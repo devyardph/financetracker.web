@@ -1,0 +1,109 @@
+﻿
+@{
+    var error = Errors?.GetError(FieldName);
+}
+
+<div class="d-flex justify-content-between mb-0">
+    <label for="@Id-@Index" class="form-label">@Label</label>
+</div>
+<div class="border-top border-bottom pt-2 pb-2">
+@foreach (var option in Options.OrderBy(q => q.Name))
+{
+        <button type="button" 
+            class="btn rounded-pill btn-sm me-2 mb-1 mt-1 @option.Style"
+            onclick="@(() => OnSelectOption(option))">
+            @option.Name
+         </button>
+}
+</div>
+@if (!string.IsNullOrEmpty(error?.ErrorMessage))
+{
+    <div id="error-message" class="form-text text-danger">
+        @((MarkupString)(error?.ErrorMessage ?? string.Empty))
+    </div>
+}
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public string? Label { get; set; } = "TOOTH SURFACES";
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter]
+    public List<SelectDto> Options { get; set; } = new List<SelectDto>();
+    public List<SelectDto> SelectedOptions { get; set; } = new List<SelectDto>();
+    [Parameter] public string? Item { get; set; } = "";
+    [Parameter] public EventCallback<string?> ItemChanged { set; get; }
+
+    [Parameter] public string SelectedStyle { get; set; } ="btn-primary";
+    [Parameter] public string UnSelectedStyle { get; set; } = "btn-label-secondary";
+
+    //FORM VALIDATION
+    [Parameter] public List<ErrorDto>? Errors { get; set; } = new List<ErrorDto>();
+    [Parameter] public string FieldName { get; set; }
+
+    protected override void OnInitialized()
+    {
+        LoadOptions();
+        base.OnInitialized();
+    }
+
+    public void LoadOptions(string item = "")
+    {
+        var items = item?.Split(",");
+        foreach (var option in Options)
+        {
+            var existing = items?.Contains(option.Id);
+            if (existing == true)
+            {
+                option.Selected = true;
+                option.Style = SelectedStyle;
+            }
+            else
+            {
+                option.Selected = false;
+                option.Style = UnSelectedStyle;
+            }
+        }
+        Item = item;
+    }
+
+    public async Task OnSelectOption(SelectDto item)
+    {
+        if (item.Id == "ALL")
+        {
+            foreach (var option in Options)
+            {
+                option.Selected = false;
+                option.Style = UnSelectedStyle;
+            }
+        }
+        else
+        {
+            foreach (var option in Options) if (option.Id == "ALL")
+                {
+                    option.Selected = false;
+                    option.Style = UnSelectedStyle;
+                }
+        }
+
+        foreach (var option in Options)
+        {
+            if (option.Id == item.Id)
+            {
+                option.Selected = !option.Selected;
+                option.Style = option.Selected == true ? SelectedStyle : UnSelectedStyle;
+            }
+        }
+        Item = string.Join(",", Options.Where(x => x.Selected == true)!.Select(x => x.Id));
+        await ItemChanged.InvokeAsync(Item);
+
+        //RESET CURRENT FIELD ERROR
+        foreach (var error in Errors!)
+        {
+            if (error.Field == FieldName)
+            {
+                error.ErrorMessage = string.Empty;
+                error.Style = string.Empty;
+            }
+        }
+    }
+}

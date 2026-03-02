@@ -1,0 +1,28 @@
+﻿@if (IsLoading)
+{
+    <table class="table border-top collapsed p-0">
+        <tbody>
+            @for (int r = 0; r < Rows; r++)
+            {
+                <tr>
+                    @foreach (var column in Columns)
+                    {
+                        <td class="card-text placeholder-glow border-0 p-1" style="">
+                            <span class="placeholder col-@column rounded"></span>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    [Parameter]
+    public List<int> Columns { get; set; } = new List<int>();
+    [Parameter]
+    public int Rows { get; set; } = 5;
+    [Parameter]
+    public bool IsLoading { get; set; } = false;
+}

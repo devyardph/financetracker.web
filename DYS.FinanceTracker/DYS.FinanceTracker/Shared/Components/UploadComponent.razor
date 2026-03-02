@@ -1,0 +1,51 @@
+﻿@if (!string.IsNullOrEmpty(Label))
+{
+    <label for="" class="form-label">@Label</label>
+}
+<InputFile OnChange="FileSelected" class="form-control" />
+<small class="text-danger mt-3">@Note</small>
+
+@if (!string.IsNullOrEmpty(PreviewUrl))
+{
+    <img class="mt-4" src="@PreviewUrl" style="max-width:100%;" />
+}
+
+@code {
+    [Parameter] public string Label { get; set; } = "Name";
+    [Parameter] public string Note { get; set; } = "";
+    [Parameter] public FileDto Item { get; set; } = new FileDto();
+    [Parameter] public string PreviewUrl { get; set; } = "";
+    [Parameter] public EventCallback<FileDto> ItemChanged { get; set; }
+    private async Task FileSelected(InputFileChangeEventArgs e)
+    {
+        Note = "";
+        PreviewUrl = "";
+        var file = e.File;
+        var fileName = file.Name;
+        var extension = Path.GetExtension(fileName);
+        var buffer = new byte[file.Size];
+        double sizeInKB = file.Size / 1024.0;
+        if (sizeInKB > 500)
+        {
+            Note = $"File is too large {sizeInKB:F2} KB, accepted size is 500KB or less.";
+        }
+        else
+        {
+            var contentType = StringExtensions.GetMimeType(extension);
+            var imageFile = await file.RequestImageFileAsync(contentType, 600, 600);
+            using var stream = imageFile.OpenReadStream();
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            PreviewUrl = $"data:{contentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+
+            var byteArray = ms.ToArray();  
+            var item = new FileDto();
+            item.FileExtension = extension;
+            item.FileSize = $"{sizeInKB:F2} KB";
+            item.Content = byteArray;
+            Item = item;
+            await ItemChanged.InvokeAsync(Item);
+        }
+
+    }
+}

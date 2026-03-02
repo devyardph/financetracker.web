@@ -1,0 +1,73 @@
+﻿@*TEXT AREA COMPONENT: TEXT TWO-WAY BINDING*@
+
+@if (!string.IsNullOrEmpty(Label))
+{
+    <label for="defaultFormControlInput" class="form-label">@Label</label>
+}
+
+@{var error = Errors?.GetError(FieldName);}
+<textarea class="form-control @Style @error?.Style border-2"
+       id="@Id-@Index"
+       placeholder="@Placeholder"
+       disabled="@ReadOnly"
+       autocomplete="off"
+       value="@Value"
+       maxlength="@MaxLength"
+       rows="@Rows"
+       @oninput="OnTextInput"
+       name="@Name"
+       required=@Required />
+
+@if (!string.IsNullOrEmpty(Note) && string.IsNullOrEmpty(error?.ErrorMessage))
+{
+    <div id="note" class="form-text">
+        @((MarkupString)Note)
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(error?.ErrorMessage))
+{
+    <div id="error-message" class="form-text text-danger">
+        @((MarkupString)(error?.ErrorMessage ?? string.Empty))
+    </div>
+}
+
+@code {
+    [Parameter] public string Label { get; set; } = "Name";
+    [Parameter] public string MaxLength { get; set; } = "1000";
+    [Parameter] public string Id { get; set; } = string.Empty;
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public int Rows { get; set; } = 3;
+    [Parameter] public string Style { get; set; } = string.Empty;
+    [Parameter] public string Note { get; set; } = string.Empty;
+    [Parameter] public string Placeholder { get; set; } = string.Empty;
+    [Parameter] public bool ReadOnly { get; set; } = false;
+    [Parameter] public string? Item { get; set; }
+    [Parameter] public EventCallback<string?> ItemChanged { set; get; }
+    [Parameter] public bool Required { get; set; } = false;
+    [Parameter] public string? ErrorMessage { get; set; }
+    [Parameter] public string Name { get; set; } = string.Empty;
+
+    //FORM VALIDATION
+    [Parameter] public List<ErrorDto>? Errors { get; set; } = new List<ErrorDto>();
+    [Parameter] public string FieldName { get; set; }
+
+    public string Value => Item ?? string.Empty;
+    public async Task OnTextInput(ChangeEventArgs e)
+    {
+        //RESET CURRENT FIELD ERROR
+        foreach (var error in Errors!)
+        {
+            if (error.Field == FieldName)
+            {
+                error.ErrorMessage = string.Empty;
+                error.Style = string.Empty;
+            }
+        }
+
+        var item = e.Value?.ToString();
+        if (!string.IsNullOrEmpty(item)) Item = item;
+        else Item = string.Empty;
+        await ItemChanged.InvokeAsync(Item);
+    }
+}

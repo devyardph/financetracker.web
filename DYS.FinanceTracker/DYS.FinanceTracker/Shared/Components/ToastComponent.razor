@@ -1,0 +1,27 @@
+﻿@inject IJSRuntime JSRuntime
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:1000">
+    <div id="@Id" role="alert" aria-live="assertive" aria-atomic="true" class="toast  @Background" data-bs-autohide="true">
+        <div class="toast-header">
+            <i class="bx bx-check-circle me-2 text-success fs-4"></i>
+            <strong class="me-auto">@Notification?.Title</strong>
+            <small>@DateTime.Now.FormatDate("hh:mmtt")</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body pt-0">
+            @Notification?.Description
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = "toast-component";
+    [Parameter]
+    public string Background { get; set; } = "bg-white";
+
+    [Parameter]
+    public NotificationDto Notification { get; set; } = new NotificationDto();
+
+    public async Task ShowToast() => await JSRuntime.InvokeVoidAsync("showToast", Id);
+}

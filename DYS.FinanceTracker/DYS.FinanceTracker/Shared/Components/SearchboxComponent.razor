@@ -1,0 +1,29 @@
+﻿<div class="input-group">
+    <input type="text" class="form-control" @bind-value="@Keyword" placeholder="@Placeholder" aria-label="@Placeholder"
+           @oninput="OnTextInput"
+           aria-describedby="button-addon2">
+    <button class="btn btn-primary btn-sm" type="button" id="@Id" @onclick="@Search">
+        <i class="icon-base bx bx-search"></i>
+    </button>
+</div>
+
+@code {
+    [Parameter]
+    public string Placeholder { get; set; } = "Search here";
+    [Parameter] 
+    public string? Keyword { get; set; }
+    [Parameter]
+    public string Id { get; set; }
+    [Parameter]
+    public EventCallback<string> KeywordChanged { get; set; }
+    [Parameter]
+    public EventCallback Search { get; set; }
+
+    public async Task OnTextInput(ChangeEventArgs e)
+    {
+        var item = e.Value?.ToString();
+        if (!string.IsNullOrEmpty(item)) Keyword = item;
+        else Keyword = string.Empty;
+        await KeywordChanged.InvokeAsync(Keyword);
+    }
+}

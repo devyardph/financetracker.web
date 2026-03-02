@@ -1,0 +1,68 @@
+﻿@if (IsVisible)
+{
+	<button id="@Id" class="btn @Style @Color @BooleanExtensions.GetConditionalString(Hidden ==true,"d-none","")" type="@Type" disabled="@(IsBusy || IsDisabled)"
+			@onclick="OnClicked" data-bs-toggle="@DataToggle" data-bs-target="#@TargetElement"
+			data-bs-dismiss="@DissmisModal"
+	>
+		@if (IsBusy)
+		{
+			if (!string.IsNullOrEmpty(@InProgressText))
+			{
+				<span class="spinner-border spinner-border-sm mr-10 mx-1" role="status" aria-hidden="true"></span>
+				@InProgressText
+			}
+			else
+			{
+
+				<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+			}
+		}
+		else
+		{
+			@if(!string.IsNullOrEmpty(Icon))
+			{
+				<i class="@Icon text-white m-0 me-1"></i>
+			}
+			@ActionText
+
+		}
+	</button>
+}
+
+
+@code {
+
+	[Parameter] public string Id { get; set; }
+	[Parameter] public string Type { get; set; } = "button";
+	[Parameter] public string Style { get; set; }
+	[Parameter] public string Color { get; set; } = "btn-primary";
+	[Parameter] public string Icon { get; set; } = "";
+	[Parameter] public EventCallback<ChangeEventArgs> OnChanged { get; set; }
+
+	[Parameter] public bool Required { get; set; }
+	[Parameter] public bool Hidden { get; set; } = false;
+
+	[Parameter]
+	public bool IsBusy { get; set; }
+	[Parameter]
+	public bool IsVisible { get; set; } = true;
+
+	[Parameter]
+	public string DataToggle { get; set; } = string.Empty;
+	[Parameter]
+	public string TargetElement { get; set; } = string.Empty;
+	[Parameter]
+	public string DissmisModal { get; set; } = "";//= "offcanvas";
+
+	[Parameter]
+	public bool IsDisabled { get; set; } = false;
+
+	[Parameter]
+	public string InProgressText { get; set; }
+	[Parameter]
+	public string ActionText { get; set; }
+
+	[Parameter]
+	public EventCallback<MouseEventArgs> OnClicked { set; get; }
+
+}

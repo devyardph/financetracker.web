@@ -1,0 +1,165 @@
+﻿@inject IJSRuntime jSRuntime
+<OffCanvasComponent Id="@Id" Title="@Title" Width="">
+    <ChildContent>
+        <div class="row">
+            <div class="mb-2">
+                <DecimalComponent Id="amount" @bind-Item="@Transaction.Amount" Label="" Placeholder="0.00" />
+            </div>
+            <div class="mb-2">
+                <SelectTextComponent Id="category" Name="category" Items="@Categories" @bind-Item="@Transaction.Category" Label="Category" Default="Choose" />
+            </div>         
+            <div class="mb-2">
+                <SelectTextComponent Id="frequency" Name="frequency" Items="GlobalSettings.Recurrence" @bind-Item="@Transaction.Recurrence" Label="Frequency" Default="Choose" TriggerEvent="@SetFrequency" />
+            </div>
+            <div class="mb-2">
+                <DateComponent Id="effective-date" Index="0" @bind-ChosenDate="@Transaction.EffectiveDate" Label="Effective Date" TriggerEvent="@SetEffectiveDate" />
+            </div>
+            <div class="mb-1">
+               <span class="fw-bold form-label text-dark-emphasis">FREQUENCY OPTIONS</span>
+            </div>
+            <div class="mb-0">
+                <div class="row gx-2 mb-1">
+                    <div class="col-md-4"> 
+                        <IntComponent Id="recurrence-count" @bind-Item="@Transaction.RecurrenceCount" Label="Count" EventTriggered="@SetEffectiveDate" />
+                    </div>
+                    <div class="col-md-8">
+                        <DateComponent Id="end-date" Index="0" @bind-ChosenDate="@Transaction.EndDate" Label="End date" TriggerEvent="@SetRecurrenceCount" />
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <TextComponent Id="description" @bind-Item="@Transaction.Description" Label="Notes" />
+                </div>
+                <div class="alert alert-secondary border-1 p-3 border-slack" role="alert">
+                    <small>Set frequency option if expense or income has a specific end date, otherwise leave empty to set it to continuous.</small>
+                </div>
+            </div>
+
+            <div class="mx-auto">
+                <ButtonComponent Id="save-expense" 
+                                ActionText="@ActionText" 
+                                IsBusy="@IsSaving"
+                                IsDisabled="@DataExtensions.IsInvalidTransaction(Transaction, IsSaving)"
+                                OnClicked="@(() => OnSubmitTransaction(Transaction))"
+                                Style="btn btn-md btn-slack w-100 d-grid" /> 
+            </div> 
+        </div>
+    </ChildContent>
+</OffCanvasComponent>
+    
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = "transaction-component";
+    [Parameter]
+    public bool IsSaving { get; set; } = false;
+    [Parameter]
+    public string Title { get; set; } = "";
+    public string ActionText { get; set; } = "";
+    public TransactionDto Transaction { get; set; } = new TransactionDto();
+    [Parameter]
+    public EventCallback<TransactionDto> SubmitTransaction { get; set; }
+    public List<SelectDto> Categories { get; set; } = new List<SelectDto>();
+
+    private async Task OnSubmitTransaction(TransactionDto transaction)
+    {
+        Console.WriteLine($"Submitting expense: {transaction.Amount} - {transaction.Category} - {transaction.Type}");
+        await SubmitTransaction.InvokeAsync(transaction);
+        Transaction = new TransactionDto();
+        StateHasChanged();
+    }
+
+    public async Task OpenTransaction(TransactionDto transaction)
+    {
+        Console.WriteLine($"Opening transaction: {transaction.Amount} - {transaction.Category} - {transaction.Type} - {transaction.RecurrenceCount}");
+        await jSRuntime.InvokeVoidAsync("showOffCanvas", Id);
+        Transaction = transaction.Id == Guid.Empty || 
+                      transaction.Id == null
+                      ? new TransactionDto() : transaction;
+        Transaction.Type = transaction.Type;
+        Title = transaction.Type == "expense" ? "EXPENSE" : "INCOME";
+        ActionText = transaction.Type == "expense" ? "SAVE EXPENSE" : "SAVE INCOME";
+        Categories = transaction.Type == "expense" ?
+                     GlobalSettings.Categories.Where(query => query.Parent == "expense").OrderBy(query => query.Name).ToList() :
+                     GlobalSettings.Categories.Where(query => query.Parent == "income").OrderBy(query => query.Name).ToList();
+        StateHasChanged();
+    }
+
+    public async Task CloseTransaction()
+    {
+        await jSRuntime.InvokeVoidAsync("hideOffCanvas", Id);
+        Transaction = new TransactionDto();
+    }
+
+    public void SetEffectiveDate()
+    {
+        var recurrence = Transaction.Recurrence;
+        var frequency = Transaction.RecurrenceCount ?? 0;
+        if (Transaction.EffectiveDate.HasValue && frequency > 0)
+        {
+            switch (recurrence)
+            {
+                case "one-time": // Weekly
+                    Transaction.EndDate = null;
+                    break;
+                case "daily": // daily
+                    Transaction.EndDate = Transaction.EffectiveDate.Value.AddDays(frequency - 1);
+                    break;
+                case "weekly": // Weekly
+                    Transaction.EndDate = Transaction.EffectiveDate.Value.AddDays(7 * (frequency-1));
+                    break;
+                case "monthly": // Monthly
+                    Transaction.EndDate = Transaction.EffectiveDate.Value.AddMonths(frequency - 1);
+                    break;
+                case "yearly": // Yearly
+                    Transaction.EndDate = Transaction.EffectiveDate.Value.AddYears(frequency - 1);
+                    break;
+                default:
+                    Transaction.EndDate = null;
+                    break;
+            }
+            Console.WriteLine($"Effective date set to: {Transaction.Recurrence} {Transaction.EffectiveDate}, End date set to: {Transaction.EndDate}");
+        }
+    }
+
+    public void SetRecurrenceCount()
+    {
+        int? reccourenceCount = null;
+        var recurrence = Transaction.Recurrence;
+        if (Transaction.EffectiveDate == null || Transaction.EndDate == null)
+        {
+            Transaction.RecurrenceCount = reccourenceCount;
+            return;
+        }
+        var effectiveDate = Transaction.EffectiveDate ?? DateTime.UtcNow;
+        var endDate = Transaction.EndDate ?? DateTime.UtcNow;
+        switch (recurrence?.ToLower())
+        {
+            case "one-time":
+                reccourenceCount = null;
+                break;
+            case "daily":
+                reccourenceCount = (endDate - effectiveDate).Days;
+                break;
+            case "weekly":
+                reccourenceCount = (endDate - effectiveDate).Days / 7;
+                break;
+            case "monthly":
+                // Difference in months between two dates
+                reccourenceCount = ((endDate.Year - effectiveDate.Year) * 12) + (endDate.Month - effectiveDate.Month);
+                break;
+            case "yearly":
+                reccourenceCount = endDate.Year - effectiveDate.Year;
+                break;
+            default:
+                reccourenceCount = null;
+                break;
+        }
+        Transaction.RecurrenceCount = reccourenceCount;
+    }
+
+    public void SetFrequency()
+    {
+        Transaction.RecurrenceCount = null;
+        Transaction.EndDate = null;
+    }
+}

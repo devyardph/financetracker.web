@@ -1,0 +1,29 @@
+﻿@inject INetworkStateService NetworkStateService
+@inject IJSRuntime JSRuntime
+
+<ModalComponent Id="network-state" Size="" Height="" Position="modal-dialog-centered">
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column text-center">
+            <h4 class="fw-bold">Sorry, it seems that you are offline</h4>
+            <p>Please check your wifi or internet connection.</p>
+        </div>
+    </div>
+</ModalComponent>
+
+
+@code {
+    protected bool IsOnline => @NetworkStateService.IsOnline;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        NetworkStateService.StatusChanged += NetworkStatusChanged;
+
+    }
+    private void NetworkStatusChanged()
+    {
+        StateHasChanged();
+        if (IsOnline) JSRuntime.InvokeVoidAsync("hideModal", "network-state");
+        else JSRuntime.InvokeVoidAsync("showModal", "network-state");
+    }
+    public void Dispose() => NetworkStateService.StatusChanged -= NetworkStatusChanged;
+}

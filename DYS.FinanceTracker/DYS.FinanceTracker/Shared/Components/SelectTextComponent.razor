@@ -1,0 +1,121 @@
+﻿
+@inject IJSRuntime JSRuntime
+
+@{
+    var error = Errors?.GetError(FieldName);
+    var displayStyle = Display ? "" : "d-none";
+}
+
+<div class="@displayStyle">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label for="@Id-@Index" class="form-label">@Label</label>
+    }
+
+    <select id="@Id-@Index"
+    class="@Styles @Width dark-style @error?.Style"
+    disabled="@Disabled"
+    @onchange="@OnSelect"
+    value="@Value"
+    name="@Name"
+    required=@Required>
+        @Default
+        @if (!string.IsNullOrEmpty(@Default))
+        {
+            <option selected value="">@Default</option>
+        }
+        @foreach (var item in Items)
+        {
+
+            var selected = !string.IsNullOrEmpty(Item) && item.Id.Equals(Item);
+            <option selected="@(selected)" value="@item?.Id">
+                @item?.Name
+            </option>
+        }
+    </select>
+
+    @if (!string.IsNullOrEmpty(Note) && string.IsNullOrEmpty(error?.ErrorMessage))
+    {
+        <div id="note" class="form-text">
+            @((MarkupString)Note)
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(error?.ErrorMessage) && Display)
+    {
+        <div id="error-message" class="form-text text-danger">
+            @((MarkupString)(error?.ErrorMessage ?? string.Empty))
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string LiveSearch { get; set; } = "false";
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public string Styles { get; set; } = "form-select";
+    [Parameter] public string Width { get; set; } = "w-100";
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string? Note { get; set; }
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public string? Item { get; set; }
+    [Parameter] public List<SelectDto> Items { get; set; } = new List<SelectDto>();
+    [Parameter] public string Default { get; set; } = "";
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Display { get; set; } = true;
+    [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public EventCallback<string?> ItemChanged { set; get; }
+    [Parameter] public EventCallback<string?> TriggerEvent { set; get; }
+    [Parameter] public bool Required { get; set; } = false;
+    [Parameter] public string? ErrorMessage { get; set; }
+    [Parameter] public string Name { get; set; } = string.Empty;
+    public string? Value => Item ?? null;
+
+    //FORM VALIDATION
+    [Parameter] public List<ErrorDto>? Errors { get; set; } = new List<ErrorDto>();
+    [Parameter] public string FieldName { get; set; }
+
+    public async Task OnSelect(ChangeEventArgs e)
+    {
+
+        var item = e.Value?.ToString();
+        if (!string.IsNullOrEmpty(item))
+        {
+            var id = new string(item);
+            await ItemChanged.InvokeAsync(id);
+            await TriggerEvent.InvokeAsync(id);
+        }
+        else
+        {
+            await ItemChanged.InvokeAsync(null);
+            await TriggerEvent.InvokeAsync(null);
+        }
+
+        //RESET CURRENT FIELD ERROR
+        foreach (var error in Errors!)
+        {
+            if (error.Field == FieldName)
+            {
+                error.ErrorMessage = string.Empty;
+                error.Style = string.Empty;
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ItemChanged.InvokeAsync(Item);
+        await TriggerEvent.InvokeAsync(Item);
+        await base.OnInitializedAsync();
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ItemChanged.InvokeAsync(Item);
+            await TriggerEvent.InvokeAsync(Item);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

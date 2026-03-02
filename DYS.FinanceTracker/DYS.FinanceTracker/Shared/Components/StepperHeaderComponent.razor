@@ -1,0 +1,29 @@
+﻿<div class="step" data-target="#@Target">
+    <button type="button" class="step-trigger" @onclick="@Trigger">
+        <span class="bs-stepper-circle">@Step</span>
+        <span class="bs-stepper-label">
+            <span class="bs-stepper-title fw-bold">@Title</span>
+            <span class="bs-stepper-subtitle">@SubTitle</span>
+        </span>
+    </button>
+</div>
+@if (HasLine)
+{
+    <div class="line"></div>
+}
+
+@code {
+    [Parameter]
+    public int Step { get; set; } = 1;
+    [Parameter]
+    public EventCallback Trigger { get; set; }
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public string SubTitle { get; set; }
+    [Parameter]
+    public string Target { get; set; }
+    [Parameter]
+    public bool HasLine { get; set; } = true;
+
+}

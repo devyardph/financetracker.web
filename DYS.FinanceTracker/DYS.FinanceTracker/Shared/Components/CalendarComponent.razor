@@ -1,0 +1,57 @@
+﻿@using System.ComponentModel
+
+@inject IJSRuntime JSRuntime
+
+<div class="app-calendar-wrapper">
+    <div class="row g-0">
+        <div class="col app-calendar-content">
+            <div class="card shadow-none border-0">
+                <div class="card-body pb-0">
+                    <!-- FullCalendar -->
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public bool ReadOnly { get; set; } = false;
+    [Parameter] public Func<DateTime?, DateTime?, Task<List<EventDto>>> GetEvents { get; set; }
+
+    [Parameter] public EventDto Event { get; set; } = new EventDto();
+    [Parameter] public EventCallback<EventDto> EventChanged { get; set; } 
+
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public async Task<List<EventDto>> FilterByDate(DateTime? startDate, DateTime? endDate, bool firstRender)
+    {
+        if (firstRender) return new List<EventDto>();
+        var events = await GetEvents(startDate, endDate);
+        return events;
+    }
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public async Task EventClicked(string id)
+    {
+        Event = new EventDto();
+        Event.Id = id;
+        Event.Action = !string.IsNullOrEmpty(id) ? GlobalSettings.Edit : GlobalSettings.Add;
+        await EventChanged.InvokeAsync(Event);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var reference = DotNetObjectReference.Create(this);
+        if (firstRender) await JSRuntime.InvokeVoidAsync("setCalendar", reference, firstRender, ReadOnly);
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public async Task ResetCalendarAsync()
+    {
+        var reference = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("setCalendar", reference, false, ReadOnly);
+    }
+}

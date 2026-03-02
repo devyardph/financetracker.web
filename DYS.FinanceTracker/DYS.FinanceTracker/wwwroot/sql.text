@@ -1,0 +1,186 @@
+-- ============================================
+-- Ledger Finance Tracker — Supabase Setup SQL
+-- Run this in your Supabase SQL Editor
+-- ============================================
+
+-- 1. Create transactions table
+-- Users handled by Supabase Auth
+
+create table public.transactions (
+    id uuid primary key default gen_random_uuid(),
+    user_id uuid references auth.users(id),
+    amount numeric not null,
+    category text not null,
+    type text check (type in ('income','expense')),
+    description text,
+    date timestamp not null default now(),
+    recurrence text check (recurrence in ('none','daily','weekly','monthly','yearly')) default 'none',
+    recurrence_group_id uuid, -- links related recurring entries
+    effective_date date default now() -- when this version starts
+);
+
+
+-- 2. Enable Row Level Security
+ALTER TABLE public.transactions ENABLE ROW LEVEL SECURITY;
+
+-- 3. RLS Policies — users can only see/edit their own data
+CREATE POLICY "Users can view own transactions"
+    ON public.transactions FOR SELECT
+    USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own transactions"
+    ON public.transactions FOR INSERT
+    WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own transactions"
+    ON public.transactions FOR UPDATE
+    USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own transactions"
+    ON public.transactions FOR DELETE
+    USING (auth.uid() = user_id);
+
+-- 4. Index for performance
+CREATE INDEX idx_transactions_user_date ON public.transactions (user_id, date DESC);
+
+
+
+
+==========================================================================
+
+Blazor Components
+- Dashboard.razor
+- Shows balance, total income, total expenses
+- Graphs (optional: use Chart.js via JS interop)
+- TransactionForm.razor
+- Fields: Amount, Category, Type (income/expense), Description, Date, Recurrence
+- Submit → Calls Supabase REST API
+- TransactionList.razor
+- Displays transactions
+- Filters by category/date
+- Highlights recurring entries
+
+🔄 Handling Recurring Transactions
+- Store recurrence type (daily, weekly, monthly, yearly) in the transactions table.
+- On dashboard load, generate upcoming instances:
+IEnumerable<Transaction> ExpandRecurring(Transaction t)
+{
+    var list = new List<Transaction>();
+    var currentDate = DateTime.Now;
+    var nextDate = t.Date;
+
+    while (nextDate < currentDate.AddMonths(3)) // preview next 3 months
+    {
+        list.Add(new Transaction { ...t, Date = nextDate });
+        nextDate = t.Recurrence switch
+        {
+            "daily" => nextDate.AddDays(1),
+            "weekly" => nextDate.AddDays(7),
+            "monthly" => nextDate.AddMonths(1),
+            "yearly" => nextDate.AddYears(1),
+            _ => nextDate
+        };
+    }
+    return list;
+}
+- This way, recurring items are virtualized on the client side without duplicating rows in the DB.
+
+🚀 Supabase Integration (Blazor)
+Use the Supabase .NET client:
+var supabase = new Supabase.Client("https://your-project.supabase.co", "public-anon-key");
+await supabase.InitializeAsync();
+
+// Insert transaction
+await supabase.From<Transaction>().Insert(new Transaction {
+    Amount = 1000,
+    Category = "Salary",
+    Type = "income",
+    Recurrence = "monthly"
+});
+
+
+
+🌟 Features to Extend
+- Authentication with Supabase Auth (login/register)
+- Category management (Food, Rent, Salary, etc.)
+- Charts for monthly summaries
+- Notifications for upcoming recurring expenses
+
+Would you like me to draft the Blazor UI code (Razor components with forms and lists) so you can plug it directly into your project, or keep it at the architectural level for now?
+
+
+
+
+
+
+
+
+
+
+public async Task<List<Transaction>> GetTransactionsForMonthAsync(Guid userId, int year, int month)
+    {
+        // Define date range for the month
+        var startDate = new DateTime(year, month, 1);
+        var endDate = startDate.AddMonths(1).AddDays(-1);
+
+        // Fetch all transactions for user that either:
+        // - Occur in this month
+        // - Or are recurring and effective before endDate
+        var result = await _supabase
+            .From<Transaction>()
+            .Filter("user_id", Postgrest.Constants.Operator.Equals, userId)
+            .Filter("effective_date", Postgrest.Constants.Operator.LessThanOrEqual, endDate)
+            .Get();
+
+        var transactions = result.Models;
+
+        // Expand recurring transactions
+        var expanded = new List<Transaction>();
+        foreach (var t in transactions)
+        {
+            if (t.Recurrence == "none")
+            {
+                // Only include if date falls in this month
+                if (t.Date >= startDate && t.Date <= endDate)
+                    expanded.Add(t);
+            }
+            else
+            {
+                // Generate recurring instances for this month
+                var nextDate = t.EffectiveDate > startDate ? t.EffectiveDate : startDate;
+
+                while (nextDate <= endDate)
+                {
+                    expanded.Add(new Transaction
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = t.UserId,
+                        Amount = t.Amount,
+                        Category = t.Category,
+                        Type = t.Type,
+                        Description = t.Description,
+                        Date = nextDate,
+                        Recurrence = t.Recurrence,
+                        RecurrenceGroupId = t.RecurrenceGroupId,
+                        EffectiveDate = t.EffectiveDate
+                    });
+
+                    nextDate = t.Recurrence switch
+                    {
+                        "daily" => nextDate.AddDays(1),
+                        "weekly" => nextDate.AddDays(7),
+                        "monthly" => nextDate.AddMonths(1),
+                        "yearly" => nextDate.AddYears(1),
+                        _ => endDate.AddDays(1) // break loop
+                    };
+                }
+            }
+        }
+
+        return expanded;
+    }
+
+
+
+    netstat -ano | findstr 5066
+    taskkill /PID 10352 /F

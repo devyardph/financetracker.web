@@ -1,0 +1,10 @@
+﻿<div id="@Id" class="content">
+    @Content
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [Parameter]
+    public RenderFragment Content { get; set; }
+}

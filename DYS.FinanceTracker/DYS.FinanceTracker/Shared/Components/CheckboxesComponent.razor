@@ -1,0 +1,68 @@
+﻿
+<div class="row">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label for="defaultFormControlInput" class="form-label">@Label</label>
+    }
+    @foreach (var item in Items.OrderBy(q => q.Name))
+    {
+
+        <div class="col-md-@(12/@Columns)">
+            <div class="form-check mb-0">
+                <input class="form-check-input" type="checkbox" value="" id="@item.Id" disabled="@ReadOnly"
+                       checked="@item.Selected" onclick="@(() => SetOption(item))">
+                <small class="form-check-label @Style" for="@item.Id">@item.Name</small>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public string Style { get; set; } = "";
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public bool ReadOnly { get; set; } = false;
+    [Parameter] public bool AllowMultiple { get; set; } = true;
+    [Parameter] public int Columns { get; set; } = 2;
+    [Parameter]
+    public List<SelectDto> Items { get; set; } = new List<SelectDto>();
+    [Parameter] public List<string> Item { get; set; } = new List<string>();
+    [Parameter]
+    public EventCallback<List<string>> ItemChanged { set; get; }
+    [Parameter] public bool IsSaving { get; set; } = false;
+    [Parameter] public EventCallback<List<string>> TriggerEvent { set; get; }
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public bool WithChanges { get; set; } = false;
+    [Parameter]
+    public EventCallback<bool> WithChangesChanged { set; get; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        foreach (var item in Items)
+        {
+            var selectedItems = Item.Contains(item.Id);
+            if (selectedItems) item.Selected = true;
+        }
+        await base.OnInitializedAsync();
+    }
+
+    public async Task SetOption(SelectDto option)
+    {
+        WithChanges = true;
+        foreach (var item in Items)
+        {
+            if (AllowMultiple == false) item.Selected = false;
+            if (item.Id == option.Id) item.Selected = !item.Selected;
+        }
+
+        var selectedItems = Items.Where(query => query.Selected).Select(query => $"{query.Id}").ToList();
+        await ItemChanged.InvokeAsync(selectedItems);
+        await TriggerEvent.InvokeAsync(selectedItems);
+        await WithChangesChanged.InvokeAsync(WithChanges);
+    }
+
+}

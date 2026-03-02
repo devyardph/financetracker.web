@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+    <Content Remove="wwwroot\appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.3" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.3" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.3" PrivateAssets="all" />
+	  <PackageReference Include="MvvmBlazor" Version="6.0.6" />
+	  <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+	  <PackageReference Include="Supabase" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DYS.FinanceTracker.Shared\DYS.FinanceTracker.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Shared\Security\" />
+    <Folder Include="wwwroot\assets\vendor\libs\imask\" />
+  </ItemGroup>
+
+</Project>

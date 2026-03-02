@@ -1,0 +1,90 @@
+﻿@if (!string.IsNullOrEmpty(Label))
+{
+    <label for="defaultFormControlInput" class="form-label">@Label</label>
+}
+
+@{
+    var error = Errors?.GetError(FieldName);
+}
+<input type="number"
+       class="form-control @Style @error?.Style"
+        id="@Id-@Index"
+        placeholder="@Placeholder"
+        disabled="@ReadOnly"
+        autocomplete="off"
+        value="@Value"
+        maxlength="@MaxLength"
+        @onkeydown="OnKeyDown"
+        @oninput="OnTextInput" />
+
+@if (!string.IsNullOrEmpty(Note) && string.IsNullOrEmpty(error?.ErrorMessage))
+{
+    <div id="note" class="form-text">
+        @((MarkupString)Note)
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(error?.ErrorMessage))
+{
+    <div id="error-message" class="form-text text-danger">
+        @((MarkupString)(error?.ErrorMessage ?? string.Empty))
+    </div>
+}
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string MaxLength { get; set; } = "2";
+    [Parameter] public string Id { get; set; } = string.Empty;
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public string Style { get; set; } = string.Empty;
+    [Parameter] public string Note { get; set; } = string.Empty;
+    [Parameter] public string Placeholder { get; set; } = string.Empty;
+    [Parameter] public bool ReadOnly { get; set; } = false;
+    [Parameter] public int? Item { get; set; }
+    [Parameter] public EventCallback<int?> ItemChanged { set; get; }
+    [Parameter] public EventCallback<KeyboardEventArgs> OnKeyDown { set; get; }
+    [Parameter] public EventCallback EventTriggered { set; get; }
+    public int? Value => Item;
+
+    //FORM VALIDATION
+    [Parameter] public List<ErrorDto>? Errors { get; set; } = new List<ErrorDto>();
+    [Parameter] public string FieldName { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ItemChanged.InvokeAsync(Item);
+            await EventTriggered.InvokeAsync(Item);
+        }
+        base.OnAfterRender(firstRender);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine($"Initializing IntComponent with value: {Item}");
+        await ItemChanged.InvokeAsync(Item);
+        await EventTriggered.InvokeAsync(Item);
+        await base.OnInitializedAsync();
+    }
+
+    public async Task OnTextInput(ChangeEventArgs e)
+    {
+        //RESET CURRENT FIELD ERROR
+        foreach (var error in Errors!)
+        {
+            if (error.Field == FieldName)
+            {
+                error.ErrorMessage = string.Empty;
+                error.Style = string.Empty;
+            }
+        }
+
+        var item = e.Value;
+        if (Int32.TryParse(item!.ToString(), out int result))
+            Item = result;
+        else Item = null;
+        await ItemChanged.InvokeAsync(Item);
+        await EventTriggered.InvokeAsync();
+    }
+}

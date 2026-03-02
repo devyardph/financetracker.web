@@ -1,0 +1,22 @@
+﻿
+<!--MODAL-->
+<div class="modal fade" id="@Id" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog @Size @Position">
+        <div class="modal-content p-0 p-md-2 p-xl-5">
+            <div class="modal-body px-2 px-md-4 @Height">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+</div>
+<!--MODAL-->
+@code {
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Width { get; set; } = "";
+    [Parameter] public string Height { get; set; } = "min-vh-100";
+    [Parameter] public string Size { get; set; } = "modal-xl";
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string SubTitle { get; set; } = "";
+    [Parameter] public string Position { get; set; } = "";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

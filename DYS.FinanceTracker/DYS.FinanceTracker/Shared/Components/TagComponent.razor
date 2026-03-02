@@ -1,0 +1,85 @@
+﻿@using System.ComponentModel;
+@inject IJSRuntime JSRuntime
+
+@{
+    var error = Errors?.GetError(FieldName);
+    var displayStyle = Display ? "" : "d-none";
+}
+@if (!string.IsNullOrEmpty(Label))
+{
+    <label for="@Id-@Index" class="form-label">@Label</label>
+}
+<div>
+    <select id="@Id-@Index" class="select2 form-select-sm @Style" multiple disabled="@ReadOnly" >
+        @foreach (var item in Items)
+        {
+            var selected = !string.IsNullOrEmpty(Item) && item.Id.Equals(Item.ToString());
+            <option selected="@selected" value="@item?.Id">
+                @item?.Name
+            </option>
+        }
+    </select>
+</div>
+
+@if (!string.IsNullOrEmpty(Note) && string.IsNullOrEmpty(error?.ErrorMessage))
+{
+    <div id="note" class="form-text">
+        @((MarkupString)Note)
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(error?.ErrorMessage) && Display)
+{
+    <div id="error-message" class="form-text text-danger">
+        @((MarkupString)(error?.ErrorMessage ?? string.Empty))
+    </div>
+}
+
+
+@code {
+
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public string? Style { get; set; }
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string? Note { get; set; }
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public string? Item { get; set; }
+    [Parameter] public List<SelectDto> Items { get; set; } = new List<SelectDto>();
+    [Parameter] public string Default { get; set; } = "Choose";
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Display { get; set; } = true;
+    [Parameter] public string Placeholder { get; set; } = "";
+    [Parameter] public EventCallback<string?> ItemChanged { set; get; }
+    [Parameter] public EventCallback TriggerEvent { set; get; }
+
+    //FORM VALIDATION
+    [Parameter] public List<ErrorDto>? Errors { get; set; } = new List<ErrorDto>();
+    [Parameter] public string FieldName { get; set; }
+
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public async Task OnSelect(string[] value)
+    {
+        var content = value.HasAny() ? string.Join(",", value) : string.Empty;
+        await ItemChanged.InvokeAsync(content);
+        await TriggerEvent.InvokeAsync();
+        //RESET CURRENT FIELD ERROR
+        foreach (var error in Errors!)
+        {
+            if (error.Field == FieldName)
+            {
+                error.ErrorMessage = string.Empty;
+                error.Style = string.Empty;
+            }
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var reference = DotNetObjectReference.Create(this);
+        var value = !string.IsNullOrEmpty(Item) ? Item.ToLower() : string.Empty;
+        if (firstRender) await JSRuntime.InvokeVoidAsync("setSelect2ById", $"{Id}-{Index}", reference,"OnSelect",Placeholder);
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+}

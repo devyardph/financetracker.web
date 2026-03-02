@@ -1,0 +1,38 @@
+﻿
+<div class="form-check mb-1">
+	<input class="form-check-input" type="checkbox" value="" id="@Id-@Index" disabled="@ReadOnly"
+		   checked="@Item" @onchange="OnCheckboxChanged">
+	<label class="form-check-label" for="@Id-@Index">@Title</label>
+</div>
+
+
+
+@code {
+	[Parameter] public string Title { get; set; } = "";
+	[Parameter] public string Id { get; set; } = "";
+	[Parameter] public int Index { get; set; } = 0;
+	[Parameter] public bool ReadOnly { get; set; } = false;
+	[Parameter] public bool? Item { get; set; } = false;
+	[Parameter]
+	public EventCallback<bool?> ItemChanged { set; get; }
+	[Parameter] public bool IsSaving { get; set; } = false;
+	[Parameter] public EventCallback<bool?> TriggerEvent { set; get; }
+
+
+	public async Task OnCheckboxChanged(ChangeEventArgs e)
+	{
+		if (e.Value == null) Item = null;
+
+		var item = e.Value != null ? e.Value.ToString() : string.Empty;
+
+		if (!string.IsNullOrEmpty(item))
+		{
+			Item = Convert.ToBoolean(item);
+		}
+		else Item = false;
+		await ItemChanged.InvokeAsync(Item);
+		await TriggerEvent.InvokeAsync(Item);
+
+	}
+
+}

@@ -1,0 +1,18 @@
+﻿
+@if (Notification.Success == true)
+{
+    <div class="alert alert-success" role="alert">
+        <strong>@Notification.Title</strong> : <p>@Notification.Description</p>
+    </div>
+}
+else if (Notification.Success == false)
+{
+    <div class="alert alert-danger" role="alert">
+        <small><strong>@Notification.Title</strong> : @Notification.Description</small>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public NotificationDto Notification { get; set; } = new NotificationDto();
+}

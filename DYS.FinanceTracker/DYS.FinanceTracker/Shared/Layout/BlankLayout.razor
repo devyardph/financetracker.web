@@ -1,0 +1,18 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime JsRuntime
+
+
+<div class="container-xxl">
+    @Body
+</div>
+
+@code 
+{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) await JsRuntime.InvokeVoidAsync("initialize");
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}
+
+

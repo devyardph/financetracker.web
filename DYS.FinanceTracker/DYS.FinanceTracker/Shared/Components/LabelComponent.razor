@@ -1,0 +1,17 @@
+﻿@*TEXT COMPONENT: TEXT TWO-WAY BINDING*@
+@if (!string.IsNullOrEmpty(Label))
+{
+    <label for="defaultFormControlInput" class="form-label">@Label</label>
+}
+<div>
+    <small>@Value</small>
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string Id { get; set; } = string.Empty;
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public string? Item { get; set; }
+    [Parameter] public EventCallback<string?> ItemChanged { set; get; }
+    public string Value => Item ?? string.Empty;
+}

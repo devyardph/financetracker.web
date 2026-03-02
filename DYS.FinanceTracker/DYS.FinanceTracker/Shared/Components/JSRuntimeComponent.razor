@@ -1,0 +1,13 @@
+﻿@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+@code 
+{
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     // if (firstRender) 
+    //     //     await JSRuntime.InvokeVoidAsync("initialize");
+    // }
+    public async Task RunJsFunction(string function, string parameter = "") => await JSRuntime.InvokeVoidAsync(function, parameter);
+    public void NavigationToPath(string path) => NavigationManager.NavigateTo(path);
+}

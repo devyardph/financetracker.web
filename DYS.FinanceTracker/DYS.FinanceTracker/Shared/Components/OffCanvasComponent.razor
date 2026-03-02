@@ -1,0 +1,37 @@
+﻿<!--MODAL-->
+<div class="offcanvas @Placement @Width @Height"
+tabindex="-1"
+id="@Id"
+aria-labelledby="addEventSidebarLabel"
+data-bs-backdrop="@Backdrop"
+data-bs-keyboard="false">
+    @if (ShowHeader)
+    {
+        <div class="offcanvas-header border-bottom">
+            <div>
+            <strong>@((MarkupString)Title)</strong>
+            <p class="m-0">@((MarkupString)SubTitle)</p>
+        </div>
+        <button type="button"
+        class="btn-close text-reset"
+        data-bs-dismiss="offcanvas"
+        aria-label="Close"></button>
+    </div>
+    }
+    <div class="offcanvas-body pt-2">
+        @ChildContent
+    </div>
+</div>
+<!--MODAL-->
+@code {
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Width { get; set; } = "";
+    [Parameter] public string Height { get; set; } = "";
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string SubTitle { get; set; } = "";
+    [Parameter] public string Backdrop { get; set; } = "static";
+    [Parameter] public bool ShowHeader { get; set; } = true;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? FooterContent { get; set; }
+    [Parameter] public string Placement { get; set; } = "offcanvas-end"; // start,end,top,bottom
+}

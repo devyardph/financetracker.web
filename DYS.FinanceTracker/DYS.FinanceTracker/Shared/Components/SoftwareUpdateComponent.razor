@@ -1,0 +1,41 @@
+﻿@inject IJSRuntime _jsRuntime
+@inject NavigationManager uriHelper
+
+@if (_newVersionAvailable)
+{
+    <div class="buy-now">
+        <a onclick="window.location.reload()"
+           class="btn btn-danger btn-buy-now text-white">
+            Software update
+            <i class="bx bx-download bx-sm ms-2"></i>
+        </a>
+    </div>
+}
+
+
+@code {
+    private bool _newVersionAvailable = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RegisterForUpdateAvailableNotification();
+    }
+
+    private async Task RegisterForUpdateAvailableNotification()
+    {
+        await _jsRuntime.InvokeAsync<object>(
+            identifier: "registerForUpdateAvailableNotification",
+            DotNetObjectReference.Create(this),
+            nameof(OnUpdateAvailable));
+    }
+
+    [JSInvokable(nameof(OnUpdateAvailable))]
+    public Task OnUpdateAvailable()
+    {
+        _newVersionAvailable = true;
+
+        StateHasChanged();
+
+        return Task.CompletedTask;
+    }
+}

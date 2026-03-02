@@ -1,0 +1,162 @@
+﻿@inject IJSRuntime JSRuntime
+@using System.Linq.Expressions
+@using System.Globalization
+
+@{
+    var error = Errors?.GetError(FieldName);
+    var disabledStyle = Disabled ? "bg-lighter" : string.Empty;
+    var displayStyle = Display ? "" : "d-none";
+}
+
+<div class="@displayStyle">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <label for="@Id-@Index" class="form-label">@Label</label>
+    }
+    <input type="text" class="form-control rounded-0 flatpickr-date @error?.Style @disabledStyle"
+           placeholder="@Placeholder" 
+           id="@Id-@Index"
+           disabled="@Disabled"
+           autocomplete="off" 
+           value="@Value"
+           @onchange="OnTextInput" />
+
+    @if (!string.IsNullOrEmpty(Note) && string.IsNullOrEmpty(error?.ErrorMessage))
+    {
+        <div id="note" class="form-text">
+            @((MarkupString)Note)
+        </div>
+    }
+</div>
+
+
+@if (!string.IsNullOrEmpty(error?.ErrorMessage) && Display)
+{
+    <div id="error-message" class="form-text text-danger">
+        @((MarkupString)(error?.ErrorMessage ?? string.Empty))
+    </div>
+}
+
+@code {
+
+    private bool _showValidation;
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Label { get; set; }
+    [Parameter] public string Note { get; set; }
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public string Style { get; set; }
+    [Parameter] public EventCallback<double?> ValueChanged { get; set; }
+    [Parameter] public EventCallback<ChangeEventArgs> OnChanged { get; set; }
+
+    [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public bool IsReadOnly { get; set; } = false;
+    [Parameter] public bool Required { get; set; } = false;
+    [Parameter] public bool Display { get; set; } = true;
+
+    [Parameter]
+    public TimeSpan? ChosenTime { get; set; }
+    public TimeSpan? TChosenTime { get; set; }
+
+    [Parameter]
+    public System.Globalization.CultureInfo Culture { get; set; }
+
+    [Parameter]
+    public EventCallback<TimeSpan?> ChosenTimeChanged { set; get; }
+    [Parameter]
+    public EventCallback<TimeSpan?> PassChanged { set; get; }
+    [Parameter]
+    public string DateFormat { get; set; } = "";
+    [Parameter] public EventCallback<TimeSpan?> TriggerEvent { set; get; }
+    [Parameter] public string Placeholder { set; get; } = "HH:MM";
+
+    //FORM VALIDATION
+    [Parameter] public List<ErrorDto>? Errors { get; set; } = new List<ErrorDto>();
+    [Parameter] public string FieldName { get; set; }
+    [Parameter]
+    public string MinTime { get; set; } = "09:00";
+    [Parameter] public string MaxTime { get; set; } = "14:00";
+
+    public string Value
+    {
+        get
+        {
+            if (TChosenTime != null)
+            {
+                return $"{TChosenTime.Value.ToString(@"hh\:mm")}";
+            }
+            return string.Empty;
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            TChosenTime = ChosenTime;
+            JSRuntime.InvokeVoidAsync("setTimeById", $"{@Id}-{@Index}", MinTime, MaxTime);
+        }
+        base.OnAfterRender(firstRender);
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        TChosenTime = ChosenTime;
+        return base.OnParametersSetAsync();
+    }
+
+    protected override void OnInitialized()
+    {
+        TChosenTime = ChosenTime;
+        base.OnInitialized();
+    }
+
+    public async Task OnTextInput(ChangeEventArgs e)
+    {
+
+        var time = e.Value!= null ? e.Value.ToString() : string.Empty;
+        if (!string.IsNullOrEmpty(time))
+        {
+            Console.WriteLine(time);
+            var selectedTime = DateTime.ParseExact(time ?? string.Empty, "h:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+            TChosenTime = selectedTime;
+        }
+        else
+        {
+            TChosenTime = null;
+        }
+
+        //RESET CURRENT FIELD ERROR
+        foreach (var error in Errors!)
+        {
+            if (error.Field == FieldName)
+            {
+                error.ErrorMessage = string.Empty;
+                error.Style = string.Empty;
+            }
+        }
+
+        await ClickApply();
+        await Task.Delay(1);
+    }
+
+
+    public async Task ClickApply()
+    {
+        if (TChosenTime.HasValue)
+        {
+            ChosenTime = TChosenTime;
+            await ChosenTimeChanged.InvokeAsync(TChosenTime.Value);
+            await PassChanged.InvokeAsync(ChosenTime);
+            await TriggerEvent.InvokeAsync(ChosenTime);
+        }
+        else
+        {
+            TChosenTime = null;
+            ChosenTime = null;
+            await ChosenTimeChanged.InvokeAsync(null);
+            await PassChanged.InvokeAsync(null);
+            await TriggerEvent.InvokeAsync(null);
+        }
+    }
+
+}

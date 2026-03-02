@@ -1,0 +1,45 @@
+﻿@using System.ComponentModel
+@inject IJSRuntime JSRuntime
+
+<div>
+    <div class="d-flex justify-content-between">
+        <label for="@Id-@Index" class="form-label">@Label</label>
+        <a href="javascript:void(0)" class="@BooleanExtensions.GetConditionalString(@Reset == false, "d-none","")" @onclick="@OnResetTrigger">reset</a>
+    </div>
+
+    <input id="@Id-@Index"
+           name="@Id-@Index"
+           class="form-control"
+           placeholder="@Placeholder"
+           value="@Item" />
+</div>
+
+
+@code {
+    [Parameter] public string? Item { get; set; }
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public string? Label { get; set; } = "";
+    [Parameter] public string? Placeholder { get; set; } = "";
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public bool Reset { get; set; } = false;
+    [Parameter] public List<string> Items { get; set; } = new List<string>();
+    [Parameter] public EventCallback<string?> ItemChanged { set; get; }
+    [Parameter] public EventCallback ResetTriggered { set; get; }
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public async Task SetTags(string[] value)
+    {
+        var content = value.HasAny() ? string.Join(",", value) : string.Empty;
+        await ItemChanged.InvokeAsync(content);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var reference = DotNetObjectReference.Create(this);
+        var defaultValues = Item?.Split(",").ToArray();
+        if (firstRender) await JSRuntime.InvokeVoidAsync("setTagify", $"{Id}-{Index}", Items, defaultValues, reference);
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public async Task OnResetTrigger() => await ResetTriggered.InvokeAsync();
+}

@@ -1,0 +1,124 @@
+﻿@inject IJSRuntime JSRuntime
+
+@if (!string.IsNullOrEmpty(Label))
+{
+  <label for="@Id-@Index" class="form-label">@Label</label>
+}
+@{
+    var error = Errors?.GetError(FieldName);
+}
+
+<div class="input-group">
+<select id="@Id-@Index"
+        class="@Styles @Width dark-style"
+        data-style="btn-default dark-style"
+        data-live-search="@LiveSearch"
+        disabled="@ReadOnly" @onchange="@OnSelect"
+        name="@Name"
+        required=@Required>
+    <option selected value="">@Default</option>
+    @foreach (var item in Items)
+    {
+            var selected = Item != null && item.Id == Item.ToString();
+            <option selected="@selected" value="@item?.Id">
+            @item?.Name
+         </option>
+    }
+</select>
+
+   @ChildContent
+
+</div>
+
+@if (!string.IsNullOrEmpty(Note) && string.IsNullOrEmpty(error?.ErrorMessage))
+{
+    <div id="note" class="form-text">
+        @((MarkupString)Note)
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(error?.ErrorMessage))
+{
+    <div id="error-message" class="form-text text-danger">
+        @((MarkupString)(error?.ErrorMessage ?? string.Empty))
+    </div>
+}
+
+
+@code {
+    [Parameter] public string LiveSearch { get; set; } = "false";
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public string Styles { get; set; } = "selectpicker";
+    [Parameter] public string Width { get; set; } = "w-100";
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string? Note { get; set; }
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public Guid? Item { get; set; }
+    [Parameter] public List<SelectDto> Items { get; set; } = new List<SelectDto>();
+    [Parameter] public string Default { get; set; } = "Choose";
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public EventCallback<Guid?> ItemChanged { set; get; }
+    [Parameter] public EventCallback<Guid?> TriggerEvent { set; get; }
+    [Parameter] public bool Required { get; set; } = false;
+    [Parameter] public string? ErrorMessage { get; set; }
+    [Parameter] public string Name { get; set; } = string.Empty;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public SelectDto SelectedItem { get; set; } = new SelectDto();
+    [Parameter] public EventCallback<SelectDto> SelectedItemChanged { set; get; }
+    [Parameter] public EventCallback<SelectDto> SelectedItemProcessed { set; get; }
+
+    //FORM VALIDATION
+    [Parameter] public List<ErrorDto>? Errors { get; set; } = new List<ErrorDto>();
+    [Parameter] public string FieldName { get; set; }
+
+    public async Task OnSelect(ChangeEventArgs e)
+    {
+        Note = string.Empty;
+        var item = e.Value?.ToString();
+        var id = !string.IsNullOrEmpty(item) ? new Guid(item) : Guid.Empty;
+        Item = id;
+        await ItemChanged.InvokeAsync(id);
+        //GET SELECTED ITEM
+        var selectedItem = Items?.FirstOrDefault(query => query.Id.ToLower() == item?.ToLower());
+        SelectedItem = selectedItem ?? new SelectDto();
+        await SelectedItemChanged.InvokeAsync(selectedItem);
+        await SelectedItemProcessed.InvokeAsync(selectedItem);
+        await TriggerEvent.InvokeAsync(id);
+
+        //RESET CURRENT FIELD 
+        if (Errors.HasAny())
+        {
+            foreach (var error in Errors!)
+            {
+                if (error.Field == FieldName)
+                {
+                    error.ErrorMessage = string.Empty;
+                    error.Style = string.Empty;
+                }
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Item.HasValue && Item != Guid.Empty)
+        {
+            var selectedItem = Items?.FirstOrDefault(query => query.Id.ToLower() == Item?.ToString().ToLower());
+            await SelectedItemChanged.InvokeAsync(selectedItem);
+            await SelectedItemProcessed.InvokeAsync(selectedItem);
+        }
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) await JSRuntime.InvokeVoidAsync("setSelectPickerByClass", "selectpicker");
+        if (Item.HasValue && Item != Guid.Empty)
+            await JSRuntime.InvokeVoidAsync("resetSelectPickerById", $"{Id}-{Index}",
+            Item.HasValue ?
+            Item?.ToString().ToLower() : string.Empty);
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

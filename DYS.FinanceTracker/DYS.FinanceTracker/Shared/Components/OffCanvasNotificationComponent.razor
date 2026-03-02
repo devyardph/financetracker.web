@@ -1,0 +1,18 @@
+﻿<div class="offcanvas offcanvas-bottom h-25 border-right border-warning border-right-2" tabindex="-1" id="offcanvas-notification">
+    <div class="offcanvas-header">
+        <h4 class="offcanvas-title fw-semibold" id="offcanvasBottomLabel">@Title</h4>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        @Notification?.Description
+    </div>
+</div>
+
+@code 
+{
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+    [Parameter]
+    public NotificationDto Notification { get; set; } = new NotificationDto();
+
+}

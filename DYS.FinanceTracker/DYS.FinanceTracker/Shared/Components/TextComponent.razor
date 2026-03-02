@@ -1,0 +1,86 @@
+﻿@*TEXT COMPONENT: TEXT TWO-WAY BINDING*@
+@if (!string.IsNullOrEmpty(Label))
+{
+    <label for="defaultFormControlInput" class="form-label text-dark">@Label</label>
+}
+
+@{var error = Errors?.GetError(FieldName);}
+<input type="@Type"
+       class="form-control @Style border-1"
+       id="@Id-@Index"
+       placeholder="@Placeholder"
+       disabled="@ReadOnly"
+       autocomplete="off"
+       value="@Value"
+       maxlength="@MaxLength"
+       @onkeydown="@KeyDown"
+       @onblur="OnBlur"
+       @oninput="OnTextInput"/>
+
+@if (!string.IsNullOrEmpty(Note) && string.IsNullOrEmpty(error?.ErrorMessage))
+{
+    <div id="note" class="form-text">
+        @((MarkupString)Note)
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(error?.ErrorMessage))
+{
+    <div id="error-message" class="form-text text-danger">
+        @((MarkupString)(error?.ErrorMessage ?? string.Empty))
+    </div>
+}
+
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string MaxLength { get; set; } = "1000";
+    [Parameter] public string Id { get; set; } = string.Empty;
+    [Parameter] public int Index { get; set; } = 0;
+    [Parameter] public string Type { get; set; } = "text";
+    [Parameter] public string Style { get; set; } = string.Empty;
+    [Parameter] public string Note { get; set; } = string.Empty;
+    [Parameter] public string Placeholder { get; set; } = string.Empty;
+    [Parameter] public bool ReadOnly { get; set; } = false;
+    [Parameter] public string? Item { get; set; }
+    [Parameter] public EventCallback<string?> ItemChanged { set; get; }
+    [Parameter] public EventCallback NotifyChange { set; get; }
+    [Parameter] public EventCallback OnKeyDown { set; get; }
+    public string Value => Item ?? string.Empty;
+    
+    //FORM VALIDATION
+    [Parameter] public List<ErrorDto>? Errors { get; set; } = new List<ErrorDto>();
+    [Parameter] public string FieldName { get; set; } 
+
+    public async Task OnTextInput(ChangeEventArgs e)
+    {
+        //RESET CURRENT FIELD ERROR
+        foreach (var error in Errors!)
+        {
+            if (error.Field == FieldName)
+            {
+                error.ErrorMessage = string.Empty;
+                error.Style = string.Empty;
+            }
+        }
+
+        var item = e.Value?.ToString();
+        if (!string.IsNullOrEmpty(item)) Item = item;
+        else Item = string.Empty;
+        await ItemChanged.InvokeAsync(Item);
+        await NotifyChange.InvokeAsync();
+    }
+
+    private async Task KeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+           // await OnKeyDown.InvokeAsync();
+        }
+    }
+
+    private async Task OnBlur(FocusEventArgs e)
+    {
+       //await NotifyChange.InvokeAsync();
+    }
+}
