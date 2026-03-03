@@ -30,6 +30,7 @@ builder.Services.AddTransient<IBaseService, BaseService>();
 builder.Services.AddTransient<BaseViewModel>();
 builder.Services.AddTransient<AccountViewModel>();
 builder.Services.AddTransient<TrackerViewModel>();
+builder.Services.AddTransient<MenuViewModel>();
 
 builder.Services.AddOtherServices();
 builder.Services.AddBlazoredLocalStorage();

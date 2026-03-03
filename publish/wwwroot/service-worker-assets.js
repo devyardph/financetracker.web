@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "fQfVGySj",
+  "version": "c4ZQfTQo",
   "assets": [
     {
       "hash": "sha256-kNOGbBKh2uuJqClKK40K9Coo+CwDBgnKuAfniHK6h+Y=",
@@ -22,12 +22,12 @@ self.assetsManifest = {
       "url": "_framework/Blazored.SessionStorage.34xr2ein7y.wasm"
     },
     {
-      "hash": "sha256-JOUNhSel81PmBHWxNHA7bVDfw9MbFNjACYjdht6Fzzs=",
-      "url": "_framework/DYS.FinanceTracker.Shared.0fw3ce5ibk.wasm"
+      "hash": "sha256-Yrdhy3EWWbUF8ZmsVscyVktBxI9NK7WVdKhDRKEinMI=",
+      "url": "_framework/DYS.FinanceTracker.Shared.y0cq4hpgz1.wasm"
     },
     {
-      "hash": "sha256-6Gbkl5nb4OzDGKRxdewz7G8Jx+Qgw15kZc9l89hgFnM=",
-      "url": "_framework/DYS.FinanceTracker.snc0t3vdo8.wasm"
+      "hash": "sha256-7ob4RY2Pc2uhISwwV2tJJgQvQECarMMo5QEWv7zR1jY=",
+      "url": "_framework/DYS.FinanceTracker.au13xj293b.wasm"
     },
     {
       "hash": "sha256-IN5hrX0mFJ3VMQllVS3NDFeGvETQ3EnCUbK4MW3/DlI=",
@@ -514,6 +514,10 @@ self.assetsManifest = {
       "url": "_framework/de/Microsoft.CodeAnalysis.resources.wnf0vy72a5.wasm"
     },
     {
+      "hash": "sha256-48E6VIdPvQVrSpaOrWWniI6EIeLcJ5asWm7zsF1KXr0=",
+      "url": "_framework/dotnet.3cryn7py9t.js"
+    },
+    {
       "hash": "sha256-tjie09uavTiX1TnkP9OL+OcnxCOs44ff5Dgws1rnAnc=",
       "url": "_framework/dotnet.native.2mv1pqdd2n.wasm"
     },
@@ -524,10 +528,6 @@ self.assetsManifest = {
     {
       "hash": "sha256-ArknccFM1sHNVcih0x1h52AG+abNCoQjl6BlVrv3ePw=",
       "url": "_framework/dotnet.runtime.q5rqv3xrhm.js"
-    },
-    {
-      "hash": "sha256-KJhxX/71EmNgtcQmjKO0Suow/6AbN3vryWOwgy7oHSU=",
-      "url": "_framework/dotnet.wycuj2wvk0.js"
     },
     {
       "hash": "sha256-mUqbpjZNWWeRyOBaKrlEMUIOq37ayHjNB+XGDYZPUiM=",
@@ -1182,7 +1182,7 @@ self.assetsManifest = {
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-rafxIx3Unmd5VLhz7RJOeNblu+UgYRDqmISpd4U1JEI=",
+      "hash": "sha256-3LcHpvNPMMSArHlW9bjOSah9ZDwgKKVBCXGqjujQ8Rc=",
       "url": "index.html"
     },
     {
