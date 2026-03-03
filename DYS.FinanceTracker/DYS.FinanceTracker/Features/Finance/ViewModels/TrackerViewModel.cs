@@ -278,7 +278,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             var session = _supabase.Auth.CurrentSession;
             var transaction = new Transaction()
             {
-                Id = t.Id ?? Guid.NewGuid(),
+                Id = t.Id ?? Guid.Empty,
                 UserId = t.UserId,
                 Amount = t.Amount,
                 Category = t.Category,
