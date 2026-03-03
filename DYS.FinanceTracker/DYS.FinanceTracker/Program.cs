@@ -45,7 +45,8 @@ builder.Services.AddSingleton(provider =>
     var options = new SupabaseOptions { AutoRefreshToken = true, AutoConnectRealtime = true };
     return new Supabase.Client(url, key, options);
 });
-
+Console.WriteLine(config["Supabase:Project"]);
+Console.WriteLine(config["Supabase:Key"]);
 builder.Services.AddScoped<ISupabaseService<Transaction>, SupabaseService<Transaction>>();
 //HZOsia6NAHOmeGqv db
 
