@@ -11,6 +11,5 @@ namespace DYS.FinanceTracker.Shared.Settings
             CreateMap<Transaction, TransactionDto>();
             CreateMap<TransactionDto, Transaction>();
         }
-
     }
 }
