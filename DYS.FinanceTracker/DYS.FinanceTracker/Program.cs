@@ -1,6 +1,8 @@
 using Blazored.LocalStorage;
 using DYS.FinanceTracker;
 using DYS.FinanceTracker.Features.Accounts.Services;
+using DYS.FinanceTracker.Features.Accounts.ViewModels;
+using DYS.FinanceTracker.Features.Finance.ViewModels;
 using DYS.FinanceTracker.Features.Test.ViewModels;
 using DYS.FinanceTracker.Shared.Data;
 using DYS.FinanceTracker.Shared.Extensions;
@@ -10,6 +12,7 @@ using DYS.FinanceTracker.Shared.ViewModels;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Supabase;
 using Supabase.Gotrue;
 using Supabase.Postgrest.Models;
@@ -21,9 +24,12 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddMvvm();
-builder.Services.AddScopedForBaseClass<BaseService, IBaseService>(Assembly.GetExecutingAssembly());
-builder.Services.AddScopedForBaseClass<BaseViewModel>(Assembly.GetExecutingAssembly());
-
+//builder.Services.AddScopedForBaseClass<BaseService, IBaseService>(Assembly.GetExecutingAssembly());
+//builder.Services.AddScopedForBaseClass<BaseViewModel>(Assembly.GetExecutingAssembly());
+builder.Services.AddTransient<IBaseService, BaseService>();
+builder.Services.AddTransient<BaseViewModel>();
+builder.Services.AddTransient<AccountViewModel>();
+builder.Services.AddTransient<TrackerViewModel>();
 
 builder.Services.AddOtherServices();
 builder.Services.AddBlazoredLocalStorage();
