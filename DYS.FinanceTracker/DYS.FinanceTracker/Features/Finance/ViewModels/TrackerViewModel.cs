@@ -301,7 +301,6 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             _isSaving = false;
             await TransactionComponent.CloseTransaction();
             await OnInitializedAsync();
-      
         }
         #endregion
     }
