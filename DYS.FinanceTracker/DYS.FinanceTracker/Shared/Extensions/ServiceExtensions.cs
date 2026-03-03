@@ -46,8 +46,8 @@ namespace DYS.FinanceTracker.Shared.Extensions
 
         public static IServiceCollection AddOtherServices(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddAutoMapper(typeof(AutoMappings).Assembly);
-            serviceCollection.AddSingleton<IMapper, Mapper>();
+            //serviceCollection.AddAutoMapper(typeof(AutoMappings).Assembly);
+            //serviceCollection.AddSingleton<IMapper, Mapper>();
             serviceCollection.AddScoped<IRequestProvider, RequestProvider>();
             return serviceCollection;
         }
