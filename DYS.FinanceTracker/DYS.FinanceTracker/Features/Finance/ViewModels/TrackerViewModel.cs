@@ -17,18 +17,16 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
 {
     public class TrackerViewModel : BaseViewModel
     {
-        private readonly IMapper _mapper;
+
         private readonly ISupabaseService<Transaction> _transactionService;
         private readonly Supabase.Client _supabase;
         public TrackerViewModel(NavigationManager navigationManager,
             IJSRuntime jsRuntime, 
-            IMapper mapper,
             ISupabaseService<Transaction> transactionService,
             ISupabaseAuthProvider supabaseAuthProvider,
             Supabase.Client supabase)
             : base(navigationManager, jsRuntime, supabaseAuthProvider)
         {
-            _mapper = mapper;
             _transactionService = transactionService;
             _supabase = supabase;
         }
@@ -209,7 +207,23 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             }
 
             _transactions = expanded.Where(q => q.Date >= startDate && q.Date <= endDate).ToList();
-            _filteredTransactions = _mapper.Map<List<TransactionDto>>(_transactions);
+            _filteredTransactions = _transactions.Select(t =>
+  new TransactionDto()
+  {
+      Id = t.Id,
+      UserId = t.UserId,
+      Amount = t.Amount,
+      Category = t.Category,
+      Type = t.Type,
+      Description = t.Description,
+      Date = t.Date,
+      Recurrence = t.Recurrence,
+      RecurrenceCount = t.RecurrenceCount,
+      RecurrenceGroupId = t.RecurrenceGroupId,
+      EffectiveDate = t.EffectiveDate,
+      EndDate = t.EndDate
+  }
+ ).ToList();
 
             var income = _filteredTransactions.Where(q => q.Type == "income").ToList();
             var expense = _filteredTransactions.Where(q => q.Type == "expense").ToList();
@@ -236,16 +250,48 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             var filteredTransactions = !string.IsNullOrEmpty(type) ? 
                                     _transactions.Where(query => query.Type == type).ToList() : 
                                     _transactions.ToList();
-            _filteredTransactions = _mapper.Map<List<TransactionDto>>(filteredTransactions);
+            _filteredTransactions = filteredTransactions.Select(t =>
+              new TransactionDto()
+              {
+                  Id = t.Id,
+                  UserId = t.UserId,
+                  Amount = t.Amount,
+                  Category = t.Category,
+                  Type = t.Type,
+                  Description = t.Description,
+                  Date = t.Date,
+                  Recurrence = t.Recurrence,
+                  RecurrenceCount = t.RecurrenceCount,
+                  RecurrenceGroupId = t.RecurrenceGroupId,
+                  EffectiveDate = t.EffectiveDate,
+                  EndDate = t.EndDate
+              }
+             ).ToList();
+
             Console.WriteLine($"Filtered transactions count: {type} {_transactions.Count}");
             _isLoading = false;
         }
 
-        public async Task SubmitTransactionAsync(TransactionDto input)
+        public async Task SubmitTransactionAsync(TransactionDto t)
         {
             _isSaving = true;
             var session = _supabase.Auth.CurrentSession;
-            var transaction = _mapper.Map<Transaction>(input);
+            var transaction = new Transaction()
+            {
+                Id = t.Id ?? Guid.NewGuid(),
+                UserId = t.UserId,
+                Amount = t.Amount,
+                Category = t.Category,
+                Type = t.Type,
+                Description = t.Description,
+                Date = t.Date,
+                Recurrence = t.Recurrence,
+                RecurrenceCount = t.RecurrenceCount,
+                RecurrenceGroupId = t.RecurrenceGroupId,
+                EffectiveDate = t.EffectiveDate,
+                EndDate = t.EndDate
+            };
+
             transaction.UserId =  new Guid(session?.User?.Id ?? "");
             if(transaction.Id == Guid.Empty)
              await _transactionService.InsertAsync(transaction);

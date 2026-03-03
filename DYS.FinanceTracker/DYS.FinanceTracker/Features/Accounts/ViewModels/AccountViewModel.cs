@@ -17,7 +17,6 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
         private readonly NavigationManager _navigationManager;
         public AccountViewModel(NavigationManager navigationManager,
           IJSRuntime jsRuntime,
-          IMapper mapper,
           ISupabaseAuthProvider supabaseAuthProvider,
           Supabase.Client supabase)
           : base(navigationManager, jsRuntime, supabaseAuthProvider)
