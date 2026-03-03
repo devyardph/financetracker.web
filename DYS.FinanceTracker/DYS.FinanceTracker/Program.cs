@@ -40,8 +40,8 @@ var config = builder.Configuration;
 builder.Services.AddSingleton<IConfiguration>(config);
 builder.Services.AddSingleton(provider =>
 {
-    var url = config["Supabase:Project"] ?? string.Empty;
-    var key = config["Supabase:Key"] ?? string.Empty;
+    var url = config["Supabase:Project"] ?? "https://qesjftwlyridrqwmqdzd.supabase.co";
+    var key = config["Supabase:Key"] ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFlc2pmdHdseXJpZHJxd21xZHpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NDA3MzEsImV4cCI6MjA4NzQxNjczMX0.piAhicsp9Vt148esugWoN0YWilJUYIlnqTSlr120vyE";
     var options = new SupabaseOptions { AutoRefreshToken = true, AutoConnectRealtime = true };
     return new Supabase.Client(url, key, options);
 });
