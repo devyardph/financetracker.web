@@ -1,6 +1,6 @@
 ﻿
 using Blazored.LocalStorage;
-using DYS.FinanceTracker.Features.Accounts.Services;
+using DYS.FinanceTracker.Shared.Security;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 

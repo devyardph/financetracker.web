@@ -183,4 +183,31 @@ public async Task<List<Transaction>> GetTransactionsForMonthAsync(Guid userId, i
 
 
     netstat -ano | findstr 5066
-    taskkill /PID 10352 /F
+    taskkill /PID 15744 /F
+
+
+
+                //var tx = new TransactionDto
+            //{
+            //    Id = Guid.NewGuid(),
+            //    EffectiveDate = DateTime.Now,
+            //    Amount = 2000,
+            //    Category = "other",
+            //    Type = "income"
+            //};
+
+            //// Save
+            //await _indexedDbHelper.SaveAsync<TransactionDB>(db => db.Transaction, tx);
+
+            //// Get all
+            //var transactions = await _indexedDbHelper.GetAllAsync<TransactionDB>(db => db.Transaction);
+
+            //// Edit
+            //tx.Category = "updated";
+            //await _indexedDbHelper.EditAsync<TransactionDB>(db => db.Transaction, tx);
+
+            //// Get by Id
+            //var saved = await _indexedDbHelper.GetByIdAsync<TransactionDB>(db => db.Transaction, tx.Id);
+
+            //// Delete
+            //await _indexedDbHelper.DeleteAsync<TransactionDB>(db => db.Transaction, tx);

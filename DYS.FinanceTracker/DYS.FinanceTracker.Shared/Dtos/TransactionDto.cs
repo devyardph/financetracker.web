@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace DYS.FinanceTracker.Shared.Dtos
 {
     public class TransactionDto
     {
+        [Key]
         public Guid? Id { get; set; } 
         public Guid? UserId { get; set; }
         public decimal? Amount { get; set; }
@@ -29,5 +31,10 @@ namespace DYS.FinanceTracker.Shared.Dtos
         // Marks when this version of the recurring transaction starts
         public DateTime? EffectiveDate { get; set; } = DateTime.UtcNow;
         public DateTime? EndDate { get; set; }
+
+        // For tracking synchronization status with the server
+        public bool Sync { get; set; } = true;
+        public string SyncError { get; set; } = string.Empty;
+
     }
 }

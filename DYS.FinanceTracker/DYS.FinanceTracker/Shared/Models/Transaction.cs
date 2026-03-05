@@ -1,4 +1,4 @@
-﻿using DYS.FinanceTracker.Shared.Data;
+﻿using DYS.FinanceTracker.Shared.Services;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 

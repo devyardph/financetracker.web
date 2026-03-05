@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using DYS.FinanceTracker.Features.Accounts.Services;
 using DYS.FinanceTracker.Features.Finance.Components;
-using DYS.FinanceTracker.Shared.Data;
 using DYS.FinanceTracker.Shared.Dtos;
 using DYS.FinanceTracker.Shared.Extensions;
 using DYS.FinanceTracker.Shared.Models;
+using DYS.FinanceTracker.Shared.Security;
 using DYS.FinanceTracker.Shared.Services;
 using DYS.FinanceTracker.Shared.ViewModels;
 using Microsoft.AspNetCore.Components;
@@ -208,22 +207,22 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
 
             _transactions = expanded.Where(q => q.Date >= startDate && q.Date <= endDate).ToList();
             _filteredTransactions = _transactions.Select(t =>
-  new TransactionDto()
-  {
-      Id = t.Id,
-      UserId = t.UserId,
-      Amount = t.Amount,
-      Category = t.Category,
-      Type = t.Type,
-      Description = t.Description,
-      Date = t.Date,
-      Recurrence = t.Recurrence,
-      RecurrenceCount = t.RecurrenceCount,
-      RecurrenceGroupId = t.RecurrenceGroupId,
-      EffectiveDate = t.EffectiveDate,
-      EndDate = t.EndDate
-  }
- ).ToList();
+              new TransactionDto()
+              {
+                  Id = t.Id,
+                  UserId = t.UserId,
+                  Amount = t.Amount,
+                  Category = t.Category,
+                  Type = t.Type,
+                  Description = t.Description,
+                  Date = t.Date,
+                  Recurrence = t.Recurrence,
+                  RecurrenceCount = t.RecurrenceCount,
+                  RecurrenceGroupId = t.RecurrenceGroupId,
+                  EffectiveDate = t.EffectiveDate,
+                  EndDate = t.EndDate
+              }
+             ).ToList();
 
             var income = _filteredTransactions.Where(q => q.Type == "income").ToList();
             var expense = _filteredTransactions.Where(q => q.Type == "expense").ToList();
