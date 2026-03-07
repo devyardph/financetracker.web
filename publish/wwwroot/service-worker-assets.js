@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "c0s0jOQu",
+  "version": "2Gd75JCZ",
   "assets": [
     {
       "hash": "sha256-hSIriYPDk3TPVlbhDE5xSGlJr7K0Rxz9RK73uizLR8o=",
@@ -16,6 +16,10 @@ self.assetsManifest = {
     {
       "hash": "sha256-tnamWuQ2F5I2J8hbtBt4/9i8Mb2y2o+9Tepj5tUrSdU=",
       "url": "_content/Microsoft.AspNetCore.Components.QuickGrid/QuickGrid.razor.js"
+    },
+    {
+      "hash": "sha256-A8e6zZwhOqf7lDQqbbCYcAUv4wGE9aQxOo4WyYxR//0=",
+      "url": "_content/Microsoft.DotNet.HotReload.WebAssembly.Browser/Microsoft.DotNet.HotReload.WebAssembly.Browser.99zm1jdh75.lib.module.js"
     },
     {
       "hash": "sha256-AlLCWxOyYlKkfhTK2nGWurxsBsSvjjp1AiLk1pwvH4Y=",
@@ -42,8 +46,8 @@ self.assetsManifest = {
       "url": "_framework/DYS.FinanceTracker.Shared.49p705t253.wasm"
     },
     {
-      "hash": "sha256-jwkogbAbSu2TtDYRzXFJkpzaQ5kmfkdtNnCovMnHBNM=",
-      "url": "_framework/DYS.FinanceTracker.xgh8w3qhcu.wasm"
+      "hash": "sha256-z7NOLPGFi1A5UFJO3jqC77chmZ9IkT1cE01RKvHTtVc=",
+      "url": "_framework/DYS.FinanceTracker.r9789t6dym.wasm"
     },
     {
       "hash": "sha256-IN5hrX0mFJ3VMQllVS3NDFeGvETQ3EnCUbK4MW3/DlI=",
@@ -534,16 +538,16 @@ self.assetsManifest = {
       "url": "_framework/de/Microsoft.CodeAnalysis.resources.wnf0vy72a5.wasm"
     },
     {
+      "hash": "sha256-id92nRjh8ems+R7P73IAKQCx+8CSXYPm+vTqdprap5E=",
+      "url": "_framework/dotnet.74ugc2xlo0.js"
+    },
+    {
       "hash": "sha256-tjie09uavTiX1TnkP9OL+OcnxCOs44ff5Dgws1rnAnc=",
       "url": "_framework/dotnet.native.2mv1pqdd2n.wasm"
     },
     {
       "hash": "sha256-JvdIvkSF0x6euoPT2QnQSMg2Gyv2oJbFeBi1XmWLYFU=",
       "url": "_framework/dotnet.native.69poregybn.js"
-    },
-    {
-      "hash": "sha256-vznXJZjq7KFAAZ2v093AQ//wThStVk1HtvAMKbPaeFg=",
-      "url": "_framework/dotnet.rth6eff189.js"
     },
     {
       "hash": "sha256-ArknccFM1sHNVcih0x1h52AG+abNCoQjl6BlVrv3ePw=",
@@ -1218,7 +1222,7 @@ self.assetsManifest = {
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-hv4sc2D8i+RJxDz2xMQpkmYBFBTDWIgRI+mNjJosE4w=",
+      "hash": "sha256-T5zouaz50FJ+/yXBFJt7h9dF+mb2MxPDVNl3G2UvPvI=",
       "url": "index.html"
     },
     {
@@ -1402,7 +1406,7 @@ self.assetsManifest = {
       "url": "manifest.webmanifest"
     },
     {
-      "hash": "sha256-8RB5mVSfmIuWzshuN7lWsnleTBwK1PcZy9ReURzt0OU=",
+      "hash": "sha256-x6bNC7GtFFBd4uD9F3JFavwGH1nbuFVhWMH72lIkX7I=",
       "url": "sql.text"
     }
   ]
