@@ -256,6 +256,9 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             await _jsRuntime.InvokeVoidAsync("countUp2", "income-text", _summary.Income);
             await _jsRuntime.InvokeVoidAsync("countUp2", "expense-text", _summary.Expense);
             await _jsRuntime.InvokeVoidAsync("countUp2", "balance-text", balance);
+
+            StateHasChanged();
+
         }
 
 
