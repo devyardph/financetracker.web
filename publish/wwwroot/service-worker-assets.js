@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "pTUtF+/K",
+  "version": "HSq4ylVO",
   "assets": [
     {
       "hash": "sha256-hSIriYPDk3TPVlbhDE5xSGlJr7K0Rxz9RK73uizLR8o=",
@@ -16,10 +16,6 @@ self.assetsManifest = {
     {
       "hash": "sha256-tnamWuQ2F5I2J8hbtBt4/9i8Mb2y2o+9Tepj5tUrSdU=",
       "url": "_content/Microsoft.AspNetCore.Components.QuickGrid/QuickGrid.razor.js"
-    },
-    {
-      "hash": "sha256-A8e6zZwhOqf7lDQqbbCYcAUv4wGE9aQxOo4WyYxR//0=",
-      "url": "_content/Microsoft.DotNet.HotReload.WebAssembly.Browser/Microsoft.DotNet.HotReload.WebAssembly.Browser.99zm1jdh75.lib.module.js"
     },
     {
       "hash": "sha256-AlLCWxOyYlKkfhTK2nGWurxsBsSvjjp1AiLk1pwvH4Y=",
@@ -46,8 +42,8 @@ self.assetsManifest = {
       "url": "_framework/DYS.FinanceTracker.Shared.49p705t253.wasm"
     },
     {
-      "hash": "sha256-Z495a3HiODe2u+vt0eKSj55s3atBuhdPZTQS8ilQyKk=",
-      "url": "_framework/DYS.FinanceTracker.h2oby8yuih.wasm"
+      "hash": "sha256-Kj6E1ELqAdWNN0ybTM0Mc7QQyTDrbg/yoN87bjIjeY8=",
+      "url": "_framework/DYS.FinanceTracker.qzl6twpjsq.wasm"
     },
     {
       "hash": "sha256-IN5hrX0mFJ3VMQllVS3NDFeGvETQ3EnCUbK4MW3/DlI=",
@@ -538,16 +534,16 @@ self.assetsManifest = {
       "url": "_framework/de/Microsoft.CodeAnalysis.resources.wnf0vy72a5.wasm"
     },
     {
-      "hash": "sha256-ZKIUFi/LcsnoU8DPy8BfV677ptugjuwtTObLaEs1YyU=",
-      "url": "_framework/dotnet.gro5dpmvf3.js"
-    },
-    {
       "hash": "sha256-tjie09uavTiX1TnkP9OL+OcnxCOs44ff5Dgws1rnAnc=",
       "url": "_framework/dotnet.native.2mv1pqdd2n.wasm"
     },
     {
       "hash": "sha256-JvdIvkSF0x6euoPT2QnQSMg2Gyv2oJbFeBi1XmWLYFU=",
       "url": "_framework/dotnet.native.69poregybn.js"
+    },
+    {
+      "hash": "sha256-g4U0rNrgPHdDIJ06rtyfZci8LX0u17cocpGkDPA4xJY=",
+      "url": "_framework/dotnet.rm9ro12134.js"
     },
     {
       "hash": "sha256-ArknccFM1sHNVcih0x1h52AG+abNCoQjl6BlVrv3ePw=",
@@ -1222,7 +1218,7 @@ self.assetsManifest = {
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-s/l7kB2BkMGhOGSA98QyY3oD+i4KP9uB2ab9m5k0ELM=",
+      "hash": "sha256-ypdNOwqf1nIxnm1vKeD8n1keEnmSHZt+B4CKCD57nHo=",
       "url": "index.html"
     },
     {

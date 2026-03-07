@@ -167,7 +167,7 @@
                                 else
                                 {
                                     <ul class="p-0 m-0">
-                                        @foreach (var transaction in BindingContext.FilteredTransactions!)
+                                        @foreach (var transaction in BindingContext.FilteredTransactions)
                                         {
                                             <li class="d-flex align-items-center mb-6" @onclick="@(() => BindingContext.TransactionComponent.OpenTransaction(transaction))">
                                                 <div class="avatar me-2">
