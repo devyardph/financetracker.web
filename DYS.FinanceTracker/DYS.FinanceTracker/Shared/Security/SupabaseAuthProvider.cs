@@ -131,6 +131,35 @@ namespace DYS.FinanceTracker.Shared.Security
             await _localStorageService.RemoveItemAsync("session");
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
+
+     
+        public async Task RefreshSessionAsync()
+        {
+            var currentSession = _supabase.Auth.CurrentSession;
+            if (currentSession != null && currentSession?.Expired() == true)
+            {
+                var session = await _supabase.Auth.RefreshSession();
+                if (session != null)
+                {
+                    Console.WriteLine($"Session refreshed successfully...");
+                    await _localStorageService.SetItemAsync<Session>("session", session ?? new Session());
+                }
+            }
+            else await LogoutAsync();
+        }
+
+        public async Task KeepAliveAsync(CancellationToken token)
+        {
+            var timer = new PeriodicTimer(TimeSpan.FromMinutes(30));
+            while (await timer.WaitForNextTickAsync(token))
+                await RefreshSessionAsync();
+        }
+        public async Task StartKeepAliveLoop()
+        {
+            var tokenSource = new CancellationTokenSource();
+            await KeepAliveAsync(tokenSource.Token);
+        }
+
     }
 
 }

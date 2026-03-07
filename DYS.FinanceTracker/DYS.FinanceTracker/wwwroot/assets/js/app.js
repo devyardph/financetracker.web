@@ -504,5 +504,28 @@ function getAuthToken(dotnetHelper)
     dotnetHelper.invokeMethodAsync('SetSession', accessToken, refreshToken);
 }
 
+function countUp() {
+    setTimeout(() => {
+        $('.counter').counterUp({
+            delay: 50,
+            time: 2000
+        });
+    }, 500);
+}
+
+function countUp2(id, value) {
+    setTimeout(() => {
+        $('#' + id).text(value).counterUp({
+            delay: 50,
+            time: 2000
+        });
+
+        let formatted = value.toLocaleString();
+        $('#' + id).text(formatted);
+    }, 500);
+}
+
+
+
 
 

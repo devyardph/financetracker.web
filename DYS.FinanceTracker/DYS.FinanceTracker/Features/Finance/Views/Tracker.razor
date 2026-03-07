@@ -29,8 +29,15 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div class="d-flex flex-column align-items-center gap-1">
-                            <h3 class="mb-1">@BindingContext.Summary.Balance?.ToString("N2") PHP</h3>
-                          @*   <small>Total Orders</small> *@
+                            @if (BindingContext.IsLoading)
+                            {
+                             <h3>loading..</h3>    
+                            }
+                            else
+                            {
+                                <h3 id="balance-text" class="mb-1 counter">@BindingContext.Summary.Balance?.ToString("N2")</h3>
+                            }
+                            @*   <small>Total Orders</small> *@
                         </div>
                     </div>
 
@@ -55,7 +62,15 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div class="d-flex flex-column align-items-center gap-1">
-                            <h3 class="mb-1">@BindingContext.Summary.Income?.ToString("N2") PHP</h3>
+                            @if (BindingContext.IsLoading)
+                            {
+                                <h3>loading..</h3>
+                            }
+                            else
+                            {
+                                <h3 id="income-text" class="mb-1 counter">@BindingContext.Summary.Income?.ToString("N2")</h3>
+                            }
+
                           @*   <small>Total Orders</small> *@
                         </div>
                     </div>
@@ -80,8 +95,15 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div class="d-flex flex-column align-items-center gap-1">
-                            <h3 class="mb-1">@BindingContext.Summary.Expense?.ToString("N2") PHP</h3>
-                          @*   <small>Total Orders</small> *@
+                            @if (BindingContext.IsLoading)
+                            {
+                                <h3>loading..</h3>
+                            }
+                            else
+                            {
+                                <h3 id="expense-text" class="mb-1 counter">@BindingContext.Summary.Expense?.ToString("N2")</h3>
+                            }
+                            @*<small>Total Orders</small> *@
                         </div>
                     </div>
 

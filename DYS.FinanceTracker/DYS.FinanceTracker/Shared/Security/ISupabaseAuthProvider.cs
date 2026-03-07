@@ -12,5 +12,9 @@ namespace DYS.FinanceTracker.Shared.Security
         Task<BaseOutputDto> LoginAsync(string email, string password);
         Task<BaseOutputDto> RegisterAsync(string email, string password);
         Task LogoutAsync();
+
+        Task KeepAliveAsync(CancellationToken token);
+        Task RefreshSessionAsync();
+        Task StartKeepAliveLoop();
     }
 }

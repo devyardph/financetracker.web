@@ -90,6 +90,12 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             await base.OnInitializedAsync();
         }
 
+        public override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender) await _jsRuntime.InvokeVoidAsync("countUp");
+            await base.OnAfterRenderAsync(firstRender);
+        }
+
         #region FUNCTIONS
         public async Task GetTransactions()
         {
@@ -237,7 +243,9 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                 Expense = totalExpense,
                 ExpenseCount = expense.Count()
             };
-
+            await _jsRuntime.InvokeVoidAsync("countUp2", "income-text", _summary.Income);
+            await _jsRuntime.InvokeVoidAsync("countUp2", "expense-text", _summary.Expense);
+            await _jsRuntime.InvokeVoidAsync("countUp2", "balance-text", balance);
             _isLoading = false;
         }
 

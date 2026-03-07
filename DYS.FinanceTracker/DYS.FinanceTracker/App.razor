@@ -1,7 +1,9 @@
 ﻿@using DYS.FinanceTracker.Features.Accounts.Components
 @using DYS.FinanceTracker.Features.Accounts.Views
 @using DYS.FinanceTracker.Shared.Layout
+@using DYS.FinanceTracker.Shared.Security
 @using Microsoft.AspNetCore.Components.Authorization
+@inject ISupabaseAuthProvider SupabaseAuthProvider
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
@@ -22,3 +24,11 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await SupabaseAuthProvider.StartKeepAliveLoop();
+    }
+}

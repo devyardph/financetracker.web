@@ -14,6 +14,7 @@
             <div class="mb-2">
                 <DateComponent Id="effective-date" Index="0" @bind-ChosenDate="@Transaction.EffectiveDate" Label="Effective Date" TriggerEvent="@SetEffectiveDate" />
             </div>
+            <div class="@BooleanExtensions.GetConditionalString(FrequencyOptionEnabled, "","d-none")">
             <div class="mb-1">
                <span class="fw-bold form-label text-dark-emphasis">FREQUENCY OPTIONS</span>
             </div>
@@ -32,6 +33,7 @@
                 <div class="alert alert-secondary border-1 p-3 border-slack" role="alert">
                     <small>Set frequency option if expense or income has a specific end date, otherwise leave empty to set it to continuous.</small>
                 </div>
+            </div>
             </div>
 
             <div class="mx-auto">
@@ -59,7 +61,7 @@
     [Parameter]
     public EventCallback<TransactionDto> SubmitTransaction { get; set; }
     public List<SelectDto> Categories { get; set; } = new List<SelectDto>();
-
+    public bool FrequencyOptionEnabled { get; set; } = false;
     private async Task OnSubmitTransaction(TransactionDto transaction)
     {
         Console.WriteLine($"Submitting expense: {transaction.Amount} - {transaction.Category} - {transaction.Type}");
@@ -75,12 +77,18 @@
         Transaction = transaction.Id == Guid.Empty || 
                       transaction.Id == null
                       ? new TransactionDto() : transaction;
+
         Transaction.Type = transaction.Type;
+        Transaction.Recurrence = transaction.Id == Guid.Empty ||
+                      transaction.Id == null ? "one-time" : Transaction.Recurrence;
         Title = transaction.Type == "expense" ? "EXPENSE" : "INCOME";
         ActionText = transaction.Type == "expense" ? "SAVE EXPENSE" : "SAVE INCOME";
         Categories = transaction.Type == "expense" ?
                      GlobalSettings.Categories.Where(query => query.Parent == "expense").OrderBy(query => query.Name).ToList() :
                      GlobalSettings.Categories.Where(query => query.Parent == "income").OrderBy(query => query.Name).ToList();
+        
+        if (Transaction.Recurrence == "one-time" || string.IsNullOrEmpty(Transaction.Recurrence)) FrequencyOptionEnabled = false;
+        else FrequencyOptionEnabled = true;
         StateHasChanged();
     }
 
@@ -161,5 +169,8 @@
     {
         Transaction.RecurrenceCount = null;
         Transaction.EndDate = null;
+
+        if (Transaction.Recurrence == "one-time" || string.IsNullOrEmpty(Transaction.Recurrence)) FrequencyOptionEnabled = false;
+        else FrequencyOptionEnabled = true;
     }
 }
