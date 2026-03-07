@@ -146,14 +146,17 @@
             <div class="card-body p-0 p-md-3">
                 <div class="table-responsive">
                     <QuickGrid Items="BindingContext.FilteredTransactions2" Class="table table-hover table-sm no-header-grid">
-                        <TemplateColumn Context="transaction">
-                            <div @onclick="@(() => BindingContext.TransactionComponent.OpenTransaction(transaction))">
-                                <span>@transaction.Category</span>
-                                <span>@transaction.Type</span>
+                        <TemplateColumn Context="transaction" >
+                            <div class="d-flex flex-column cursor-pointer" @onclick="@(() => BindingContext.TransactionComponent.OpenTransaction(transaction))">
+                                <div class="p-0">@DataExtensions.GetSelectedName(GlobalSettings.Categories, transaction.Category)</div>
+                                <div class="p-0"><small>@transaction.EffectiveDate.FormatDate("MMM-dd-yyyy")</small></div>
                             </div>
                         </TemplateColumn>
-                        <TemplateColumn Context="transaction" Class="w-px-150 text-end">
-                            <span>@transaction.Amount?.ToString("N2")</span>
+                        <TemplateColumn Context="transaction" Class="w-px-250 text-end">
+                            <div class="d-flex flex-column cursor-pointer" @onclick="@(() => BindingContext.TransactionComponent.OpenTransaction(transaction))">
+                                <div class="p-0">PHP @transaction.Amount?.ToString("N2")</div>
+                                <div class="p-0"><small>@transaction.Recurrence @transaction.Type</small></div>
+                            </div>
                         </TemplateColumn>
                    </QuickGrid>
                 </div>

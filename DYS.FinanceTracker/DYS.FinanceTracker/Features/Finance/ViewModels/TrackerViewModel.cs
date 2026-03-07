@@ -286,7 +286,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                   EndDate = t.EndDate
               }
              ).ToList();
-
+            _filteredTransactions2 = _filteredTransactions.AsQueryable();
             Console.WriteLine($"Filtered transactions count: {type} {_transactions.Count}");
             _isLoading = false;
         }
