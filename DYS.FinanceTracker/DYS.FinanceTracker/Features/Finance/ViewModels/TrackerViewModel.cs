@@ -54,6 +54,14 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             set => Set(ref _filteredTransactions, value, nameof(FilteredTransactions));
         }
 
+        private IQueryable<TransactionDto> _filteredTransactions2;
+        public IQueryable<TransactionDto> FilteredTransactions2
+        {
+            get => _filteredTransactions2;
+            set => Set(ref _filteredTransactions2, value, nameof(FilteredTransactions2));
+        }
+
+
         private SummaryDto _summary = new SummaryDto();
         public SummaryDto Summary
         {
@@ -230,6 +238,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
               }
              ).ToList();
 
+            _filteredTransactions2 = _filteredTransactions.AsQueryable();
             var income = _filteredTransactions.Where(q => q.Type == "income").ToList();
             var expense = _filteredTransactions.Where(q => q.Type == "expense").ToList();
 
@@ -243,10 +252,10 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                 Expense = totalExpense,
                 ExpenseCount = expense.Count()
             };
+            _isLoading = false;
             await _jsRuntime.InvokeVoidAsync("countUp2", "income-text", _summary.Income);
             await _jsRuntime.InvokeVoidAsync("countUp2", "expense-text", _summary.Expense);
             await _jsRuntime.InvokeVoidAsync("countUp2", "balance-text", balance);
-            _isLoading = false;
         }
 
 

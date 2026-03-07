@@ -3,11 +3,17 @@
 @using DYS.FinanceTracker.Features.Finance.Components
 @using DYS.FinanceTracker.Features.Finance.ViewModels
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
 @inherits MvvmComponentBase<TrackerViewModel>
 @attribute [Authorize]
 
 <div class="row mt-10">
   
+    <QuickGrid Class="table table-sm table-hover" Items="BindingContext.FilteredTransactions2">
+    <PropertyColumn Property="@(p => p.Amount)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Category)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.EffectiveDate)" Format="yyyy-MM-dd" Sortable="true" />
+</QuickGrid>
 
 
     <div class="row">
