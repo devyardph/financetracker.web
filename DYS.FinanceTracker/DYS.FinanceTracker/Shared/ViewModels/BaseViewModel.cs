@@ -136,7 +136,7 @@ namespace DYS.FinanceTracker.Shared.ViewModels
         public async Task Signout()
         {
             await _supabaseAuthProvider.LogoutAsync();
-            _navigationManager.NavigateTo("/login");
+            _navigationManager.NavigateTo("/login", forceLoad:true);
         }
         public void NavigationToPath(string path)
         {

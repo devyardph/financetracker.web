@@ -183,7 +183,7 @@ public async Task<List<Transaction>> GetTransactionsForMonthAsync(Guid userId, i
 
 
     netstat -ano | findstr 5066
-    taskkill /PID 24308 /F
+    taskkill /PID 1848 /F
 
 
 

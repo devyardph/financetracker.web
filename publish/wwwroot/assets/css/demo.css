@@ -118,3 +118,7 @@
     border-radius: 10px;
     border: 5px dashed black;
 }
+
+.no-header-grid thead {
+    display: none;
+}
