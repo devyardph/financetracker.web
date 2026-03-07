@@ -146,62 +146,64 @@
 
                 <div class="tab-content p-0">
                     <div class="tab-pane fade active show" id="transactions-card" role="tabpanel">
-                        @if (BindingContext.IsLoading)
-                        {
-                            <div class="d-flex justify-content-center align-items-center py-5">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            @if (BindingContext.FilteredTransactions.Count == 0)
-                            {
-                                <span>No transactions.</span>
-                            }
-                            else
-                            {
-                                <ul class="">
-                                    @foreach (var transaction in BindingContext.FilteredTransactions)
-                                    {
-                                        <li class="d-flex align-items-center mb-6" @onclick="@(() => BindingContext.TransactionComponent.OpenTransaction(transaction))">
-                                            <div class="avatar me-2">
-                                                <span class="avatar-initial rounded-2 bg-label-@BooleanExtensions.GetConditionalString(transaction.Type == "income", "success", "warning")">
-                                                    <i class="icon-base bx icon-lg @DataExtensions.GetSelectedOption(GlobalSettings.Categories, @transaction.Category)?.Icon"></i>
-                                                </span>
-                                            </div>
-                                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                <div class="me-2">
-                                                    <h6 class="fw-normal text-dark mb-0">@DataExtensions.GetSelectedOption(GlobalSettings.Categories, @transaction.Category)?.Name</h6>
-                                                    <small>Date: @transaction.Date.FormatDate("MMM dd yyyy")</small><br />
-                                                    @if (@transaction.EndDate == null)
-                                                    {
-                                                        <small>Continuous @transaction.Type</small>
-                                                    }
-                                                    else
-                                                    {
-                                                        <small>End date: @transaction.EndDate.FormatDate("MMM dd yyyy")</small>
-                                                    }
-                                                       
-                                                </div>
-                                                <div class="user-progress d-flex align-items-center gap-2">
-                                                    <h6 class="fw-normal mb-0 @BooleanExtensions.GetConditionalString(transaction.Type == "expense", "text-danger", "text-dark")">@transaction.Amount?.ToString("N2")</h6>
-                                                    <span class="@BooleanExtensions.GetConditionalString(transaction.Type == "expense", "text-danger", "text-dark")" ">PHP</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    }
-
-                                </ul>
-                            }
-                        }
+                      
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@if (BindingContext.IsLoading)
+{
+    <div class="d-flex justify-content-center align-items-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    @if (BindingContext.FilteredTransactions.Count == 0)
+    {
+        <span>No transactions.</span>
+    }
+    else
+    {
+        <ul class="">
+            @foreach (var transaction in BindingContext.FilteredTransactions)
+            {
+                <li class="d-flex align-items-center mb-6" @onclick="@(() => BindingContext.TransactionComponent.OpenTransaction(transaction))">
+                    <div class="avatar me-2">
+                        <span class="avatar-initial rounded-2 bg-label-@BooleanExtensions.GetConditionalString(transaction.Type == "income", "success", "warning")">
+                            <i class="icon-base bx icon-lg @DataExtensions.GetSelectedOption(GlobalSettings.Categories, @transaction.Category)?.Icon"></i>
+                        </span>
+                    </div>
+                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                        <div class="me-2">
+                            <h6 class="fw-normal text-dark mb-0">@DataExtensions.GetSelectedOption(GlobalSettings.Categories, @transaction.Category)?.Name</h6>
+                            <small>Date: @transaction.Date.FormatDate("MMM dd yyyy")</small><br />
+                            @if (@transaction.EndDate == null)
+                            {
+                                <small>Continuous @transaction.Type</small>
+                            }
+                            else
+                            {
+                                <small>End date: @transaction.EndDate.FormatDate("MMM dd yyyy")</small>
+                            }
+                                                       
+                        </div>
+                        <div class="user-progress d-flex align-items-center gap-2">
+                            <h6 class="fw-normal mb-0 @BooleanExtensions.GetConditionalString(transaction.Type == "expense", "text-danger", "text-dark")">@transaction.Amount?.ToString("N2")</h6>
+                            <span class="@BooleanExtensions.GetConditionalString(transaction.Type == "expense", "text-danger", "text-dark")" ">PHP</span>
+                        </div>
+                    </div>
+                </li>
+            }
+
+        </ul>
+    }
+}
 
 
 <!--OFF CANVASS-->
