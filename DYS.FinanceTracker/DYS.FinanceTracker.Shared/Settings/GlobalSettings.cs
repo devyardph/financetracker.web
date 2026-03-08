@@ -407,7 +407,39 @@ namespace DYS.FinanceTracker.Shared.Settings
 };
 
 
+
+
+        public static List<SelectDto> AccountType = new List<SelectDto>() {
+            new SelectDto(){ Id="cash", Name="Cash",Description="Cash", Style="bg-info" },
+            new SelectDto(){ Id="bank", Name="Bank",Description="Bank", Style="bg-primary" },
+            new SelectDto(){ Id="credit", Name="Credit",Description="Credit", Style="bg-warning" },
+            new SelectDto(){ Id="investment", Name="Investment",Description="Investment", Style="bg-success" },
+            new SelectDto(){ Id="wallet", Name="Wallet",Description="Wallet", Style="bg-secondary" }
+        };
+
+ public static List<SelectDto> Currencies = new List<SelectDto>()
+{
+    new SelectDto(){ Id="USD", Name="US Dollar", Description="United States Dollar", Style="" },
+    new SelectDto(){ Id="EUR", Name="Euro", Description="European Union Euro", Style="" },
+    new SelectDto(){ Id="GBP", Name="British Pound", Description="United Kingdom Pound Sterling", Style="" },
+    new SelectDto(){ Id="JPY", Name="Japanese Yen", Description="Japan Yen", Style="" },
+    new SelectDto(){ Id="CNY", Name="Chinese Yuan", Description="China Yuan Renminbi", Style="" },
+    new SelectDto(){ Id="AUD", Name="Australian Dollar", Description="Australia Dollar", Style="" },
+    new SelectDto(){ Id="CAD", Name="Canadian Dollar", Description="Canada Dollar", Style="" },
+    new SelectDto(){ Id="CHF", Name="Swiss Franc", Description="Switzerland Franc", Style="" },
+    new SelectDto(){ Id="NZD", Name="New Zealand Dollar", Description="New Zealand Dollar", Style="" },
+    new SelectDto(){ Id="PHP", Name="Philippine Peso", Description="Philippines Peso", Style="" },
+    new SelectDto(){ Id="SGD", Name="Singapore Dollar", Description="Singapore Dollar", Style="" },
+    new SelectDto(){ Id="HKD", Name="Hong Kong Dollar", Description="Hong Kong Dollar", Style="" },
+    new SelectDto(){ Id="INR", Name="Indian Rupee", Description="India Rupee", Style="" },
+    new SelectDto(){ Id="KRW", Name="South Korean Won", Description="South Korea Won", Style="" },
+    new SelectDto(){ Id="SEK", Name="Swedish Krona", Description="Sweden Krona", Style="" },
+    new SelectDto(){ Id="NOK", Name="Norwegian Krone", Description="Norway Krone", Style="" },
+    new SelectDto(){ Id="DKK", Name="Danish Krone", Description="Denmark Krone", Style="" },
+    new SelectDto(){ Id="MXN", Name="Mexican Peso", Description="Mexico Peso", Style="" },
+    new SelectDto(){ Id="BRL", Name="Brazilian Real", Description="Brazil Real", Style="" },
+    new SelectDto(){ Id="ZAR", Name="South African Rand", Description="South Africa Rand", Style="" }
+};
+
     }
-
-
 }

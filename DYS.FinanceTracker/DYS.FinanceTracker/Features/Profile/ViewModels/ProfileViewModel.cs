@@ -8,14 +8,14 @@ using Microsoft.JSInterop;
 using System.Reactive;
 
 
-namespace DYS.FinanceTracker.Features.Accounts.ViewModels
+namespace DYS.FinanceTracker.Features.Profile.ViewModels
 {
    
-    public class AccountViewModel: BaseViewModel
+    public class ProfileViewModel: BaseViewModel
     {
         private readonly ISupabaseAuthProvider _supabaseAuthProvider;
         private readonly NavigationManager _navigationManager;
-        public AccountViewModel(NavigationManager navigationManager,
+        public ProfileViewModel(NavigationManager navigationManager,
           IJSRuntime jsRuntime,
           ISupabaseAuthProvider supabaseAuthProvider,
           Supabase.Client supabase)

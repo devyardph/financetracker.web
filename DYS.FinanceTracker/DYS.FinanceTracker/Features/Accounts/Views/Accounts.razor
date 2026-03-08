@@ -1,0 +1,74 @@
+﻿@page "/accounts"
+@using DYS.FinanceTracker.Features.Accounts.Components
+@using DYS.FinanceTracker.Features.Accounts.ViewModels
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.AspNetCore.Components.QuickGrid.Infrastructure
+@inherits MvvmComponentBase<AccountsViewModel>
+@attribute [Authorize]
+
+
+<div class="row mt-10">
+      <div class="col-md-3 col-xxl-3 mb-6">
+        <div class="card h-100 border-3 border-light bg-light-subtle">
+            <div class="card-header d-flex justify-content-between">
+                <div class="card-title mb-0">
+                    <h5 class="mb-1 me-2 fw-bolder">Add new account</h5>
+                    <p class="card-subtitle">credit, debit, cash, investment</p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex flex-column align-items-center gap-1">
+                        <button class="btn text-body-secondary p-0" type="button" id="orederStatistics"
+                                @onclick="@(() => BindingContext.AccountComponent.OpenAccount(new AccountDto() { Type = "" }))">
+                            <i class="icon-base bx bx-plus icon-36px fw-extrabold text-bg-dark"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @foreach (var account in BindingContext.FilteredAccounts)
+    {
+        <div class="col-md-3 col-xxl-3 mb-6" @onclick="@(() => BindingContext.AccountComponent.OpenAccount(account))">
+            <div class="card h-100 border-3 border-light">
+                <div class="card-header d-flex justify-content-between">
+                    <div class="card-title mb-0">
+                        <h5 class="mb-1 me-2 fw-bolder">@account.Name</h5>
+                        <p class="card-subtitle">@account.Description</p>
+                    </div>
+                    <small>@account.Type</small>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="d-flex flex-column align-items-center gap-1">
+                            @if (BindingContext.IsLoading)
+                            {
+                                <h3>loading..</h3>
+                            }
+                            else
+                            {
+                                <h3 id="@account.Id" class="mb-1 counter">@account.Amount?.ToString("N2")</h3>
+                               
+                            }
+                           
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+  
+</div>
+
+
+
+<!--OFF CANVASS-->
+<AccountComponent Id="account-component" 
+SubmitAccount="BindingContext.SubmitAccountAsync" 
+IsSaving="BindingContext.IsSaving" @ref="BindingContext.AccountComponent" />
+<!--OFF CANVASS-->
+

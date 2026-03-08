@@ -81,6 +81,16 @@ namespace DYS.FinanceTracker.Shared.Extensions
                 transaction.EffectiveDate == null) return true;
             return false;
         }
+
+        public static bool IsInvalidAccount(AccountDto account, bool isBusy)
+        {
+            if (isBusy ||
+                account.Amount <= 0 ||
+                account.Amount == null ||
+                string.IsNullOrEmpty(account.Name) ||
+                string.IsNullOrEmpty(account.Type)) return true;
+            return false;
+        }
         #endregion
     }
 }

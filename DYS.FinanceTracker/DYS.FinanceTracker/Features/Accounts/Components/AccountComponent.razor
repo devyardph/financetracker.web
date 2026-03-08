@@ -1,0 +1,72 @@
+﻿@inject IJSRuntime jSRuntime
+<OffCanvasComponent Id="@Id" Title="ACCOUNT" Width="">
+    <ChildContent>
+        <div class="row">
+            <div class="mb-2">
+                <SelectTextComponent Id="type" Name="type" Items="GlobalSettings.AccountType" @bind-Item="@Account.Type" Label="Account type" Default="Choose" />
+            </div>
+            <div class="mb-2">
+                <DecimalComponent Id="amount" @bind-Item="@Account.Amount" Label="Initial amount or credit limit" Placeholder="0.00" />
+            </div>  
+    
+            <div class="mb-2">
+                <TextComponent Id="name" @bind-Item="@Account.Name" Label="Name" />
+            </div>
+        
+            <div class="mb-2">
+                <SelectTextComponent Id="currency" Name="currency" Items="GlobalSettings.Currencies" @bind-Item="@Account.Currency" Label="Currency" Default="Choose" />
+            </div>
+            <div class="mb-5">
+                <TextComponent Id="description" @bind-Item="@Account.Description" Label="Description" />
+            </div>
+            <div class="mx-auto">
+                <ButtonComponent Id="save-account" 
+                                ActionText="@ActionText" 
+                                IsBusy="@IsSaving"
+                                IsDisabled="@DataExtensions.IsInvalidAccount(Account, IsSaving)"
+                                 OnClicked="@(() => OnSubmitAccount(Account))"
+                                Style="btn btn-md btn-slack w-100 d-grid" /> 
+            </div> 
+        </div>
+    </ChildContent>
+</OffCanvasComponent>
+    
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = "transaction-component";
+    [Parameter]
+    public bool IsSaving { get; set; } = false;
+    [Parameter]
+    public string Title { get; set; } = "";
+    public string ActionText { get; set; } = "";
+    public AccountDto Account { get; set; } = new AccountDto();
+    [Parameter]
+    public EventCallback<AccountDto> SubmitAccount { get; set; }
+    public List<SelectDto> Categories { get; set; } = new List<SelectDto>();
+
+    private async Task OnSubmitAccount(AccountDto account)
+    {
+        Console.WriteLine($"Submitting expense: {account.Amount} - {account.Type}");
+        await SubmitAccount.InvokeAsync(account);
+        Account = new AccountDto();
+        StateHasChanged();
+    }
+
+    public async Task OpenAccount(AccountDto? account)
+    {
+        Console.WriteLine($"Opening transaction: {account?.Amount} - {account?.Type}");
+        await jSRuntime.InvokeVoidAsync("showOffCanvas", Id);
+        Account = account?.Id == Guid.Empty ||
+                      account?.Id == null
+                      ? new AccountDto() : account;
+        ActionText = "SAVE ACCOUNT";
+        StateHasChanged();
+    }
+
+    public async Task CloseAccount()
+    {
+        await jSRuntime.InvokeVoidAsync("hideOffCanvas", Id);
+        Account = new AccountDto();
+    }
+}

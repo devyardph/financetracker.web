@@ -19,6 +19,14 @@
 
 
 	<ItemGroup>
+	  <Compile Remove="Features\Profile\Services\**" />
+	  <Content Remove="Features\Profile\Services\**" />
+	  <EmbeddedResource Remove="Features\Profile\Services\**" />
+	  <None Remove="Features\Profile\Services\**" />
+	</ItemGroup>
+
+
+	<ItemGroup>
     <Content Remove="wwwroot\appsettings.json" />
   </ItemGroup>
 
@@ -50,7 +58,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Accounts\Services\" />
     <Folder Include="wwwroot\assets\vendor\libs\imask\" />
   </ItemGroup>
 

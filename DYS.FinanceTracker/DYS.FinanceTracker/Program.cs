@@ -3,6 +3,7 @@ using Blazored.LocalStorage;
 using DYS.FinanceTracker;
 using DYS.FinanceTracker.Features.Accounts.ViewModels;
 using DYS.FinanceTracker.Features.Finance.ViewModels;
+using DYS.FinanceTracker.Features.Profile.ViewModels;
 using DYS.FinanceTracker.Features.Test.ViewModels;
 using DYS.FinanceTracker.Shared.Dtos;
 using DYS.FinanceTracker.Shared.Extensions;
@@ -28,8 +29,9 @@ builder.Services.AddMvvm();
 //builder.Services.AddScopedForBaseClass<BaseService, IBaseService>(Assembly.GetExecutingAssembly());
 //builder.Services.AddScopedForBaseClass<BaseViewModel>(Assembly.GetExecutingAssembly());
 builder.Services.AddTransient<BaseViewModel>();
-builder.Services.AddTransient<AccountViewModel>();
+builder.Services.AddTransient<ProfileViewModel>();
 builder.Services.AddTransient<TrackerViewModel>();
+builder.Services.AddTransient<AccountsViewModel>();
 builder.Services.AddTransient<MenuViewModel>();
 builder.Services.AddTransient<DemoViewModel>();
 
@@ -49,11 +51,13 @@ builder.Services.AddSingleton(provider =>
 Console.WriteLine(config["Supabase:Project"]);
 Console.WriteLine(config["Supabase:Key"]);
 builder.Services.AddScoped<ISupabaseService<Transaction>, SupabaseService<Transaction>>();
+builder.Services.AddScoped<ISupabaseService<Account>, SupabaseService<Account>>();
 //HZOsia6NAHOmeGqv db
 
 //DB INDEX
 builder.Services.AddSingleton<IIndexedDbFactory, IndexedDbFactory>();
 builder.Services.AddScoped<IndexedDbHelper<TransactionDto>>();
+builder.Services.AddScoped<IndexedDbHelper<AccountDto>>();
 
 
 builder.Services.AddScoped<ISupabaseAuthProvider,SupabaseAuthProvider>();
