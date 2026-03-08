@@ -11,6 +11,8 @@ namespace DYS.FinanceTracker.Shared.Models
         public Guid Id { get; set; } 
         [Column("user_id")]
         public Guid? UserId { get; set; }
+        [Column("account_id")]
+        public Guid? AccountId { get; set; }
         [Column("amount")]
         public decimal? Amount { get; set; }
         [Column("category")]

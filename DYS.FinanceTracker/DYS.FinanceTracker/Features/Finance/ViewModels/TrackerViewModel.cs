@@ -18,15 +18,18 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
     {
 
         private readonly ISupabaseService<Transaction> _transactionService;
+        private readonly ISupabaseService<Account> _accountService;
         private readonly Supabase.Client _supabase;
         public TrackerViewModel(NavigationManager navigationManager,
             IJSRuntime jsRuntime, 
             ISupabaseService<Transaction> transactionService,
+            ISupabaseService<Account> accountService,
             ISupabaseAuthProvider supabaseAuthProvider,
             Supabase.Client supabase)
             : base(navigationManager, jsRuntime, supabaseAuthProvider)
         {
             _transactionService = transactionService;
+            _accountService = accountService;
             _supabase = supabase;
         }
 
@@ -89,11 +92,19 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             get => _type;
             set => Set(ref _type, value, nameof(Type));
         }
+
+        private List<SelectDto> _accounts = new List<SelectDto>();
+        public List<SelectDto> Accounts
+        {
+            get => _accounts;
+            set => Set(ref _accounts, value, nameof(Accounts));
+        }
         public TransactionComponent TransactionComponent { get; set; } = new TransactionComponent();
         #endregion
 
         public override async Task OnInitializedAsync()
         {
+            await GetAccounts();
             await GetTransactions();
             await base.OnInitializedAsync();
         }
@@ -261,7 +272,25 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
 
         }
 
+        public async Task GetAccounts()
+        {
+            Console.WriteLine("Getting accounts...");
+            _isLoading = true;
 
+            var session = _supabase.Auth.CurrentSession;
+            var userId = !string.IsNullOrEmpty(session?.User?.Id) ? new Guid(session.User.Id) : Guid.Empty;
+
+            var filters = new List<(string, Constants.Operator, object)>
+            {
+                ("user_id", Constants.Operator.Equals, userId),
+            };
+
+            var allAccounts = await _accountService.GetAllAsync(filters);
+            _accounts = allAccounts.OrderBy(t => t.Name)
+                            .Select(a => new SelectDto() { Id = a.Id.ToString(), Name = $"{a.Name}({a.Type})" })
+                            .ToList();
+            _isLoading = false;
+        }
         public void ReloadTransactions(string type) 
         {
             _isLoading = true;
@@ -290,7 +319,6 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             Console.WriteLine($"Filtered transactions count: {type} {_transactions.Count}");
             _isLoading = false;
         }
-
         public async Task SubmitTransactionAsync(TransactionDto t)
         {
             _isSaving = true;
@@ -320,6 +348,11 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             _isSaving = false;
             await TransactionComponent.CloseTransaction();
             await OnInitializedAsync();
+        }
+        public async Task OpenTransactionAsync(TransactionDto t)
+        {
+            TransactionComponent.Accounts = _accounts;
+            await TransactionComponent.OpenTransaction(t);
         }
         #endregion
     }

@@ -11,7 +11,7 @@
 
 
 
-<div class="row mt-10">
+<div class="row mt-5">
     <div class="col-md-4 col-xxl-4 mb-6">
         <div class="card h-100 border-3 border-light bg-warning-subtle">
             <div class="card-header d-flex justify-content-between">
@@ -55,7 +55,7 @@
                 </div>
                 <div>
                     <button class="btn text-body-secondary p-0" type="button" id="orederStatistics"
-                            @onclick="@(() => BindingContext.TransactionComponent.OpenTransaction(new TransactionDto() { Type = "income" }))">
+                            @onclick="@(() => BindingContext.OpenTransactionAsync(new TransactionDto() { Type = "income" }))">
                         <i class="icon-base bx bx-plus icon-36px fw-extrabold text-bg-success"></i>
                     </button>
                 </div>
@@ -88,7 +88,7 @@
                 </div>
                 <div>
                     <button class="btn text-body-secondary p-0" type="button" id="orederStatistics"
-                            @onclick="@(() => BindingContext.TransactionComponent.OpenTransaction(new TransactionDto() { Type = "expense" }))">
+                            @onclick="@(() => BindingContext.OpenTransactionAsync(new TransactionDto() { Type = "expense" }))">
                         <i class="icon-base bx bx-plus icon-36px fw-extrabold text-bg-info"></i>
                     </button>
                 </div>
@@ -152,13 +152,13 @@
                 <div class="table-responsive">
                     <QuickGrid Items="BindingContext.FilteredTransactions2" Class="table table-hover table-sm no-header-grid">
                         <TemplateColumn Context="transaction" >
-                            <div class="d-flex flex-column cursor-pointer" @onclick="@(() => BindingContext.TransactionComponent.OpenTransaction(transaction))">
+                            <div class="d-flex flex-column cursor-pointer" @onclick="@(() => BindingContext.OpenTransactionAsync(transaction))">
                                 <div class="p-0">@DataExtensions.GetSelectedName(GlobalSettings.Categories, transaction.Category)</div>
                                 <div class="p-0"><small>@transaction.EffectiveDate.FormatDate("MMM-dd-yyyy")</small></div>
                             </div>
                         </TemplateColumn>
                         <TemplateColumn Context="transaction" Class="w-px-250 text-end">
-                            <div class="d-flex flex-column cursor-pointer" @onclick="@(() => BindingContext.TransactionComponent.OpenTransaction(transaction))">
+                            <div class="d-flex flex-column cursor-pointer" @onclick="@(() => BindingContext.OpenTransactionAsync(transaction))">
                                 <div class="p-0">PHP @transaction.Amount?.ToString("N2")</div>
                                 <div class="p-0"><small>@transaction.Recurrence @transaction.Type</small></div>
                             </div>

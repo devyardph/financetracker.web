@@ -6,6 +6,9 @@
                 <DecimalComponent Id="amount" @bind-Item="@Transaction.Amount" Label="" Placeholder="0.00" />
             </div>
             <div class="mb-2">
+                <SelectComponent Id="account" Name="account" Items="@Accounts" @bind-Item="@Transaction.AccountId" Label="Account" Default="Choose" />
+            </div>
+            <div class="mb-2">
                 <SelectTextComponent Id="category" Name="category" Items="@Categories" @bind-Item="@Transaction.Category" Label="Category" Default="Choose" />
             </div>         
             <div class="mb-2">
@@ -61,6 +64,7 @@
     [Parameter]
     public EventCallback<TransactionDto> SubmitTransaction { get; set; }
     public List<SelectDto> Categories { get; set; } = new List<SelectDto>();
+    public List<SelectDto> Accounts { get; set; } = new List<SelectDto>();
     public bool FrequencyOptionEnabled { get; set; } = false;
     private async Task OnSubmitTransaction(TransactionDto transaction)
     {

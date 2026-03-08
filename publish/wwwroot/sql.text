@@ -183,7 +183,7 @@ public async Task<List<Transaction>> GetTransactionsForMonthAsync(Guid userId, i
 
 
     netstat -ano | findstr 5066
-    taskkill /PID 18916 /F
+    taskkill /PID 39468 /F
     dotnet watch run
 
 

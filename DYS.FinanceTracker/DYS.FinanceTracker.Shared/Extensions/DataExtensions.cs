@@ -76,6 +76,7 @@ namespace DYS.FinanceTracker.Shared.Extensions
             if (isBusy || 
                 transaction.Amount <= 0 ||
                 transaction.Amount == null ||
+                transaction.AccountId == null ||
                 string.IsNullOrEmpty(transaction.Category) ||
                 string.IsNullOrEmpty(transaction.Recurrence) ||
                 transaction.EffectiveDate == null) return true;
