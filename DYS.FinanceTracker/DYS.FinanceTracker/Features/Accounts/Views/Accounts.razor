@@ -30,38 +30,45 @@
             </div>
         </div>
     </div>
-    @foreach (var account in BindingContext.FilteredAccounts)
+   @if (BindingContext.IsLoading)
     {
-        <div class="col-md-3 col-xxl-3 mb-6" @onclick="@(() => BindingContext.AccountComponent.OpenAccount(account))">
-            <div class="card h-100 border-3 border-light">
-                <div class="card-header d-flex justify-content-between">
-                    <div class="card-title mb-0">
-                        <h5 class="mb-1 me-2 fw-bolder">@account.Name</h5>
-                        <p class="card-subtitle">@account.Description</p>
-                    </div>
-                    <small>@account.Type</small>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div class="d-flex flex-column align-items-center gap-1">
-                            @if (BindingContext.IsLoading)
-                            {
-                                <h3>loading..</h3>
-                            }
-                            else
-                            {
-                                <h3 id="@account.Id" class="mb-1 counter">@account.Amount?.ToString("N2")</h3>
-                               
-                            }
-                           
+        <AccountLoaderComponent Loop="7" />
+    }
+    else
+    {
+        @foreach (var account in BindingContext.FilteredAccounts)
+        {
+            <div class="col-md-3 col-xxl-3 mb-6" @onclick="@(() => BindingContext.AccountComponent.OpenAccount(account))">
+                <div class="card h-100 border-3 border-light">
+                    <div class="card-header d-flex justify-content-between">
+                        <div class="card-title mb-0">
+                            <h5 class="mb-1 me-2 fw-bolder">@account.Name</h5>
+                            <p class="card-subtitle">@account.Description</p>
                         </div>
+                        <small>@account.Type</small>
                     </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex flex-column align-items-center gap-1">
+                                @if (BindingContext.IsLoading)
+                                {
+                                    <h3>loading..</h3>
+                                }
+                                else
+                                {
+                                    <h3 id="@account.Id" class="mb-1 counter">@account.Amount?.ToString("N2")</h3>
 
+                                }
+
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     }
-  
+
 </div>
 
 

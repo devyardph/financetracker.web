@@ -1,0 +1,28 @@
+﻿@for    (int i = 0; i < Loop; i++)
+{
+    <div class="col-md-3 col-xxl-3 mb-6">
+        <div class="card h-100 border-3 border-light bg-light-subtle">
+            <div class="card-header d-flex justify-content-between">
+                <div class="card-title mb-0">
+                    <div class="ssc-line mb mb-1 w-px-150"></div>
+                    <div class="ssc-line mb mb-1 w-50"></div>
+                </div>
+                <div class="ssc-line mb mb-1 w-20"></div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex flex-column align-items-center gap-1">
+                        <div class="ssc-line mb mb-1 w-px-150"></div>
+                        <div class="ssc-line mb mb-1 w-px-150"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+@code {
+    [Parameter]
+    public int Loop { get; set; } = 7;
+
+}

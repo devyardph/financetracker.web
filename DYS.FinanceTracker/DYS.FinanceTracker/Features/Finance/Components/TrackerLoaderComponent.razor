@@ -1,0 +1,26 @@
+﻿<table class="table table-sm">
+    @for    (int i = 0; i < Loop; i++)
+    {
+        <tr>
+            <td>
+                <div class="d-flex justify-content-between">
+                    <div class="p-0">
+                        <div class="ssc-line mb mb-1 w-px-150"></div>
+                        <div class="ssc-line mb mb-1 w-50"></div>
+                    </div>
+                    <div></div>
+                    <div class="p-0">
+                        <div class="ssc-line mb mb-1 w-px-150"></div>
+                        <div class="ssc-line mb mb-1 w-50"></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    }
+</table>
+
+@code {
+    [Parameter]
+    public int Loop { get; set; } = 10;
+
+}

@@ -144,6 +144,11 @@ namespace DYS.FinanceTracker.Shared.Security
                     Console.WriteLine($"Session refreshed successfully...");
                     await _localStorageService.SetItemAsync<Session>("session", session ?? new Session());
                 }
+                else 
+                {
+                    Console.WriteLine($"Session refresh failed: No session returned.");
+                    await LogoutAsync();
+                }
             }
             else await LogoutAsync();
         }
