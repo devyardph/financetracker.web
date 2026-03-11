@@ -27,7 +27,7 @@ namespace DYS.FinanceTracker.Shared.Security
             {
 
                 await _supabase.Auth.SetSession(session.AccessToken ?? string.Empty,
-                                                  session.RefreshToken ?? string.Empty,false);
+                                                session.RefreshToken ?? string.Empty,false);
 
                 var expired = session?.Expired();
                 if (expired == true)

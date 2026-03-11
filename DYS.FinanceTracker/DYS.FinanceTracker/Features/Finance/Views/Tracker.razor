@@ -9,22 +9,15 @@
 @attribute [Authorize]
 
 
-
-
 <div class="row mt-5">
     <div class="col-md-4 col-xxl-4 mb-6">
         <div class="card h-100 border-3 border-light bg-warning-subtle">
             <div class="card-header d-flex justify-content-between">
                 <div class="card-title mb-0">
-                    <h5 class="mb-1 me-2 fw-bolder">Remaining balance</h5>
-                    <p class="card-subtitle">From @BindingContext.StartDate.FormatDate("dd MMM yyyy") to @BindingContext.EndDate.FormatDate("dd MMM yyyy")</p>
+                    <h5 class="mb-1 me-2 fw-bolder display-6">Remaining balance</h5>
+                    <p class="card-subtitle">@BindingContext.StartDate.FormatDate("MMM dd") to @BindingContext.EndDate.FormatDate("MMM dd, yyyy")</p>
                 </div>
                 <div>
-                    @*  <button class="btn text-body-secondary p-0" type="button" id="orederStatistics"
-                                data-bs-toggle="offcanvas" href="#transaction-component"
-                                aria-haspopup="true" aria-expanded="false">
-                            <i class="icon-base bx bx-plus icon-30px"></i>
-                        </button> *@
                 </div>
             </div>
             <div class="card-body">
@@ -38,7 +31,6 @@
                         {
                             <h3 id="balance-text" class="mb-1 counter">@BindingContext.Summary.Balance?.ToString("N2")</h3>
                         }
-                        @*   <small>Total Orders</small> *@
                     </div>
                 </div>
 
@@ -49,7 +41,7 @@
         <div class="card h-100 border-3 border-light bg-success-subtle">
             <div class="card-header d-flex justify-content-between">
                 <div class="card-title mb-0">
-                    <h5 class="mb-1 me-2 fw-bolder">Income</h5>
+                    <h5 class="mb-1 me-2 fw-bolder  display-6">Income</h5>
                     <p class="card-subtitle">@BindingContext.Summary.IncomeCount items</p>
                       
                 </div>
@@ -83,7 +75,7 @@
         <div class="card h-100 border-3 border-light bg-info-subtle">
             <div class="card-header d-flex justify-content-between">
                 <div class="card-title mb-0">
-                    <h5 class="mb-1 me-2 fw-bolder">Expenses</h5>
+                    <h5 class="mb-1 me-2 fw-bolder  display-6">Expenses</h5>
                     <p class="card-subtitle">@BindingContext.Summary.ExpenseCount items</p>
                 </div>
                 <div>

@@ -113,24 +113,24 @@ namespace DYS.FinanceTracker.Shared.ViewModels
 
         public override async Task OnAfterRenderAsync(bool firstRender)
         {
-            //if (firstRender)
-            //{
-            //    var authState = await _supabaseAuthProvider.GetAuthenticationStateAsync();
-            //    if (authState.User != null)
-            //    {
-            //        authState.User.Claims.ToList().ForEach(x =>
-            //        {
-            //            if (x.Type == ClaimTypes.NameIdentifier)
-            //            {
-            //                _profile.Id = x.Value;
-            //            }
-            //            else if (x.Type == ClaimTypes.Email)
-            //            {
-            //                _profile.Email = x.Value;
-            //            }
-            //        });
-            //    }
-            //}
+            if (firstRender)
+            {
+                var authState = await _supabaseAuthProvider.GetAuthenticationStateAsync();
+                if (authState.User != null)
+                {
+                    authState.User.Claims.ToList().ForEach(x =>
+                    {
+                        if (x.Type == ClaimTypes.NameIdentifier)
+                        {
+                            _profile.Id = x.Value;
+                        }
+                        else if (x.Type == ClaimTypes.Email)
+                        {
+                            _profile.Email = x.Value;
+                        }
+                    });
+                }
+            }
         }
 
         public async Task Signout()

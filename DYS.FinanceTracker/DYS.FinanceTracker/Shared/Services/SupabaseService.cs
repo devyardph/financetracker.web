@@ -88,6 +88,54 @@ namespace DYS.FinanceTracker.Shared.Services
                 throw;
             }
         }
+        //public async Task<(List<T> Items, int TotalCount)> GetAllAsync(
+        //List<(string Column, Constants.Operator Operator, object Value)> filters = null,
+        //int page = 1,
+        //int pageSize = 20)
+        //{
+        //    try
+        //    {
+        //        var query = _client.From<T>();
+
+        //        // Apply filters if provided
+        //        if (filters != null)
+        //        {
+        //            foreach (var (column, op, value) in filters)
+        //            {
+        //                var stringValue = value switch
+        //                {
+        //                    Guid g => g.ToString(),
+        //                    int i => i.ToString(),
+        //                    float f => f.ToString(),
+        //                    bool b => b.ToString().ToLower(),
+        //                    DateTime dt => dt.ToString("o"), // ISO 8601 format
+        //                    string s => s,
+        //                    _ => value.ToString()
+        //                };
+
+        //                query = (Supabase.Interfaces.ISupabaseTable<T, Supabase.Realtime.RealtimeChannel>)
+        //                    query.Filter(column, op, stringValue);
+        //            }
+        //        }
+
+        //        // Paging logic
+        //        int from = (page - 1) * pageSize;
+        //        int to = from + pageSize - 1;
+
+        //        query = (Supabase.Interfaces.ISupabaseTable<T, Supabase.Realtime.RealtimeChannel>)query.Range(from, to);
+
+        //        // Request total count along with results
+        //        // Correct way: request count
+        //        var result = await query.Count();
+
+        //        return (result.Models, result.Count ?? 0);
+
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         public async Task<T?> InsertAsync(T entity)
         {
             var output = await _client.From<T>().Insert(entity);
