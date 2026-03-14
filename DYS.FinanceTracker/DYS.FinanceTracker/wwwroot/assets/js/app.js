@@ -506,22 +506,27 @@ function getAuthToken(dotnetHelper)
 
 function countUp() {
     setTimeout(() => {
-        $('.counter').counterUp({
-            delay: 50,
-            time: 2000
-        });
+        // Check if .counter exists and has non-empty text
+        if ($('.counter').length && $.trim($('.counter').text()).length > 0) {
+            $('.counter').counterUp({
+                delay: 50,
+                time: 2000
+            });
+        }
     }, 500);
 }
 
 function countUp2(id, value) {
     setTimeout(() => {
-        $('#' + id).text(value).counterUp({
-            delay: 50,
-            time: 2000
-        });
+        if ($('#' + id).length && $.trim($('#' + id).text()).length > 0) {
+            $('#' + id).text(value).counterUp({
+                delay: 50,
+                time: 2000
+            });
 
-        let formatted = value.toLocaleString();
-        $('#' + id).text(formatted);
+            let formatted = value.toLocaleString();
+            $('#' + id).text(formatted);
+        }
     }, 500);
 }
 
