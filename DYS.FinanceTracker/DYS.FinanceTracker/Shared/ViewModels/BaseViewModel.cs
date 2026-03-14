@@ -11,7 +11,7 @@ namespace DYS.FinanceTracker.Shared.ViewModels
     {
         public NavigationManager _navigationManager;
         public IJSRuntime _jsRuntime;
-        private readonly ISupabaseAuthProvider _supabaseAuthProvider;
+        public readonly ISupabaseAuthProvider _supabaseAuthProvider;
         private readonly SessionHandler _sessionHandler;
 
         #region PROPERTIES

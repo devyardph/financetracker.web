@@ -38,6 +38,8 @@ namespace DYS.FinanceTracker.Shared.Security
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
 
+        public async Task<Session?> Session() => await _localStorageService.GetItemAsync<Session>("session");
+
         public async Task<BaseOutputDto> LoginAsync(string email, string password)
         {
             var output = new BaseOutputDto();

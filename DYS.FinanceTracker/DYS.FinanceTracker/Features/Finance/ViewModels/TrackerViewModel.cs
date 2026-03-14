@@ -110,12 +110,6 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             await base.OnInitializedAsync();
         }
 
-        public override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender) await _jsRuntime.InvokeVoidAsync("countUp");
-            await base.OnAfterRenderAsync(firstRender);
-        }
-
         #region FUNCTIONS
         public async Task GetTransactions()
         {
@@ -125,7 +119,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             var startDate = _startDate ?? DateTime.Now.StartOfMonth();
             var endDate = _endDate ?? startDate.EndOfMonth();
 
-            var session = _supabase.Auth.CurrentSession;
+            var session = await _supabaseAuthProvider.Session();
             var userId = !string.IsNullOrEmpty(session?.User?.Id) ? new Guid(session.User.Id) : Guid.Empty;
 
             var filters = new List<(string, Constants.Operator, object)>
@@ -265,12 +259,9 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                 ExpenseCount = expense.Count()
             };
             _isLoading = false;
-            await _jsRuntime.InvokeVoidAsync("countUp2", "income-text", _summary.Income);
-            await _jsRuntime.InvokeVoidAsync("countUp2", "expense-text", _summary.Expense);
-            await _jsRuntime.InvokeVoidAsync("countUp2", "balance-text", balance);
-
-            StateHasChanged();
-
+            await _jsRuntime.InvokeVoidAsync("countUp2", "income-text", _summary?.Income ?? 0);
+            await _jsRuntime.InvokeVoidAsync("countUp2", "expense-text", _summary?.Expense ?? 0);
+            await _jsRuntime.InvokeVoidAsync("countUp2", "balance-text", balance ?? 0);
         }
 
         public async Task GetAccounts()
@@ -350,10 +341,10 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             await TransactionComponent.CloseTransaction();
             await OnInitializedAsync();
         }
-        public async Task OpenTransactionAsync(TransactionDto t)
+        public async Task OpenTransactionAsync(TransactionDto transaction)
         {
             TransactionComponent.Accounts = _accounts;
-            await TransactionComponent.OpenTransaction(t);
+            await TransactionComponent.OpenTransaction(transaction);
         }
         #endregion
     }

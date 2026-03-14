@@ -10,6 +10,7 @@ namespace DYS.FinanceTracker.Shared.Security
     {
         Task<AuthenticationState> GetAuthenticationStateAsync();
         Task RefreshSessionAsync();
+        Task<Session?> Session();
 
         Task<BaseOutputDto> LoginAsync(string email, string password);
         Task<BaseOutputDto> RegisterAsync(string email, string password);

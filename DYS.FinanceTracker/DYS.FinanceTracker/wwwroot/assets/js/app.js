@@ -527,7 +527,7 @@ function countUp2(id, value) {
             let formatted = value.toLocaleString();
             $('#' + id).text(formatted);
         }
-    }, 500);
+    }, 1000);
 }
 
 
