@@ -142,10 +142,10 @@ namespace DYS.FinanceTracker.Shared.ViewModels
             _sessionHandler.Stop();
             _navigationManager.NavigateTo("/login", forceLoad:true);
         }
-        public void NavigationToPath(string path)
+        public virtual void NavigationToPath(string path, bool forceLoad )
         {
             StateHasChanged();
-            _navigationManager.NavigateTo(path);
+            _navigationManager.NavigateTo(path,forceLoad: forceLoad);
         }
 
     }

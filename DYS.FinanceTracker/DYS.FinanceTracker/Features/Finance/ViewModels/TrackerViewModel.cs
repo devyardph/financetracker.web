@@ -20,18 +20,35 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
         private readonly ISupabaseService<Transaction> _transactionService;
         private readonly ISupabaseService<Account> _accountService;
         private readonly Supabase.Client _supabase;
+        private readonly IndexedDbHelper<TransactionDto> _indexedTransactionDbHelper;
+        private readonly IndexedDbHelper<AccountDto> _indexedAccountDbHelper;
+        /// <summary>
+        /// CONSTRUCTOR
+        /// </summary>
+        /// <param name="navigationManager"></param>
+        /// <param name="jsRuntime"></param>
+        /// <param name="transactionService"></param>
+        /// <param name="accountService"></param>
+        /// <param name="supabaseAuthProvider"></param>
+        /// <param name="supabase"></param>
+        /// <param name="sessionHandler"></param>
+        /// <param name="indexedTransactionDbHelper"></param>
         public TrackerViewModel(NavigationManager navigationManager,
             IJSRuntime jsRuntime, 
             ISupabaseService<Transaction> transactionService,
             ISupabaseService<Account> accountService,
             ISupabaseAuthProvider supabaseAuthProvider,
             Supabase.Client supabase,
-            SessionHandler sessionHandler)
+            SessionHandler sessionHandler,
+            IndexedDbHelper<TransactionDto> indexedTransactionDbHelper,
+            IndexedDbHelper<AccountDto> indexedAccountDbHelper)
             : base(navigationManager, jsRuntime, supabaseAuthProvider, sessionHandler)
         {
             _transactionService = transactionService;
             _accountService = accountService;
             _supabase = supabase;
+            _indexedTransactionDbHelper = indexedTransactionDbHelper;
+            _indexedAccountDbHelper = indexedAccountDbHelper;
         }
 
 
@@ -121,85 +138,46 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
 
             var session = await _supabaseAuthProvider.Session();
             var userId = !string.IsNullOrEmpty(session?.User?.Id) ? new Guid(session.User.Id) : Guid.Empty;
-
             var filters = new List<(string, Constants.Operator, object)>
             {
                 ("user_id",        Constants.Operator.Equals,           userId),
                 ("effective_date", Constants.Operator.LessThanOrEqual,  endDate),
             };
 
-            var allTransactions = await _transactionService.GetAllAsync(filters);
-       
-            // Filter end_date: include if null OR end_date >= startDate
-            _transactions = allTransactions
-                .Where(t => (t.EndDate == null || t.EndDate >= startDate))
-                .ToList();
 
-            var expanded = new List<Transaction>();
-
-            foreach (var t in _transactions)
+            var transactions = await _indexedTransactionDbHelper.GetAllAsync<TransactionDB>(db => db.Transaction);
+            if (transactions.Any())
             {
-                // Non-recurring
-                if (t.Recurrence == "one-time")
-                {
-                    if (t.Date >= startDate && t.Date <= endDate)
-                        expanded.Add(t);
-                }
-                // Yearly recurrence (only once per year)
-                else if (t.Recurrence == "yearly")
-                {
-                    var yearlyDate = new DateTime(startDate.Year, t.EffectiveDate.Value.Month, t.EffectiveDate.Value.Day);
+                Console.WriteLine("Retrive from index...");
+                _filteredTransactions2 = transactions.AsQueryable();
+            }
+            else
+            {
+                Console.WriteLine("Retrive from database...");
+                var allTransactions = await _transactionService.GetAllAsync(filters);
 
-                    if (yearlyDate >= startDate && yearlyDate <= endDate &&
-                        (t.EndDate == null || yearlyDate <= t.EndDate))
-                    {
-                        expanded.Add(new Transaction
-                        {
-                            Id = t.Id,
-                            UserId = t.UserId,
-                            Amount = t.Amount,
-                            Category = t.Category,
-                            Type = t.Type,
-                            Description = t.Description,
-                            Date = yearlyDate,
-                            Recurrence = t.Recurrence,
-                            RecurrenceCount = t.RecurrenceCount,
-                            RecurrenceGroupId = t.RecurrenceGroupId,
-                            EffectiveDate = t.EffectiveDate,
-                            EndDate = t.EndDate
-                        });
-                    }
-                }
-                // Daily, weekly, monthly expansion
-                else
+                // Filter end_date: include if null OR end_date >= startDate
+                _transactions = allTransactions
+                    .Where(t => (t.EndDate == null || t.EndDate >= startDate))
+                    .ToList();
+
+                var expanded = new List<Transaction>();
+
+                foreach (var t in _transactions)
                 {
-                    var nextDate = t.EffectiveDate > startDate ? t.EffectiveDate : startDate;
-                    //continuous transactions
-                    if (t.EndDate == null)
+                    // Non-recurring
+                    if (t.Recurrence == "one-time")
                     {
-                        // If EndDate is null, only show the transaction once (at EffectiveDate if in range)
-                        if (nextDate >= startDate && nextDate <= endDate)
-                        {
-                            expanded.Add(new Transaction
-                            {
-                                Id = t.Id,
-                                UserId = t.UserId,
-                                Amount = t.Amount,
-                                Category = t.Category,
-                                Type = t.Type,
-                                Description = t.Description,
-                                Date = nextDate,
-                                Recurrence = t.Recurrence,
-                                RecurrenceGroupId = t.RecurrenceGroupId,
-                                EffectiveDate = t.EffectiveDate,
-                                EndDate = t.EndDate
-                            });
-                        }
+                        if (t.Date >= startDate && t.Date <= endDate)
+                            expanded.Add(t);
                     }
-                    else
+                    // Yearly recurrence (only once per year)
+                    else if (t.Recurrence == "yearly")
                     {
-                        // If EndDate is set, expand until EndDate
-                        while (nextDate <= endDate && nextDate <= t.EndDate)
+                        var yearlyDate = new DateTime(startDate.Year, t.EffectiveDate.Value.Month, t.EffectiveDate.Value.Day);
+
+                        if (yearlyDate >= startDate && yearlyDate <= endDate &&
+                            (t.EndDate == null || yearlyDate <= t.EndDate))
                         {
                             expanded.Add(new Transaction
                             {
@@ -209,44 +187,96 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                                 Category = t.Category,
                                 Type = t.Type,
                                 Description = t.Description,
-                                Date = nextDate,
+                                Date = yearlyDate,
                                 Recurrence = t.Recurrence,
                                 RecurrenceCount = t.RecurrenceCount,
                                 RecurrenceGroupId = t.RecurrenceGroupId,
                                 EffectiveDate = t.EffectiveDate,
                                 EndDate = t.EndDate
                             });
+                        }
+                    }
+                    // Daily, weekly, monthly expansion
+                    else
+                    {
+                        var nextDate = t.EffectiveDate > startDate ? t.EffectiveDate : startDate;
+                        //continuous transactions
+                        if (t.EndDate == null)
+                        {
+                            // If EndDate is null, only show the transaction once (at EffectiveDate if in range)
+                            if (nextDate >= startDate && nextDate <= endDate)
+                            {
+                                expanded.Add(new Transaction
+                                {
+                                    Id = t.Id,
+                                    UserId = t.UserId,
+                                    Amount = t.Amount,
+                                    Category = t.Category,
+                                    Type = t.Type,
+                                    Description = t.Description,
+                                    Date = nextDate,
+                                    Recurrence = t.Recurrence,
+                                    RecurrenceGroupId = t.RecurrenceGroupId,
+                                    EffectiveDate = t.EffectiveDate,
+                                    EndDate = t.EndDate
+                                });
+                            }
+                        }
+                        else
+                        {
+                            // If EndDate is set, expand until EndDate
+                            while (nextDate <= endDate && nextDate <= t.EndDate)
+                            {
+                                expanded.Add(new Transaction
+                                {
+                                    Id = t.Id,
+                                    UserId = t.UserId,
+                                    Amount = t.Amount,
+                                    Category = t.Category,
+                                    Type = t.Type,
+                                    Description = t.Description,
+                                    Date = nextDate,
+                                    Recurrence = t.Recurrence,
+                                    RecurrenceCount = t.RecurrenceCount,
+                                    RecurrenceGroupId = t.RecurrenceGroupId,
+                                    EffectiveDate = t.EffectiveDate,
+                                    EndDate = t.EndDate
+                                });
 
-                            var candidate = DateExtensions.GetNextDate(nextDate.Value, t.Recurrence);
-                            if (candidate == null) break;
-                            nextDate = candidate;
+                                var candidate = DateExtensions.GetNextDate(nextDate.Value, t.Recurrence);
+                                if (candidate == null) break;
+                                nextDate = candidate;
+                            }
                         }
                     }
                 }
+
+                _transactions = expanded.Where(q => q.Date >= startDate && q.Date <= endDate).ToList();
+                _filteredTransactions = _transactions.Select(t =>
+                  new TransactionDto()
+                  {
+                      Id = t.Id,
+                      UserId = t.UserId,
+                      Amount = t.Amount,
+                      Category = t.Category,
+                      Type = t.Type,
+                      Description = t.Description,
+                      Date = t.Date,
+                      Recurrence = t.Recurrence,
+                      RecurrenceCount = t.RecurrenceCount,
+                      RecurrenceGroupId = t.RecurrenceGroupId,
+                      EffectiveDate = t.EffectiveDate,
+                      EndDate = t.EndDate
+                  }
+                 ).ToList();
+
+                _filteredTransactions2 = _filteredTransactions.AsQueryable();
+                //SAVE TO INDEXED DB
+                await _indexedTransactionDbHelper.SaveAsync<TransactionDB>(db => db.Transaction, _filteredTransactions2.ToList());
             }
 
-            _transactions = expanded.Where(q => q.Date >= startDate && q.Date <= endDate).ToList();
-            _filteredTransactions = _transactions.Select(t =>
-              new TransactionDto()
-              {
-                  Id = t.Id,
-                  UserId = t.UserId,
-                  Amount = t.Amount,
-                  Category = t.Category,
-                  Type = t.Type,
-                  Description = t.Description,
-                  Date = t.Date,
-                  Recurrence = t.Recurrence,
-                  RecurrenceCount = t.RecurrenceCount,
-                  RecurrenceGroupId = t.RecurrenceGroupId,
-                  EffectiveDate = t.EffectiveDate,
-                  EndDate = t.EndDate
-              }
-             ).ToList();
-
-            _filteredTransactions2 = _filteredTransactions.AsQueryable();
-            var income = _filteredTransactions.Where(q => q.Type == "income").ToList();
-            var expense = _filteredTransactions.Where(q => q.Type == "expense").ToList();
+            var income = _filteredTransactions2.Where(q => q.Type == "income").ToList();
+            var expense = _filteredTransactions2.Where(q => q.Type == "expense").ToList();
 
             var totalIncome = income.Sum(q => q.Amount);
             var totalExpense = expense.Sum(q => q.Amount);
@@ -281,6 +311,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             _accounts = allAccounts.OrderBy(t => t.Name)
                             .Select(a => new SelectDto() { Id = a.Id.ToString(), Name = $"{a.Name}({a.Type})" })
                             .ToList();
+
             _isLoading = false;
         }
         public void ReloadTransactions(string type) 
@@ -338,6 +369,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
              await _transactionService.UpdateAsync(transaction);
 
             _isSaving = false;
+            await _indexedTransactionDbHelper.DeleteAllAsync<TransactionDB>(db => db.Transaction);
             await TransactionComponent.CloseTransaction();
             await OnInitializedAsync();
         }

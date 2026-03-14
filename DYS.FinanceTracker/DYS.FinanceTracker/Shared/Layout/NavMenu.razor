@@ -22,56 +22,21 @@
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-1">
-        <!-- Dashboards -->
-        <li class="menu-item active">
-            <a href="/" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-smile"></i>
-                <div class="text-truncate" data-i18n="Dashboards">Home</div>
-
-            </a>
-        </li>
-        <li class="menu-item">
-            <a href="/accounts" class="menu-link menu-toggle">
-                <i class="menu-icon icon-base bx bx-food-menu"></i>
-                <div data-i18n="Invoice">Accounts</div>
-            </a>
-        </li>
-        <li class="menu-item">
-            <a href="/accounts" class="menu-link">
-                <i class="menu-icon icon-base bx bx-envelope"></i>
-                <div data-i18n="Email">Email</div>
-            </a>
-        </li>
-        <li class="menu-item">
-            <a href="" target="_blank" class="menu-link">
-                <i class="menu-icon icon-base bx bx-file"></i>
-                <div data-i18n="Documentation">Support</div>
-            </a>
-        </li>
-
+        @foreach (var menu in BindingContext.Menu)
+        {
+            <li class="menu-item @BooleanExtensions.GetConditionalString(menu.Id == BindingContext.ActiveMenu, "active","")">
+                <a href="javascript:void(0)" class="menu-link menu-toggle" @onclick="@(() => BindingContext.NavigationToPath(menu.Id, menu.Path))">
+                    <i class="menu-icon icon-base bx @menu.Icon"></i>
+                    <div data-i18n="@menu.Title">@menu.Title</div>
+                </a>
+            </li>
+        }
         <li class="menu-item">
             <a href="javascript:void(0)"  class="menu-link" @onclick="BindingContext.Signout">
                 <i class="menu-icon icon-base bx bx-log-out"></i>
                 <div data-i18n="Logout">Logout</div>
             </a>
         </li>
-     <!--  <li class="menu-item">
-            @if (string.IsNullOrEmpty(BindingContext.Profile?.Email))
-            {
-                <a href="javascript:void(0)" @onclick="BindingContext.GoogleSign" class="menu-link">
-                    <i class="menu-icon icon-base bx bx-arrow-to-right"></i>
-                    <div data-i18n="Documentation">Google signin</div>
-                </a>
-            }
-            else
-            {
-                @* <a href="javascript:void(0)" @onclick="BindingContext.GoogleLogout" class="menu-link">
-                    <i class="menu-icon icon-base bx bx-arrow-to-left"></i>
-                    <div data-i18n="Documentation">Sign out</div>
-                </a> *@
-            }
-        </li>
-        -->
     </ul>
 </aside>
 @* <SessionStorageComponent @ref="BindingContext.SessionStorageComponent" /> *@

@@ -22,11 +22,11 @@ namespace DYS.FinanceTracker.Shared.Security
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var session = await _localStorageService.GetItemAsync<Session>("session");
-            Console.WriteLine($"Session will expire on {session?.ExpiresIn}");
+            //Console.WriteLine($"Session will expire on {session?.ExpiresIn}");
             if (session != null)
             {
                 session = await _supabase.Auth.SetSession(session.AccessToken ?? "", session.RefreshToken ?? "");
-                Console.WriteLine("Get session from refresh token...");
+                //Console.WriteLine("Get session from refresh token...");
                 await _localStorageService.SetItemAsync<Session>("session", session);
             }
            
@@ -34,7 +34,7 @@ namespace DYS.FinanceTracker.Shared.Security
                     new Claim(ClaimTypes.NameIdentifier, session!.User!.Id ?? string.Empty),
                     new Claim(ClaimTypes.Email, session.User.Email ?? "")
             }, "supabase") : new ClaimsIdentity();
-            Console.WriteLine($"Get session {identity.Name}");
+            //Console.WriteLine($"Get session {identity.Name}");
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
 
