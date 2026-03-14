@@ -22,45 +22,20 @@ namespace DYS.FinanceTracker.Shared.Security
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var session = await _localStorageService.GetItemAsync<Session>("session");
-
-            if (session!=null)
+            Console.WriteLine($"Session will expire on {session?.ExpiresIn}");
+            if (session != null)
             {
-
-                await _supabase.Auth.SetSession(session.AccessToken ?? string.Empty,
-                                                session.RefreshToken ?? string.Empty,false);
-
-                var expired = session?.Expired();
-                if (expired == true)
-                { 
-                    var refreshedSession = await _supabase.Auth.RefreshSession();
-                    if (refreshedSession != null)
-                    {
-                        await _localStorageService.SetItemAsync<Session>("session", refreshedSession);
-                        session = await _localStorageService.GetItemAsync<Session>("session");
-                    }
-                }
-
-                if (session != null)
-                {
-                    var identity = new ClaimsIdentity(new[]
-                    {
+                session = await _supabase.Auth.SetSession(session.AccessToken ?? "", session.RefreshToken ?? "");
+                Console.WriteLine("Get session from refresh token...");
+                await _localStorageService.SetItemAsync<Session>("session", session);
+            }
+           
+            var identity = session != null ? new ClaimsIdentity(new[]{
                     new Claim(ClaimTypes.NameIdentifier, session!.User!.Id ?? string.Empty),
                     new Claim(ClaimTypes.Email, session.User.Email ?? "")
-                    }, "supabase");
-
-                    return new AuthenticationState(new ClaimsPrincipal(identity));
-                }
-                else
-                {
-                    _currentUser = new ClaimsPrincipal(new ClaimsIdentity());
-                }
-            }
-            else
-            {
-                _currentUser = new ClaimsPrincipal(new ClaimsIdentity());
-            }
-
-            return new AuthenticationState(_currentUser);
+            }, "supabase") : new ClaimsIdentity();
+            Console.WriteLine($"Get session {identity.Name}");
+            return new AuthenticationState(new ClaimsPrincipal(identity));
         }
 
         public async Task<BaseOutputDto> LoginAsync(string email, string password)
@@ -144,27 +119,8 @@ namespace DYS.FinanceTracker.Shared.Security
                     Console.WriteLine($"Session refreshed successfully...");
                     await _localStorageService.SetItemAsync<Session>("session", session ?? new Session());
                 }
-                else 
-                {
-                    Console.WriteLine($"Session refresh failed: No session returned.");
-                    await LogoutAsync();
-                }
             }
-            else await LogoutAsync();
         }
-
-        public async Task KeepAliveAsync(CancellationToken token)
-        {
-            var timer = new PeriodicTimer(TimeSpan.FromMinutes(30));
-            while (await timer.WaitForNextTickAsync(token))
-                await RefreshSessionAsync();
-        }
-        public async Task StartKeepAliveLoop()
-        {
-            var tokenSource = new CancellationTokenSource();
-            await KeepAliveAsync(tokenSource.Token);
-        }
-
     }
 
 }

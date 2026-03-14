@@ -28,9 +28,3 @@
 </CascadingAuthenticationState>
 
 
-@code {
-    protected override async Task OnInitializedAsync()
-    {
-        await SupabaseAuthProvider.StartKeepAliveLoop();
-    }
-}

@@ -25,8 +25,9 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             ISupabaseService<Transaction> transactionService,
             ISupabaseService<Account> accountService,
             ISupabaseAuthProvider supabaseAuthProvider,
-            Supabase.Client supabase)
-            : base(navigationManager, jsRuntime, supabaseAuthProvider)
+            Supabase.Client supabase,
+            SessionHandler sessionHandler)
+            : base(navigationManager, jsRuntime, supabaseAuthProvider, sessionHandler)
         {
             _transactionService = transactionService;
             _accountService = accountService;

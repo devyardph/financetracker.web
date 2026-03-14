@@ -59,13 +59,18 @@ builder.Services.AddSingleton<IIndexedDbFactory, IndexedDbFactory>();
 builder.Services.AddScoped<IndexedDbHelper<TransactionDto>>();
 builder.Services.AddScoped<IndexedDbHelper<AccountDto>>();
 
-
+builder.Services.AddScoped<SessionHandler>();
 builder.Services.AddScoped<ISupabaseAuthProvider,SupabaseAuthProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, SupabaseAuthProvider>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
 
+var host = builder.Build();
 
+// Start refresher after DI is ready
+var sessionHandler = host.Services.GetRequiredService<SessionHandler>();
+sessionHandler.Start();
 
-await builder.Build().RunAsync();
+await host.RunAsync();
+
 

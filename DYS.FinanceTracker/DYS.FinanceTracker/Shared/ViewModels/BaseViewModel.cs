@@ -12,6 +12,7 @@ namespace DYS.FinanceTracker.Shared.ViewModels
         public NavigationManager _navigationManager;
         public IJSRuntime _jsRuntime;
         private readonly ISupabaseAuthProvider _supabaseAuthProvider;
+        private readonly SessionHandler _sessionHandler;
 
         #region PROPERTIES
         public bool _isReadOnly = false;
@@ -104,11 +105,13 @@ namespace DYS.FinanceTracker.Shared.ViewModels
 
         public BaseViewModel(NavigationManager navigationManager,
                              IJSRuntime jsRuntime,
-                             ISupabaseAuthProvider supabaseAuthProvider)
+                             ISupabaseAuthProvider supabaseAuthProvider,
+                             SessionHandler sessionHandler)
         {
             _jsRuntime = jsRuntime;
             _navigationManager = navigationManager;
             _supabaseAuthProvider = supabaseAuthProvider;
+            _sessionHandler = sessionHandler;
         }
 
         public override async Task OnAfterRenderAsync(bool firstRender)
@@ -136,6 +139,7 @@ namespace DYS.FinanceTracker.Shared.ViewModels
         public async Task Signout()
         {
             await _supabaseAuthProvider.LogoutAsync();
+            _sessionHandler.Stop();
             _navigationManager.NavigateTo("/login", forceLoad:true);
         }
         public void NavigationToPath(string path)

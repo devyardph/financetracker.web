@@ -18,8 +18,9 @@ namespace DYS.FinanceTracker.Features.Profile.ViewModels
         public ProfileViewModel(NavigationManager navigationManager,
           IJSRuntime jsRuntime,
           ISupabaseAuthProvider supabaseAuthProvider,
-          Supabase.Client supabase)
-          : base(navigationManager, jsRuntime, supabaseAuthProvider)
+          Supabase.Client supabase,
+          SessionHandler sessionHandler)
+          : base(navigationManager, jsRuntime, supabaseAuthProvider, sessionHandler)
         {
             _supabaseAuthProvider = supabaseAuthProvider;
             _navigationManager = navigationManager;

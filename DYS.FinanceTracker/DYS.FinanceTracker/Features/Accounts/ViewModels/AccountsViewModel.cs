@@ -24,8 +24,9 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
             IJSRuntime jsRuntime, 
             ISupabaseService<Account> accountService,
             ISupabaseAuthProvider supabaseAuthProvider,
-            Supabase.Client supabase)
-            : base(navigationManager, jsRuntime, supabaseAuthProvider)
+            Supabase.Client supabase,
+            SessionHandler sessionHandler)
+            : base(navigationManager, jsRuntime, supabaseAuthProvider, sessionHandler)
         {
             _accountService = accountService;
             _supabase = supabase;

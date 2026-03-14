@@ -9,12 +9,10 @@ namespace DYS.FinanceTracker.Shared.Security
     public interface ISupabaseAuthProvider
     {
         Task<AuthenticationState> GetAuthenticationStateAsync();
+        Task RefreshSessionAsync();
+
         Task<BaseOutputDto> LoginAsync(string email, string password);
         Task<BaseOutputDto> RegisterAsync(string email, string password);
         Task LogoutAsync();
-
-        Task KeepAliveAsync(CancellationToken token);
-        Task RefreshSessionAsync();
-        Task StartKeepAliveLoop();
     }
 }

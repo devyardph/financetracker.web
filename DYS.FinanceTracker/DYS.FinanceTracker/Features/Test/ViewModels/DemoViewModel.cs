@@ -27,8 +27,9 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             ISupabaseService<Transaction> transactionService,
             ISupabaseAuthProvider supabaseAuthProvider,
             IndexedDbHelper<TransactionDto> indexedDbHelper,
-            Supabase.Client supabase)
-            : base(navigationManager, jsRuntime, supabaseAuthProvider)
+            Supabase.Client supabase,
+            SessionHandler sessionHandler)
+            : base(navigationManager, jsRuntime, supabaseAuthProvider, sessionHandler)
         {
             _transactionService = transactionService;
             _indexedDbHelper = indexedDbHelper;

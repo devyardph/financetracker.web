@@ -14,8 +14,9 @@ namespace DYS.FinanceTracker.Shared.ViewModels
         public MenuViewModel(NavigationManager navigationManager, IJSRuntime jsRuntime,
             ILocalStorageService localStorageService,
             IConfiguration configuration,
-             ISupabaseAuthProvider supabaseAuthProvider)
-            : base(navigationManager, jsRuntime, supabaseAuthProvider)
+             ISupabaseAuthProvider supabaseAuthProvider,
+             SessionHandler sessionHandler)
+            : base(navigationManager, jsRuntime, supabaseAuthProvider, sessionHandler)
         {
             _navigationManager = navigationManager;
             _configuration = configuration;
