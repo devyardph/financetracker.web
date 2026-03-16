@@ -20,7 +20,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
         private readonly ISupabaseService<Transaction> _transactionService;
         private readonly ISupabaseService<Account> _accountService;
         private readonly Supabase.Client _supabase;
-        private readonly IndexedDbHelper<TransactionDto> _indexedTransactionDbHelper;
+        private readonly IndexedDbHelper<TransactionDto> _indexedFinanceTrackerDBHelper;
         private readonly IndexedDbHelper<AccountDto> _indexedAccountDbHelper;
         /// <summary>
         /// CONSTRUCTOR
@@ -32,7 +32,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
         /// <param name="supabaseAuthProvider"></param>
         /// <param name="supabase"></param>
         /// <param name="sessionHandler"></param>
-        /// <param name="indexedTransactionDbHelper"></param>
+        /// <param name="indexedFinanceTrackerDBHelper"></param>
         public TrackerViewModel(NavigationManager navigationManager,
             IJSRuntime jsRuntime, 
             ISupabaseService<Transaction> transactionService,
@@ -40,14 +40,14 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             ISupabaseAuthProvider supabaseAuthProvider,
             Supabase.Client supabase,
             SessionHandler sessionHandler,
-            IndexedDbHelper<TransactionDto> indexedTransactionDbHelper,
+            IndexedDbHelper<TransactionDto> indexedFinanceTrackerDBHelper,
             IndexedDbHelper<AccountDto> indexedAccountDbHelper)
             : base(navigationManager, jsRuntime, supabaseAuthProvider, sessionHandler)
         {
             _transactionService = transactionService;
             _accountService = accountService;
             _supabase = supabase;
-            _indexedTransactionDbHelper = indexedTransactionDbHelper;
+            _indexedFinanceTrackerDBHelper = indexedFinanceTrackerDBHelper;
             _indexedAccountDbHelper = indexedAccountDbHelper;
         }
 
@@ -152,7 +152,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             };
 
 
-            var transactions = await _indexedTransactionDbHelper.GetAllAsync<TransactionDB>(db => db.Transaction);
+            var transactions = await _indexedFinanceTrackerDBHelper.GetAllAsync<FinanceTrackerDB>(db => db.Transaction);
             if (transactions.Any())
             {
                 Console.WriteLine("Retrive from index...");
@@ -279,7 +279,10 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
 
                 _filteredTransactions2 = _filteredTransactions.AsQueryable();
                 //SAVE TO INDEXED DB
-                await _indexedTransactionDbHelper.SaveAsync<TransactionDB>(db => db.Transaction, _filteredTransactions2.ToList());
+                Console.WriteLine("Count..." + _filteredTransactions2.Count());
+                await _indexedFinanceTrackerDBHelper.SaveAsync<FinanceTrackerDB>(db => db.Transaction, _filteredTransactions.ToList());
+                var testing = await _indexedFinanceTrackerDBHelper.GetAllAsync<FinanceTrackerDB>(db => db.Transaction);
+                Console.WriteLine("Final count..." + testing.Count());
             }
 
             var income = _filteredTransactions2.Where(q => q.Type == "income").ToList();
@@ -314,7 +317,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                 ("user_id", Constants.Operator.Equals, userId),
             };
 
-            var accounts = await _indexedAccountDbHelper.GetAllAsync<AccountDB>(db => db.Account);
+            var accounts = await _indexedAccountDbHelper.GetAllAsync<FinanceTrackerDB>(db => db.Account);
             if (accounts.Any())
             {
                 Console.WriteLine("Retrive accounts from index...");
@@ -340,7 +343,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                                 .Select(a => new SelectDto() { Id = $"{a.Id}", Name = $"{a.Name}({a.Type})" })
                                 .ToList();
                 //SAVE TO INDEXED DB
-                await _indexedAccountDbHelper.SaveAsync<AccountDB>(db => db.Account, _accounts.ToList());
+                await _indexedAccountDbHelper.SaveAsync<FinanceTrackerDB>(db => db.Account, _accounts.ToList());
             }
 
             _isLoading = false;
@@ -400,7 +403,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
              await _transactionService.UpdateAsync(transaction);
 
             _isSaving = false;
-            await _indexedTransactionDbHelper.DeleteAllAsync<TransactionDB>(db => db.Transaction);
+            await _indexedFinanceTrackerDBHelper.DeleteAllAsync<FinanceTrackerDB>(db => db.Transaction);
             await TransactionComponent.CloseTransaction();
             await OnInitializedAsync();
         }

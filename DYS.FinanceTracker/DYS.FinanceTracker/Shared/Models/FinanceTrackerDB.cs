@@ -4,10 +4,11 @@ using Microsoft.JSInterop;
 
 namespace DYS.FinanceTracker.Shared.Models
 {
-    public class TransactionDB: IndexedDb
+    public class FinanceTrackerDB : IndexedDb
     {
-        public TransactionDB(IJSRuntime jSRuntime, string name, int version)
+        public FinanceTrackerDB(IJSRuntime jSRuntime, string name, int version)
             : base(jSRuntime, name, version) { }
         public IndexedSet<TransactionDto> Transaction { get; set; }
+        public IndexedSet<AccountDto> Account { get; set; }
     }
 }

@@ -14,11 +14,11 @@ namespace DYS.FinanceTracker.Shared.Dtos
         public Guid? Id { get; set; } 
         public Guid? UserId { get; set; }
         public decimal? Amount { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         // "credit" or "cash" or "bank" or "investment"
-        public string Type { get; set; }
-        public string Currency { get; set; }
+        public string Type { get; set; } = string.Empty;
+        public string Currency { get; set; } = string.Empty;
         public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
     }

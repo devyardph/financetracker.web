@@ -119,7 +119,7 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
                 ("user_id",        Constants.Operator.Equals, userId),
             };
 
-            var accounts = await _indexedAccountDbHelper.GetAllAsync<AccountDB>(db => db.Account);
+            var accounts = await _indexedAccountDbHelper.GetAllAsync<FinanceTrackerDB>(db => db.Account);
             if (accounts.Any())
             {
                 Console.WriteLine("Retrive accounts from index...");
@@ -141,7 +141,10 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
                 }).ToList();
 
                 //SAVE TO INDEXED DB
-                await _indexedAccountDbHelper.SaveAsync<AccountDB>(db => db.Account, _filteredAccounts.ToList());
+                Console.WriteLine("Count..." + _filteredAccounts.Count());
+                await _indexedAccountDbHelper.SaveAsync<FinanceTrackerDB>(db => db.Account, _filteredAccounts.ToList());
+                var testing = await _indexedAccountDbHelper.GetAllAsync<FinanceTrackerDB>(db => db.Account);
+                Console.WriteLine("Final count..." + testing.Count());
             }
             _isLoading = false;
 
@@ -179,7 +182,7 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
              await _accountService.UpdateAsync(a);
 
             _isSaving = false;
-            await _indexedAccountDbHelper.DeleteAllAsync<AccountDB>(db => db.Account);
+            await _indexedAccountDbHelper.DeleteAllAsync<FinanceTrackerDB>(db => db.Account);
             await AccountComponent.CloseAccount();
             await OnInitializedAsync();
         }

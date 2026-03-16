@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DYS.FinanceTracker.Shared.Dtos
 {
@@ -14,17 +10,17 @@ namespace DYS.FinanceTracker.Shared.Dtos
         public Guid? Id { get; set; } 
         public Guid? UserId { get; set; }
         public Guid? AccountId { get; set; }
-        public decimal? Amount { get; set; }
-        public string Category { get; set; } 
+        public decimal? Amount { get; set; } = 0;
+        public string Category { get; set; } = string.Empty;
 
         // "income" or "expense"
-        public string Type { get; set; } 
-        public string Description { get; set; } 
+        public string Type { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public DateTime? Date { get; set; } = DateTime.UtcNow;
 
-        // "none", "daily", "weekly", "monthly", "yearly"
-        public string Recurrence { get; set; } = "none";
-        public int? RecurrenceCount { get; set; }
+        // "one-time", "daily", "weekly", "monthly", "yearly"
+        public string Recurrence { get; set; } = "one-time";
+        public int? RecurrenceCount { get; set; } = 0;
 
         // Groups related recurring entries together
         public Guid? RecurrenceGroupId { get; set; }
@@ -34,8 +30,7 @@ namespace DYS.FinanceTracker.Shared.Dtos
         public DateTime? EndDate { get; set; }
 
         // For tracking synchronization status with the server
-        public bool Sync { get; set; } = true;
-        public string SyncError { get; set; } = string.Empty;
-
+        //public bool? Sync { get; set; } = true;
+        //public string SyncError { get; set; } = string.Empty;
     }
 }

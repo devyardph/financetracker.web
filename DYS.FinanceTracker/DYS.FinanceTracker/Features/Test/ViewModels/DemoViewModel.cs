@@ -102,10 +102,10 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             };
 
             // Save
-            await _indexedDbHelper.SaveAsync<TransactionDB>(db => db.Transaction, tx);
+            await _indexedDbHelper.SaveAsync<FinanceTrackerDB>(db => db.Transaction, tx);
 
             //test
-            var transactions = await _indexedDbHelper.GetAllAsync<TransactionDB>(db => db.Transaction);
+            var transactions = await _indexedDbHelper.GetAllAsync<FinanceTrackerDB>(db => db.Transaction);
             _filteredTransactions = transactions ?? new List<TransactionDto>();
             await base.OnInitializedAsync();
         }
