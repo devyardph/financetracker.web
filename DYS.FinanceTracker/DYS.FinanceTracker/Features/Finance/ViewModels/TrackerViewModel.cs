@@ -111,8 +111,15 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             set => Set(ref _type, value, nameof(Type));
         }
 
-        private List<SelectDto> _accounts = new List<SelectDto>();
-        public List<SelectDto> Accounts
+        private List<SelectDto> _accountOptions = new List<SelectDto>();
+        public List<SelectDto> AccountOptions
+        {
+            get => _accountOptions;
+            set => Set(ref _accountOptions, value, nameof(Accounts));
+        }
+
+        private List<AccountDto> _accounts = new List<AccountDto>();
+        public List<AccountDto> Accounts
         {
             get => _accounts;
             set => Set(ref _accounts, value, nameof(Accounts));
@@ -307,10 +314,34 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                 ("user_id", Constants.Operator.Equals, userId),
             };
 
-            var allAccounts = await _accountService.GetAllAsync(filters);
-            _accounts = allAccounts.OrderBy(t => t.Name)
-                            .Select(a => new SelectDto() { Id = a.Id.ToString(), Name = $"{a.Name}({a.Type})" })
+            var accounts = await _indexedAccountDbHelper.GetAllAsync<AccountDB>(db => db.Account);
+            if (accounts.Any())
+            {
+                Console.WriteLine("Retrive accounts from index...");
+                _accounts = accounts.ToList();
+                _accountOptions = _accounts.OrderBy(t => t.Name)
+                            .Select(a => new SelectDto() { Id = $"{a.Id}", Name = $"{a.Name}({a.Type})" })
                             .ToList();
+            }
+            else
+            {
+                var allAccounts = await _accountService.GetAllAsync(filters);
+                _accounts = allAccounts.Select(a => new AccountDto()
+                {
+                    Id = a.Id,
+                    UserId = a.UserId,
+                    Amount = a.Amount,
+                    Type = a.Type,
+                    Name = a.Name,
+                    Description = a.Description,
+                    Currency = a.Currency,
+                }).ToList();
+                _accountOptions = _accounts.OrderBy(t => t.Name)
+                                .Select(a => new SelectDto() { Id = $"{a.Id}", Name = $"{a.Name}({a.Type})" })
+                                .ToList();
+                //SAVE TO INDEXED DB
+                await _indexedAccountDbHelper.SaveAsync<AccountDB>(db => db.Account, _accounts.ToList());
+            }
 
             _isLoading = false;
         }
@@ -375,7 +406,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
         }
         public async Task OpenTransactionAsync(TransactionDto transaction)
         {
-            TransactionComponent.Accounts = _accounts;
+            TransactionComponent.Accounts = _accountOptions;
             await TransactionComponent.OpenTransaction(transaction);
         }
         #endregion

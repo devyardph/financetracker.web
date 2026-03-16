@@ -20,15 +20,18 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
 
         private readonly ISupabaseService<Account> _accountService;
         private readonly Supabase.Client _supabase;
+        private readonly IndexedDbHelper<AccountDto> _indexedAccountDbHelper;
         public AccountsViewModel(NavigationManager navigationManager,
             IJSRuntime jsRuntime, 
             ISupabaseService<Account> accountService,
             ISupabaseAuthProvider supabaseAuthProvider,
             Supabase.Client supabase,
-            SessionHandler sessionHandler)
+            SessionHandler sessionHandler,
+            IndexedDbHelper<AccountDto> indexedAccountDbHelper)
             : base(navigationManager, jsRuntime, supabaseAuthProvider, sessionHandler)
         {
             _accountService = accountService;
+            _indexedAccountDbHelper = indexedAccountDbHelper;
             _supabase = supabase;
         }
 
@@ -116,24 +119,37 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
                 ("user_id",        Constants.Operator.Equals, userId),
             };
 
-            var allAccounts = await _accountService.GetAllAsync(filters);
-            _accounts = allAccounts.OrderByDescending(t => t.Name).ToList();
-            _filteredAccounts = _accounts.Select(a => new AccountDto
+            var accounts = await _indexedAccountDbHelper.GetAllAsync<AccountDB>(db => db.Account);
+            if (accounts.Any())
             {
-                Id = a.Id,
-                UserId = a.UserId,
-                Amount = a.Amount,
-                Type = a.Type,
-                Name = a.Name,
-                Description = a.Description,
-                Currency = a.Currency,
-            }).ToList();
+                Console.WriteLine("Retrive accounts from index...");
+                _filteredAccounts = accounts.ToList();
+            }
+            else
+            {
+                var allAccounts = await _accountService.GetAllAsync(filters);
+                _accounts = allAccounts.OrderByDescending(t => t.Name).ToList();
+                _filteredAccounts = _accounts.Select(a => new AccountDto
+                {
+                    Id = a.Id,
+                    UserId = a.UserId,
+                    Amount = a.Amount,
+                    Type = a.Type,
+                    Name = a.Name,
+                    Description = a.Description,
+                    Currency = a.Currency,
+                }).ToList();
+
+                //SAVE TO INDEXED DB
+                await _indexedAccountDbHelper.SaveAsync<AccountDB>(db => db.Account, _filteredAccounts.ToList());
+            }
             _isLoading = false;
 
-            foreach (var account in allAccounts)
+            foreach (var account in _accounts)
             {
                 await _jsRuntime.InvokeVoidAsync("countUp2",$"{account.Id}", account.Amount);
             }
+
 
             //await _jsRuntime.InvokeVoidAsync("countUp2", "expense-text", _summary.Expense);
             //await _jsRuntime.InvokeVoidAsync("countUp2", "balance-text", balance);
@@ -163,6 +179,7 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
              await _accountService.UpdateAsync(a);
 
             _isSaving = false;
+            await _indexedAccountDbHelper.DeleteAllAsync<AccountDB>(db => db.Account);
             await AccountComponent.CloseAccount();
             await OnInitializedAsync();
         }
