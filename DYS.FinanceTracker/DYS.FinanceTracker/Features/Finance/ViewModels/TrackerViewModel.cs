@@ -153,10 +153,10 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
 
 
             var transactions = await _indexedFinanceTrackerDBHelper.GetAllAsync<FinanceTrackerDB>(db => db.Transaction);
-            if (transactions.Any())
+            if (transactions.Where(x => x.UserId == userId).Any())
             {
                 Console.WriteLine("Retrive from index...");
-                _filteredTransactions2 = transactions.Where(x => x.UserId == userId).AsQueryable();
+                _filteredTransactions2 = transactions.AsQueryable();
             }
             else
             {
@@ -258,7 +258,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                     }
                 }
 
-                _transactions = expanded.Where(q => q.Date >= startDate && q.Date <= endDate && q.UserId == userId).ToList();
+                _transactions = expanded.Where(q => q.Date >= startDate && q.Date <= endDate).ToList();
                 _filteredTransactions = _transactions.Select(t =>
                   new TransactionDto()
                   {

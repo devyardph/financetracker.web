@@ -120,7 +120,7 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
             };
 
             var accounts = await _indexedAccountDbHelper.GetAllAsync<FinanceTrackerDB>(db => db.Account);
-            if (accounts.Any())
+            if (accounts.Where(x => x.UserId == userId).Any())
             {
                 Console.WriteLine("Retrive accounts from index...");
                 _filteredAccounts = accounts.ToList();
