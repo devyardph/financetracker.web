@@ -277,13 +277,13 @@ function setValue(id, value) {
 function setNumberById(id) {
     var element = document.getElementById(id);
     var maskOptions = {
-        mask: Number,  // enable number mask
-        scale: 2,  // digits after point, 0 for integers
-        thousandsSeparator: ',',  // any single char
-        padFractionalZeros: false,  // if true, then pads zeros at end to the length of scale
-        normalizeZeros: true,  // appends or removes zeros at ends
-        radix: ',',  // fractional delimiter
-        mapToRadix: ['.'],  // symbols to process as radix
+        mask: Number,              // enable number mask
+        scale: 2,                  // allow 2 digits after decimal
+        thousandsSeparator: ',',   // separator for thousands
+        padFractionalZeros: false, // don’t force trailing zeros
+        normalizeZeros: true,      // normalize zeros
+        radix: '.',                // use dot as decimal separator
+        mapToRadix: [','],         // allow comma to be interpreted as dot
         min: 0,
         max: 10000000000000,
         autofix: true,
