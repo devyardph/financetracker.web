@@ -17,7 +17,7 @@
             <div class="mb-2">
                 <DateComponent Id="effective-date" Index="0" @bind-ChosenDate="@Transaction.EffectiveDate" Label="Effective Date" TriggerEvent="@SetEffectiveDate" />
             </div>
-            <div class="@BooleanExtensions.GetConditionalString(FrequencyOptionEnabled, "","d-none")">
+            <div class="mb-2 @BooleanExtensions.GetConditionalString(FrequencyOptionEnabled, "","d-none")">
             <div class="mb-1">
                <span class="fw-bold form-label text-dark-emphasis">FREQUENCY OPTIONS</span>
             </div>
@@ -30,15 +30,14 @@
                         <DateComponent Id="end-date" Index="0" @bind-ChosenDate="@Transaction.EndDate" Label="End date" TriggerEvent="@SetRecurrenceCount" />
                     </div>
                 </div>
-                <div class="mb-2">
-                    <TextComponent Id="description" @bind-Item="@Transaction.Description" Label="Notes" />
-                </div>
                 <div class="alert alert-secondary border-1 p-3 border-slack" role="alert">
                     <small>Set frequency option if expense or income has a specific end date, otherwise leave empty to set it to continuous.</small>
                 </div>
             </div>
             </div>
-
+            <div class="mb-2">
+                <TextComponent Id="description" @bind-Item="@Transaction.Description" Label="Notes" />
+            </div>
             <div class="mx-auto">
                 <ButtonComponent Id="save-expense" 
                                 ActionText="@ActionText" 
