@@ -156,7 +156,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             if (transactions.Any())
             {
                 Console.WriteLine("Retrive from index...");
-                _filteredTransactions2 = transactions.AsQueryable();
+                _filteredTransactions2 = transactions.Where(x => x.UserId == userId).AsQueryable();
             }
             else
             {
@@ -258,7 +258,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                     }
                 }
 
-                _transactions = expanded.Where(q => q.Date >= startDate && q.Date <= endDate).ToList();
+                _transactions = expanded.Where(q => q.Date >= startDate && q.Date <= endDate && q.UserId == userId).ToList();
                 _filteredTransactions = _transactions.Select(t =>
                   new TransactionDto()
                   {
