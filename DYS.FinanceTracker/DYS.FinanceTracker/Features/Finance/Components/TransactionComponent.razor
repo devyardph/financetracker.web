@@ -1,5 +1,20 @@
 ﻿@inject IJSRuntime jSRuntime
 <OffCanvasComponent Id="@Id" Title="@Title" Width="">
+    <HeaderContent>
+        <div class="p-6 pt-4 pb-2 border-bottom d-flex justify-content-between align-items-center">
+            <div>
+                <strong>@Title</strong>
+            </div>
+            @if (Transaction.Id != Guid.Empty && Transaction.Id != null)
+            {
+                <button type="button"
+                class="btn p-0"
+                aria-label="Delete" @onclick="@(() => EnableDelete(Transaction))">
+                    <i class="bx bx-trash"></i>
+                </button>
+            }
+        </div>
+    </HeaderContent>
     <ChildContent>
         <div class="row">
             <div class="mb-2">
@@ -30,7 +45,7 @@
                         <DateComponent Id="end-date" Index="0" @bind-ChosenDate="@Transaction.EndDate" Label="End date" TriggerEvent="@SetRecurrenceCount" />
                     </div>
                 </div>
-                <div class="alert alert-secondary border-1 p-3 border-slack" role="alert">
+                <div class="alert alert-secondary border-1 p-3 border-slack mb-0" role="alert">
                     <small>Set frequency option if expense or income has a specific end date, otherwise leave empty to set it to continuous.</small>
                 </div>
             </div>
@@ -44,7 +59,12 @@
                                 IsBusy="@IsSaving"
                                 IsDisabled="@DataExtensions.IsInvalidTransaction(Transaction, IsSaving)"
                                 OnClicked="@(() => OnSubmitTransaction(Transaction))"
-                                Style="btn btn-md btn-slack w-100 d-grid" /> 
+                                Style="btn btn-md btn-slack w-100 d-grid mb-2" />
+
+                <ButtonComponent Id="cancel-expense"
+                                 ActionText="CANCEL"
+                                 DissmisModal="offcanvas"
+                                 Style="btn btn-md btn-outline-gray w-100 d-grid mb-2" />
             </div> 
         </div>
     </ChildContent>
@@ -59,22 +79,30 @@
     [Parameter]
     public string Title { get; set; } = "";
     public string ActionText { get; set; } = "";
+    public string DeleteActionText { get; set; } = "";
     public TransactionDto Transaction { get; set; } = new TransactionDto();
     [Parameter]
     public EventCallback<TransactionDto> SubmitTransaction { get; set; }
+    [Parameter]
+    public EventCallback<TransactionDto> DeleteTransaction { get; set; }
     public List<SelectDto> Categories { get; set; } = new List<SelectDto>();
     public List<SelectDto> Accounts { get; set; } = new List<SelectDto>();
     public bool FrequencyOptionEnabled { get; set; } = false;
+    public bool DeleteEnabled { get; set; } = false;
     private async Task OnSubmitTransaction(TransactionDto transaction)
     {
         Console.WriteLine($"Submitting expense: {transaction.Amount} - {transaction.Category} - {transaction.Type}");
-        await SubmitTransaction.InvokeAsync(transaction);
+        if (DeleteEnabled)
+            await DeleteTransaction.InvokeAsync(transaction);
+        else
+            await SubmitTransaction.InvokeAsync(transaction);
         Transaction = new TransactionDto();
         StateHasChanged();
     }
 
     public async Task OpenTransaction(TransactionDto transaction)
     {
+        DeleteEnabled = false;
         Console.WriteLine($"Opening transaction: {transaction.Amount} - {transaction.Category} - {transaction.Type} - {transaction.RecurrenceCount}");
         await jSRuntime.InvokeVoidAsync("showOffCanvas", Id);
         Transaction = transaction.Id == Guid.Empty || 
@@ -86,10 +114,11 @@
                       transaction.Id == null ? "one-time" : Transaction.Recurrence;
         Title = transaction.Type == "expense" ? "EXPENSE" : "INCOME";
         ActionText = transaction.Type == "expense" ? "SAVE EXPENSE" : "SAVE INCOME";
+        DeleteActionText = transaction.Type == "expense" ? "DELETE EXPENSE" : "DELETE INCOME";
         Categories = transaction.Type == "expense" ?
                      GlobalSettings.Categories.Where(query => query.Parent == "expense").OrderBy(query => query.Name).ToList() :
                      GlobalSettings.Categories.Where(query => query.Parent == "income").OrderBy(query => query.Name).ToList();
-        
+
         if (Transaction.Recurrence == "one-time" || string.IsNullOrEmpty(Transaction.Recurrence)) FrequencyOptionEnabled = false;
         else FrequencyOptionEnabled = true;
         StateHasChanged();
@@ -175,5 +204,11 @@
 
         if (Transaction.Recurrence == "one-time" || string.IsNullOrEmpty(Transaction.Recurrence)) FrequencyOptionEnabled = false;
         else FrequencyOptionEnabled = true;
+    }
+
+    public async Task EnableDelete(TransactionDto transaction)
+    {
+        DeleteEnabled = true;
+        ActionText = transaction.Type == "expense" ? "DELETE EXPENSE" : "DELETE INCOME";
     }
 }

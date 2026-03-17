@@ -7,16 +7,7 @@ data-bs-backdrop="@Backdrop"
 data-bs-keyboard="false">
     @if (ShowHeader)
     {
-        <div class="offcanvas-header border-bottom">
-            <div>
-            <strong>@((MarkupString)Title)</strong>
-            <p class="m-0">@((MarkupString)SubTitle)</p>
-        </div>
-        <button type="button"
-        class="btn-close text-reset"
-        data-bs-dismiss="offcanvas"
-        aria-label="Close"></button>
-    </div>
+      @HeaderContent
     }
     <div class="offcanvas-body pt-2">
         @ChildContent
@@ -33,5 +24,6 @@ data-bs-keyboard="false">
     [Parameter] public bool ShowHeader { get; set; } = true;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public RenderFragment? FooterContent { get; set; }
+    [Parameter] public RenderFragment? HeaderContent { get; set; }
     [Parameter] public string Placement { get; set; } = "offcanvas-end"; // start,end,top,bottom
 }

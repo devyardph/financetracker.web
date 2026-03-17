@@ -407,6 +407,19 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             await TransactionComponent.CloseTransaction();
             await OnInitializedAsync();
         }
+
+        public async Task DeleteTransactionAsync(TransactionDto t)
+        {
+            _isSaving = true;
+            var transaction = t.Id;
+            if (transaction != Guid.Empty)
+                await _transactionService.DeleteAsync(transaction ?? Guid.Empty);
+
+            _isSaving = false;
+            await _indexedFinanceTrackerDBHelper.DeleteAllAsync<FinanceTrackerDB>(db => db.Transaction);
+            await TransactionComponent.CloseTransaction();
+            await OnInitializedAsync();
+        }
         public async Task OpenTransactionAsync(TransactionDto transaction)
         {
             TransactionComponent.Accounts = _accountOptions;
