@@ -7,6 +7,7 @@ using DYS.FinanceTracker.Shared.Security;
 using DYS.FinanceTracker.Shared.Services;
 using DYS.FinanceTracker.Shared.ViewModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.JSInterop;
 using Supabase;
 using Supabase.Postgrest;
@@ -150,7 +151,6 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                 ("user_id",        Constants.Operator.Equals,           userId),
                 ("effective_date", Constants.Operator.LessThanOrEqual,  endDate),
             };
-
 
             var transactions = await _indexedFinanceTrackerDBHelper.GetAllAsync<FinanceTrackerDB>(db => db.Transaction);
             if (transactions.Where(x => x.UserId == userId).Any())
@@ -436,6 +436,12 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
         {
             TransactionComponent.Accounts = _accountOptions;
             await TransactionComponent.OpenTransaction(transaction);
+        }
+
+        public async Task OnChangeDate()
+        {
+            await _indexedFinanceTrackerDBHelper.DeleteAllAsync<FinanceTrackerDB>(db => db.Transaction);
+            await GetTransactions();
         }
         #endregion
     }
