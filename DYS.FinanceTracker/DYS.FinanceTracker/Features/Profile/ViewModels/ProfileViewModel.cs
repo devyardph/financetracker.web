@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 
 using DYS.FinanceTracker.Shared.Dtos;
+using DYS.FinanceTracker.Shared.Models;
 using DYS.FinanceTracker.Shared.Security;
+using DYS.FinanceTracker.Shared.Services;
 using DYS.FinanceTracker.Shared.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -15,15 +17,21 @@ namespace DYS.FinanceTracker.Features.Profile.ViewModels
     {
         private readonly ISupabaseAuthProvider _supabaseAuthProvider;
         private readonly NavigationManager _navigationManager;
+        private readonly IndexedDbHelper<TransactionDto> _indexedFinanceTrackerDBHelper;
+        private readonly IndexedDbHelper<AccountDto> _indexedAccountDbHelper;
         public ProfileViewModel(NavigationManager navigationManager,
           IJSRuntime jsRuntime,
           ISupabaseAuthProvider supabaseAuthProvider,
           Supabase.Client supabase,
-          SessionHandler sessionHandler)
+          SessionHandler sessionHandler,
+          IndexedDbHelper<TransactionDto> indexedFinanceTrackerDBHelper,
+          IndexedDbHelper<AccountDto> indexedAccountDbHelper)
           : base(navigationManager, jsRuntime, supabaseAuthProvider, sessionHandler)
         {
             _supabaseAuthProvider = supabaseAuthProvider;
             _navigationManager = navigationManager;
+            _indexedFinanceTrackerDBHelper = indexedFinanceTrackerDBHelper;
+            _indexedAccountDbHelper = indexedAccountDbHelper;
         }
 
         #region PROPERTIES
@@ -50,6 +58,9 @@ namespace DYS.FinanceTracker.Features.Profile.ViewModels
             if (output.Success)
             {
                 _navigationManager.NavigateTo("/", forceLoad: true);
+                //MAKE SURE TO CLEAR INDEX
+                await _indexedFinanceTrackerDBHelper.DeleteAllAsync<FinanceTrackerDB>(db => db.Transaction);
+                await _indexedAccountDbHelper.DeleteAllAsync<FinanceTrackerDB>(db => db.Account);
             }
             else
             { 

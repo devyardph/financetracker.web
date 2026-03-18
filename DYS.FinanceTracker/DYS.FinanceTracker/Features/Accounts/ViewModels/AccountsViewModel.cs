@@ -21,6 +21,8 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
         private readonly ISupabaseService<Account> _accountService;
         private readonly Supabase.Client _supabase;
         private readonly IndexedDbHelper<AccountDto> _indexedAccountDbHelper;
+
+
         public AccountsViewModel(NavigationManager navigationManager,
             IJSRuntime jsRuntime, 
             ISupabaseService<Account> accountService,
