@@ -126,12 +126,12 @@
                     }
                     else
                     {
-                        <QuickGrid Items="BindingContext.FilteredTransactions2.OrderByDescending(x => x.EffectiveDate)" Class="table table-hover table-sm no-header-grid">
+                        <QuickGrid Items="BindingContext.FilteredTransactions2.OrderByDescending(x => x.DateCreated)" Class="table table-hover table-sm no-header-grid">
                             <TemplateColumn Context="transaction" >
                                 <div class="d-flex flex-column cursor-pointer" @onclick="@(() => BindingContext.OpenTransactionAsync(transaction))">
                                     <div class="p-0 fw-lighter">@DataExtensions.GetSelectedName(GlobalSettings.Categories, transaction.Category)</div>
-                                    <div class="p-0 fw-lighter"><small>@transaction.EffectiveDate.FormatDate("MMM dd,yyyy")</small></div>
-                                    <div class="p-0fw-lighter"><small>@transaction.Description</small></div>
+@*                                  <div class="p-0 fw-lighter"><small>@transaction.DateCreated.FormatDate("MMM dd, yyyy hh:mm tt")</small></div> *@
+                                    <div class="p-0fw-lighter"><small>@DataExtensions.GetSelectedName(BindingContext.AccountOptions, transaction.AccountId.ToString()) @transaction.Description</small></div>
                                 </div>
                             </TemplateColumn>
                             <TemplateColumn Context="transaction" Class="w-px-250 text-end">

@@ -28,6 +28,7 @@ namespace DYS.FinanceTracker.Shared.Dtos
         // Marks when this version of the recurring transaction starts
         public DateTime? EffectiveDate { get; set; } = DateTime.UtcNow;
         public DateTime? EndDate { get; set; }
+        public DateTime? DateCreated { get; set; } = DateTime.UtcNow;
 
         // For tracking synchronization status with the server
         //public bool? Sync { get; set; } = true;

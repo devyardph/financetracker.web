@@ -99,8 +99,10 @@
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        await base.OnAfterRenderAsync(firstRender);
+        await ItemChanged.InvokeAsync(Item);
+        await TriggerEvent.InvokeAsync(Item);
+        await base.OnInitializedAsync();
     }
 }

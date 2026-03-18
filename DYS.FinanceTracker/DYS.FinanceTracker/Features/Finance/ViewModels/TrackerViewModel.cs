@@ -192,6 +192,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                                 UserId = t.UserId,
                                 Amount = t.Amount,
                                 Category = t.Category,
+                                AccountId = t.AccountId,
                                 Type = t.Type,
                                 Description = t.Description,
                                 Date = yearlyDate,
@@ -199,7 +200,8 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                                 RecurrenceCount = t.RecurrenceCount,
                                 RecurrenceGroupId = t.RecurrenceGroupId,
                                 EffectiveDate = t.EffectiveDate,
-                                EndDate = t.EndDate
+                                EndDate = t.EndDate,
+                                DateCreated = t.DateCreated
                             });
                         }
                     }
@@ -219,13 +221,15 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                                     UserId = t.UserId,
                                     Amount = t.Amount,
                                     Category = t.Category,
+                                    AccountId = t.AccountId,
                                     Type = t.Type,
                                     Description = t.Description,
                                     Date = nextDate,
                                     Recurrence = t.Recurrence,
                                     RecurrenceGroupId = t.RecurrenceGroupId,
                                     EffectiveDate = t.EffectiveDate,
-                                    EndDate = t.EndDate
+                                    EndDate = t.EndDate,
+                                    DateCreated = t.DateCreated
                                 });
                             }
                         }
@@ -240,6 +244,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                                     UserId = t.UserId,
                                     Amount = t.Amount,
                                     Category = t.Category,
+                                    AccountId = t.AccountId,
                                     Type = t.Type,
                                     Description = t.Description,
                                     Date = nextDate,
@@ -247,7 +252,8 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                                     RecurrenceCount = t.RecurrenceCount,
                                     RecurrenceGroupId = t.RecurrenceGroupId,
                                     EffectiveDate = t.EffectiveDate,
-                                    EndDate = t.EndDate
+                                    EndDate = t.EndDate,
+                                    DateCreated = t.DateCreated
                                 });
 
                                 var candidate = DateExtensions.GetNextDate(nextDate.Value, t.Recurrence);
@@ -266,6 +272,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                       UserId = t.UserId,
                       Amount = t.Amount,
                       Category = t.Category,
+                      AccountId = t.AccountId,
                       Type = t.Type,
                       Description = t.Description,
                       Date = t.Date,
@@ -273,7 +280,8 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                       RecurrenceCount = t.RecurrenceCount,
                       RecurrenceGroupId = t.RecurrenceGroupId,
                       EffectiveDate = t.EffectiveDate,
-                      EndDate = t.EndDate
+                      EndDate = t.EndDate,
+                      DateCreated = t.DateCreated
                   }
                  ).ToList();
 
@@ -386,6 +394,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                 UserId = t.UserId,
                 Amount = t.Amount,
                 Category = t.Category,
+                AccountId = t.AccountId,
                 Type = t.Type,
                 Description = t.Description,
                 Date = t.Date,
@@ -396,6 +405,9 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
                 EndDate = t.EndDate
             };
 
+            transaction.DateCreated = t.Id != Guid.Empty || t.Id!= null ? 
+                                      t.DateCreated :
+                                      DateTime.UtcNow;
             transaction.UserId =  new Guid(session?.User?.Id ?? "");
             if(transaction.Id == Guid.Empty)
              await _transactionService.InsertAsync(transaction);

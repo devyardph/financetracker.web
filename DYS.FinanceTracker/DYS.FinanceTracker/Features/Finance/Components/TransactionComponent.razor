@@ -7,11 +7,21 @@
             </div>
             @if (Transaction.Id != Guid.Empty && Transaction.Id != null)
             {
-                <button type="button"
-                class="btn p-0"
-                aria-label="Delete" @onclick="@(() => EnableDelete(Transaction))">
-                    <i class="bx bx-trash"></i>
-                </button>
+                @if (DeleteEnabled == false)
+                {
+                    <button type="button"
+                    class="btn p-0"
+                    aria-label="Delete" @onclick="@(() => EnableDelete(Transaction))">
+                        <i class="bx bx-trash"></i>
+                    </button>
+                }
+                else
+                {
+                    <button type="button"
+                            class="btn btn-close p-0"
+                            aria-label="Delete" @onclick="@(() => DisableDelete(Transaction))">
+                    </button>
+                }
             }
         </div>
     </HeaderContent>
@@ -50,7 +60,7 @@
                 </div>
             </div>
             </div>
-            <div class="mb-2">
+            <div class="mb-3">
                 <TextComponent Id="description" @bind-Item="@Transaction.Description" Label="Notes" />
             </div>
             <div class="mx-auto">
@@ -59,7 +69,7 @@
                                 IsBusy="@IsSaving"
                                 IsDisabled="@DataExtensions.IsInvalidTransaction(Transaction, IsSaving)"
                                 OnClicked="@(() => OnSubmitTransaction(Transaction))"
-                                Style="btn btn-md btn-slack w-100 d-grid mb-2" />
+                                 Style="@BooleanExtensions.GetConditionalString(DeleteEnabled == true, "btn btn-md btn-danger w-100 d-grid mb-2 ","btn btn-md btn-slack w-100 d-grid mb-2 ")" />
 
                 <ButtonComponent Id="cancel-expense"
                                  ActionText="CANCEL"
@@ -210,5 +220,11 @@
     {
         DeleteEnabled = true;
         ActionText = transaction.Type == "expense" ? "DELETE EXPENSE" : "DELETE INCOME";
+    }
+
+    public async Task DisableDelete(TransactionDto transaction)
+    {
+        DeleteEnabled = false;
+        ActionText = transaction.Type == "expense" ? "SAVE EXPENSE" : "SAVE INCOME";
     }
 }

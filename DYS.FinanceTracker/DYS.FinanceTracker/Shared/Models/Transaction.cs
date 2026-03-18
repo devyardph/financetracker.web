@@ -40,7 +40,10 @@ namespace DYS.FinanceTracker.Shared.Models
         [Column("effective_date")]
         public DateTime? EffectiveDate { get; set; } = DateTime.UtcNow;
         [Column("end_date")]
-        public DateTime? EndDate { get; set; } 
+        public DateTime? EndDate { get; set; }
+
+        [Column("date_created")]
+        public DateTime? DateCreated { get; set; }
 
     }
 }
