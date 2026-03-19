@@ -23,13 +23,20 @@ namespace DYS.FinanceTracker.Shared.Security
         {
             var session = await _localStorageService.GetItemAsync<Session>("session");
             //Console.WriteLine($"Session will expire on {session?.ExpiresIn}");
-            if (session != null)
+            if (session != null && session.Expired())
             {
-                session = await _supabase.Auth.SetSession(session.AccessToken ?? "", session.RefreshToken ?? "");
-                //Console.WriteLine("Get session from refresh token...");
-                await _localStorageService.SetItemAsync<Session>("session", session);
+                if (!string.IsNullOrEmpty(session.AccessToken) && !string.IsNullOrEmpty(session.RefreshToken))
+                {
+                    session = await _supabase.Auth.SetSession(session.AccessToken, session.RefreshToken);
+                    await _localStorageService.SetItemAsync("session", session);
+                }
+                else
+                {
+                    // invalid session, force logout
+                    session = null;
+                }
             }
-           
+
             var identity = session != null ? new ClaimsIdentity(new[]{
                     new Claim(ClaimTypes.NameIdentifier, session!.User!.Id ?? string.Empty),
                     new Claim(ClaimTypes.Email, session.User.Email ?? "")
