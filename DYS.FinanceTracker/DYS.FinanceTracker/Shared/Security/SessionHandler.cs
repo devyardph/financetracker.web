@@ -12,8 +12,8 @@
 
         public void Start()
         {
-            _timer = new Timer(async _ => await _supabaseAuthProvider.RefreshSessionAsync(),
-                               null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
+            //_timer = new Timer(async _ => await _supabaseAuthProvider.RefreshSessionAsync(),
+                               //null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
         }
 
         public void Stop() => _timer?.Dispose();

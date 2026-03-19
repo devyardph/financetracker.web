@@ -126,8 +126,8 @@ namespace DYS.FinanceTracker.Shared.Security
      
         public async Task RefreshSessionAsync()
         {
+            var currentSession = await _localStorageService.GetItemAsync<Session>("session");
             Console.WriteLine($"Try to refresh token...");
-            var currentSession = _supabase.Auth.CurrentSession;
             if (currentSession != null && currentSession?.Expired() == true)
             {
                 try
@@ -156,7 +156,6 @@ namespace DYS.FinanceTracker.Shared.Security
                 Console.WriteLine($"Error refreshing session");
                 await _localStorageService.RemoveItemAsync("session");
             }
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
     }
 
