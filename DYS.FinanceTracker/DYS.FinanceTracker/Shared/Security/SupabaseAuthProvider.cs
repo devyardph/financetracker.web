@@ -151,6 +151,12 @@ namespace DYS.FinanceTracker.Shared.Security
                 }
 
             }
+            else
+            {
+                Console.WriteLine($"Error refreshing session");
+                await _localStorageService.RemoveItemAsync("session");
+            }
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
     }
 
