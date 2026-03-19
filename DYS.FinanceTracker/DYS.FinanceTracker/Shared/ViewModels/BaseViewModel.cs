@@ -80,18 +80,18 @@ namespace DYS.FinanceTracker.Shared.ViewModels
             set => Set(ref _errors, value, nameof(Errors));
         }
 
+        public string _id;
+        public string Id
+        {
+            get => _id;
+            set => Set(ref _id, value, nameof(Id));
+        }
+
         public string _name;
         public string Name
         {
             get => _name;
             set => Set(ref _name, value, nameof(Name));
-        }
-
-        public ProfileDto _profile = new ProfileDto();
-        public ProfileDto Profile
-        {
-            get => _profile;
-            set => Set(ref _profile, value, nameof(Profile));
         }
 
         public SearchDto _search = new SearchDto();
@@ -112,28 +112,21 @@ namespace DYS.FinanceTracker.Shared.ViewModels
             _navigationManager = navigationManager;
             _supabaseAuthProvider = supabaseAuthProvider;
             _sessionHandler = sessionHandler;
+
+           
         }
 
-        public override async Task OnAfterRenderAsync(bool firstRender)
+        public override async Task OnInitializedAsync()
         {
-            if (firstRender)
+            var authState = await _supabaseAuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated == true)
             {
-                var authState = await _supabaseAuthProvider.GetAuthenticationStateAsync();
-                if (authState.User != null)
-                {
-                    authState.User.Claims.ToList().ForEach(x =>
-                    {
-                        if (x.Type == ClaimTypes.NameIdentifier)
-                        {
-                            _profile.Id = x.Value;
-                        }
-                        else if (x.Type == ClaimTypes.Email)
-                        {
-                            _profile.Email = x.Value;
-                        }
-                    });
-                }
+                _id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+                _name = user.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
             }
+            await base.OnInitializedAsync();
         }
 
         public async Task Signout()

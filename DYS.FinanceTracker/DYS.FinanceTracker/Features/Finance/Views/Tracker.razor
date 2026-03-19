@@ -126,7 +126,7 @@
                     }
                     else
                     {
-                        <QuickGrid Items="BindingContext.FilteredTransactions2.OrderByDescending(x => x.DateCreated)" Class="table table-hover table-sm no-header-grid">
+                        <QuickGrid Items="BindingContext.FilteredTransactions2?.OrderByDescending(x => x.DateCreated)!" Class="table table-hover table-sm no-header-grid">
                             <TemplateColumn Context="transaction" >
                                 <div class="d-flex flex-column cursor-pointer" @onclick="@(() => BindingContext.OpenTransactionAsync(transaction))">
                                     <div class="p-0fw-lighter"><small>@DataExtensions.GetSelectedName(BindingContext.AccountOptions, transaction.AccountId.ToString()) </small></div>

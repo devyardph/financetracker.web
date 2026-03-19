@@ -23,6 +23,7 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
         private readonly Supabase.Client _supabase;
         private readonly IndexedDbHelper<TransactionDto> _indexedFinanceTrackerDBHelper;
         private readonly IndexedDbHelper<AccountDto> _indexedAccountDbHelper;
+
         /// <summary>
         /// CONSTRUCTOR
         /// </summary>
@@ -130,9 +131,9 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
 
         public override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
             await GetAccounts();
             await GetTransactions();
-            await base.OnInitializedAsync();
         }
 
         #region FUNCTIONS
@@ -144,8 +145,8 @@ namespace DYS.FinanceTracker.Features.Finance.ViewModels
             var startDate = _startDate ?? DateTime.Now.StartOfMonth();
             var endDate = _endDate ?? startDate.EndOfMonth();
 
-            var session = await _supabaseAuthProvider.Session();
-            var userId = !string.IsNullOrEmpty(session?.User?.Id) ? new Guid(session.User.Id) : Guid.Empty;
+            var session = _id;
+            var userId = !string.IsNullOrEmpty(session) ? new Guid(session) : Guid.Empty;
             var filters = new List<(string, Constants.Operator, object)>
             {
                 ("user_id",        Constants.Operator.Equals,           userId),

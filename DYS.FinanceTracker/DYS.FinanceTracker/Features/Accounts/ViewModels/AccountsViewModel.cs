@@ -94,8 +94,8 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
 
         public override async Task OnInitializedAsync()
         {
-            await GetTransactions();
             await base.OnInitializedAsync();
+            await GetTransactions();
         }
 
         public override async Task OnAfterRenderAsync(bool firstRender)
@@ -113,8 +113,8 @@ namespace DYS.FinanceTracker.Features.Accounts.ViewModels
             var startDate = _startDate ?? DateTime.Now.StartOfMonth();
             var endDate = _endDate ?? startDate.EndOfMonth();
 
-            var session = _supabase.Auth.CurrentSession;
-            var userId = !string.IsNullOrEmpty(session?.User?.Id) ? new Guid(session.User.Id) : Guid.Empty;
+            var session = _id;
+            var userId = !string.IsNullOrEmpty(session) ? new Guid(session) : Guid.Empty;
 
             var filters = new List<(string, Constants.Operator, object)>
             {

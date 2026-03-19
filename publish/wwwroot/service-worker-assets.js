@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "sFQ7lGpY",
+  "version": "yUntSxaG",
   "assets": [
     {
       "hash": "sha256-hSIriYPDk3TPVlbhDE5xSGlJr7K0Rxz9RK73uizLR8o=",
@@ -42,8 +42,8 @@ self.assetsManifest = {
       "url": "_framework/DYS.FinanceTracker.Shared.bzdh5qtk82.wasm"
     },
     {
-      "hash": "sha256-HrGztpaoq9w4PywWBSUYKCyY60gWRUjr19GeYZqIEsU=",
-      "url": "_framework/DYS.FinanceTracker.a13btsak3x.wasm"
+      "hash": "sha256-jZybmDEY56pesVNnY5K9qbJ9KZSdqY1yWCc18ksNFLA=",
+      "url": "_framework/DYS.FinanceTracker.tku7mo5miv.wasm"
     },
     {
       "hash": "sha256-IN5hrX0mFJ3VMQllVS3NDFeGvETQ3EnCUbK4MW3/DlI=",
@@ -346,8 +346,8 @@ self.assetsManifest = {
       "url": "_framework/System.ObjectModel.5fyq5h3nhe.wasm"
     },
     {
-      "hash": "sha256-yaCSCk4VEp8bST6VTp6OX91J/V2P9HcTVPa+qv0OPuY=",
-      "url": "_framework/System.Private.CoreLib.pswz4rcenk.wasm"
+      "hash": "sha256-T6ZW1S0qIyP0UO18oGsMfyLifsMGxxUgbJGkWXtdiUo=",
+      "url": "_framework/System.Private.CoreLib.1kuswgjt36.wasm"
     },
     {
       "hash": "sha256-Z6FSXKFTk8Re7/QN5d7Hezc5lhv7ni6Bh+/ow1+gfo0=",
@@ -426,8 +426,8 @@ self.assetsManifest = {
       "url": "_framework/System.Runtime.t3o3as9rte.wasm"
     },
     {
-      "hash": "sha256-5E1kXWjg8d0+KCyblpf9f24OelBvcdjxdZNWgXtfirE=",
-      "url": "_framework/System.Security.Claims.c2xagizzdd.wasm"
+      "hash": "sha256-AerL66Q+jp3jcJZ9RK0tdRF70fPEk/hLQvnCNNdYhWo=",
+      "url": "_framework/System.Security.Claims.7q1p5rxnu3.wasm"
     },
     {
       "hash": "sha256-0A86mfnDVvC+Z2F3SbPPqaz/t7BSrHN/EFIKKJkHrXQ=",
@@ -534,10 +534,6 @@ self.assetsManifest = {
       "url": "_framework/de/Microsoft.CodeAnalysis.resources.wnf0vy72a5.wasm"
     },
     {
-      "hash": "sha256-7KxR7PVB31CNE9vchC1gWNsnxA0GKKXVObldRXTe8JA=",
-      "url": "_framework/dotnet.glt91pr4wx.js"
-    },
-    {
       "hash": "sha256-WHdERxxgCQA79nOtWAOvxQ2f7p1kEx+swJwfE4AE9Nk=",
       "url": "_framework/dotnet.native.4xbsgn06op.js"
     },
@@ -548,6 +544,10 @@ self.assetsManifest = {
     {
       "hash": "sha256-YdXsn/a7hb+UMypOFCf8bmv3S6PbDPewiNWqmUM/1dk=",
       "url": "_framework/dotnet.runtime.zj9dll5ffg.js"
+    },
+    {
+      "hash": "sha256-J0Rn7TH010r+E/TXGeD2cFtcdpBILDtf5zSW6oRw8fs=",
+      "url": "_framework/dotnet.tvei4jv8yp.js"
     },
     {
       "hash": "sha256-mUqbpjZNWWeRyOBaKrlEMUIOq37ayHjNB+XGDYZPUiM=",
@@ -1222,7 +1222,7 @@ self.assetsManifest = {
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-gg/4E8Rr30z8HteShVuiH2Blg5D2KWOx9vUPjaEQBYo=",
+      "hash": "sha256-s8ojk3ig8Fro03fjfV8etiFZsepVq+GQgkCGJTN6QKI=",
       "url": "index.html"
     },
     {

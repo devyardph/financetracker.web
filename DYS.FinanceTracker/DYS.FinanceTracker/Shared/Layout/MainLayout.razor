@@ -44,7 +44,7 @@
 {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender) await JsRuntime.InvokeVoidAsync("initialize");
+        //if (firstRender) await JsRuntime.InvokeVoidAsync("initialize");
         await base.OnAfterRenderAsync(firstRender);
     }
 }

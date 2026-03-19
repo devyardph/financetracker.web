@@ -11,7 +11,6 @@ namespace DYS.FinanceTracker.Shared.Security
     {
         private readonly Supabase.Client _supabase;
         private readonly ILocalStorageService _localStorageService;
-        private ClaimsPrincipal _currentUser = new ClaimsPrincipal(new ClaimsIdentity());
 
         public SupabaseAuthProvider(Supabase.Client supabase, ILocalStorageService localStorageService)
         {
@@ -23,12 +22,20 @@ namespace DYS.FinanceTracker.Shared.Security
         {
             var session = await _localStorageService.GetItemAsync<Session>("session");
             //Console.WriteLine($"Session will expire on {session?.ExpiresIn}");
-            if (session != null && session.Expired())
+            if (session != null)
             {
                 if (!string.IsNullOrEmpty(session.AccessToken) && !string.IsNullOrEmpty(session.RefreshToken))
                 {
-                    session = await _supabase.Auth.SetSession(session.AccessToken, session.RefreshToken);
-                    await _localStorageService.SetItemAsync("session", session);
+                    try
+                    {
+                        session = await _supabase.Auth.SetSession(session.AccessToken, session.RefreshToken);
+                        await _localStorageService.SetItemAsync("session", session);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Session will expire on {ex?.Message}");
+                        session = null;
+                    }
                 }
                 else
                 {
@@ -119,15 +126,30 @@ namespace DYS.FinanceTracker.Shared.Security
      
         public async Task RefreshSessionAsync()
         {
+            Console.WriteLine($"Try to refresh token...");
             var currentSession = _supabase.Auth.CurrentSession;
             if (currentSession != null && currentSession?.Expired() == true)
             {
-                var session = await _supabase.Auth.RefreshSession();
-                if (session != null)
+                try
                 {
-                    Console.WriteLine($"Session refreshed successfully...");
-                    await _localStorageService.SetItemAsync<Session>("session", session ?? new Session());
+                    var session = await _supabase.Auth.RefreshSession();
+                    if (session != null)
+                    {
+                        Console.WriteLine("Session refreshed successfully...");
+                        await _localStorageService.SetItemAsync("session", session);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to refresh session, clearing local storage...");
+                        await _localStorageService.RemoveItemAsync("session");
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error refreshing session: {ex.Message}");
+                    await _localStorageService.RemoveItemAsync("session");
+                }
+
             }
         }
     }
