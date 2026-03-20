@@ -28,18 +28,22 @@ namespace DYS.FinanceTracker.Shared.Security
                 {
                     try
                     {
+                        Console.WriteLine($"Setting session..");
                         session = await _supabase.Auth.SetSession(session.AccessToken, session.RefreshToken);
                         await _localStorageService.SetItemAsync("session", session);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Session will expire on {ex?.Message}");
+                        await _localStorageService.RemoveItemAsync("session");
                         session = null;
                     }
                 }
                 else
                 {
                     // invalid session, force logout
+                    Console.WriteLine($"Session is epxired");
+                    await _localStorageService.RemoveItemAsync("session");
                     session = null;
                 }
             }
