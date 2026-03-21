@@ -1,0 +1,194 @@
+﻿@page "/debt-tracker"
+@using DYS.FinanceTracker.Features.Accounts.Components
+@using DYS.FinanceTracker.Features.Accounts.ViewModels
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.AspNetCore.Components.QuickGrid.Infrastructure
+
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+        <h2 class="text-4xl font-headline font-extrabold text-primary tracking-tight">Debt Tracker</h2>
+        <p class="text-on-surface-variant mt-1">Manage and track your liabilities</p>
+    </div>
+    <a href="create-debt.html" class="flex items-center justify-center space-x-2 bg-primary text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
+        <span>Add New Debt</span>
+    </a>
+</div>
+
+<!-- Debt Summary Card -->
+<div class="ledger-gradient text-white p-8 rounded-[2.5rem] shadow-xl shadow-primary/10 relative overflow-hidden">
+    <div class="relative z-10 space-y-6">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-white/70 text-sm font-bold uppercase tracking-widest">Total Remaining Debt</p>
+                <h3 class="text-5xl font-headline font-black mt-1">$399,850.00</h3>
+            </div>
+            <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m23 18-9-9-6 6-7-7" /><polyline points="17 18 23 18 23 12" /></svg>
+            </div>
+        </div>
+                    
+        <div class="space-y-2">
+            <div class="flex justify-between text-sm font-bold">
+                <span>Overall Progress</span>
+                <span>16.7% Paid</span>
+            </div>
+            <div class="h-3 bg-white/20 rounded-full overflow-hidden">
+                <div class="h-full bg-white rounded-full" style="width: 16.7%"></div>
+            </div>
+        </div>
+    </div>
+    <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-6">
+        <h3 class="text-xl font-headline font-extrabold text-primary px-2">Active Debts</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Debt 1 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/10 shadow-sm hover:shadow-md transition-all group debt-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-3 rounded-2xl bg-blue-50 text-blue-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+                    </div>
+                    <span class="text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter bg-amber-100 text-amber-700">
+                        Active
+                    </span>
+                </div>
+                <h4 class="font-headline font-extrabold text-primary text-lg">Studio Mortgage</h4>
+                <p class="text-xs text-on-surface-variant font-medium mb-4">Chase Bank</p>
+                            
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end">
+                        <span class="text-xs text-on-surface-variant font-bold uppercase tracking-widest">Remaining</span>
+                        <span class="text-lg font-headline font-black text-primary">$385,000.00</span>
+                    </div>
+                    <div class="h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                        <div class="h-full bg-primary rounded-full" style="width: 14.4%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold text-on-surface-variant">
+                        <span>4.5% APR</span>
+                        <span>Due: 2026-04-01</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <a href="create-payment.html" class="flex-1 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-container transition-all flex items-center justify-center space-x-2 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
+                        <span>Pay</span>
+                    </a>
+                    <a href="debt-payments.html" class="px-4 py-3 bg-surface-container-low text-primary font-bold rounded-xl hover:bg-surface-container-highest transition-all flex items-center justify-center" title="View History">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Debt 2 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/10 shadow-sm hover:shadow-md transition-all group debt-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-3 rounded-2xl bg-emerald-50 text-emerald-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2h0V5z" /><path d="M7 11h.01" /><path d="M11 11h.01" /><path d="M15 11h.01" /></svg>
+                    </div>
+                    <span class="text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter bg-amber-100 text-amber-700">
+                        Active
+                    </span>
+                </div>
+                <h4 class="font-headline font-extrabold text-primary text-lg">Equipment Loan</h4>
+                <p class="text-xs text-on-surface-variant font-medium mb-4">Wells Fargo</p>
+                            
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end">
+                        <span class="text-xs text-on-surface-variant font-bold uppercase tracking-widest">Remaining</span>
+                        <span class="text-lg font-headline font-black text-primary">$12,400.00</span>
+                    </div>
+                    <div class="h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                        <div class="h-full bg-primary rounded-full" style="width: 50.4%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold text-on-surface-variant">
+                        <span>6.2% APR</span>
+                        <span>Due: 2026-04-15</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <a href="create-payment.html" class="flex-1 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-container transition-all flex items-center justify-center space-x-2 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
+                        <span>Pay</span>
+                    </a>
+                    <a href="debt-payments.html" class="px-4 py-3 bg-surface-container-low text-primary font-bold rounded-xl hover:bg-surface-container-highest transition-all flex items-center justify-center" title="View History">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Debt 3 -->
+            <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/10 shadow-sm hover:shadow-md transition-all group debt-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-3 rounded-2xl bg-rose-50 text-rose-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></svg>
+                    </div>
+                    <span class="text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter bg-amber-100 text-amber-700">
+                        Active
+                    </span>
+                </div>
+                <h4 class="font-headline font-extrabold text-primary text-lg">Corporate Amex</h4>
+                <p class="text-xs text-on-surface-variant font-medium mb-4">American Express</p>
+                            
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end">
+                        <span class="text-xs text-on-surface-variant font-bold uppercase tracking-widest">Remaining</span>
+                        <span class="text-lg font-headline font-black text-primary">$2,450.00</span>
+                    </div>
+                    <div class="h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                        <div class="h-full bg-primary rounded-full" style="width: 51%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold text-on-surface-variant">
+                        <span>18.9% APR</span>
+                        <span>Due: 2026-03-28</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <a href="create-payment.html" class="flex-1 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-container transition-all flex items-center justify-center space-x-2 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
+                        <span>Pay</span>
+                    </a>
+                    <a href="debt-payments.html" class="px-4 py-3 bg-surface-container-low text-primary font-bold rounded-xl hover:bg-surface-container-highest transition-all flex items-center justify-center" title="View History">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-6">
+        <h3 class="text-xl font-headline font-extrabold text-primary px-2">Debt Insights</h3>
+        <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 space-y-6">
+            <div class="flex items-center space-x-4">
+                <div class="p-3 bg-primary-container/10 rounded-2xl text-primary-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>
+                </div>
+                <h3 class="text-xl font-headline font-extrabold text-primary">Payoff Strategy</h3>
+            </div>
+                        
+            <div class="space-y-4 text-sm text-on-surface-variant leading-relaxed">
+                <p>
+                    Based on your current interest rates, we recommend focusing on the <span class="font-bold text-primary">Corporate Amex</span> first (Avalanche Method).
+                </p>
+                <p>
+                    By adding just <span class="font-bold text-primary">$200</span> more to your monthly payments, you could save <span class="text-emerald-600 font-bold">$4,200</span> in interest.
+                </p>
+            </div>
+                        
+            <div class="pt-4">
+                <div class="p-4 bg-background rounded-2xl border border-outline-variant/10">
+                    <p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Architect's Tip</p>
+                    <p class="text-xs text-on-surface-variant">
+                        Automate your minimum payments to avoid late fees and protect your credit score.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,157 @@
+﻿@page "/insights"
+@using DYS.FinanceTracker.Features.Accounts.Components
+@using DYS.FinanceTracker.Features.Accounts.ViewModels
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.AspNetCore.Components.QuickGrid.Infrastructure
+
+<section class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="md:col-span-2 p-6 md:p-10 bg-white rounded-[2.5rem] shadow-sm relative overflow-hidden group">
+        <div class="relative z-10 flex flex-col justify-between h-full">
+            <div>
+                <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#40484c] opacity-70">Financial Health Index</span>
+                <h2 class="text-4xl md:text-6xl font-black font-headline text-[#003345] mt-4">
+                    842
+                    <span class="block sm:inline text-sm md:text-xl font-medium text-[#016a60] sm:ml-4 mt-2 sm:mt-0">+12 pts this month</span>
+                </h2>
+            </div>
+            <div class="mt-8 md:mt-12 space-y-6">
+                <p class="text-[#40484c] max-w-md text-base md:text-lg leading-relaxed">Your financial health is in the <span class="text-[#003345] font-bold">top 5%</span> of peers. Maintain this trend by diversifying your investment portfolio.</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button class="px-8 py-3 bg-[#003345] text-white text-sm font-bold rounded-xl active:scale-95 transition-all">View Full Audit</button>
+                    <button class="px-8 py-3 text-[#003345] border-2 border-[#c0c7cd]/20 text-sm font-bold rounded-xl hover:bg-[#f1f4fa] transition-colors">Compare Peers</button>
+                </div>
+            </div>
+        </div>
+        <div class="absolute right-0 bottom-0 w-1/2 h-full opacity-5 pointer-events-none transform translate-x-12 translate-y-12 group-hover:translate-x-0 transition-transform duration-700 hidden sm:block">
+            <svg class="w-full h-full text-[#003345]" viewBox="0 0 100 100">
+                <path d="M0,100 Q25,80 50,90 T100,60 L100,100 Z" fill="currentColor"></path>
+            </svg>
+        </div>
+    </div>
+    <div class="p-6 md:p-10 bg-[#003345] text-white rounded-[2.5rem] shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[250px]">
+        <div class="z-10">
+            <span class="text-[10px] font-bold uppercase tracking-widest opacity-60">Savings Goal: New Studio</span>
+            <h3 class="text-3xl md:text-4xl font-headline font-bold mt-4">$42,850.00</h3>
+            <p class="text-sm opacity-80 mt-2">78% of $55k goal reached</p>
+        </div>
+        <div class="z-10 mt-10">
+            <div class="w-full h-3 bg-white/20 rounded-full overflow-hidden">
+                <div class="w-[78%] h-full bg-[#7fda91] shadow-[0_0_20px_rgba(127,218,145,0.4)]"></div>
+            </div>
+            <p class="text-[10px] mt-4 opacity-50 font-bold tracking-widest uppercase">Estimated Completion: Nov 2024</p>
+        </div>
+        <div class="absolute -right-12 -top-12 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
+    </div>
+</section>
+
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
+    <div class="lg:col-span-2 space-y-8">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-4">
+            <h3 class="text-2xl md:text-3xl font-headline font-bold text-[#003345]">Monthly Spending Trend</h3>
+            <div class="flex bg-[#f1f4fa] p-1.5 rounded-2xl w-fit">
+                <button class="px-4 md:px-6 py-2 text-xs font-bold text-[#003345] bg-white rounded-xl shadow-sm">6 Months</button>
+                <button class="px-4 md:px-6 py-2 text-xs font-bold text-[#40484c] hover:text-[#003345] transition-colors">1 Year</button>
+            </div>
+        </div>
+        <div class="bg-white p-6 md:p-10 rounded-[2.5rem] h-[24rem] md:h-[28rem] flex flex-col justify-between shadow-sm overflow-hidden">
+            <div class="flex-1 flex items-end justify-between gap-2 md:gap-6 mb-10">
+                <div class="w-full bg-[#f1f4fa] rounded-2xl relative group transition-all duration-500 hover:bg-[#004b63]/20" style="height: 48%"></div>
+                <div class="w-full bg-[#f1f4fa] rounded-2xl relative group transition-all duration-500 hover:bg-[#004b63]/20" style="height: 64%"></div>
+                <div class="w-full bg-[#004b63] rounded-2xl relative group transition-all duration-500" style="height: 52%"></div>
+                <div class="w-full bg-[#f1f4fa] rounded-2xl relative group transition-all duration-500 hover:bg-[#004b63]/20" style="height: 72%"></div>
+                <div class="w-full bg-[#f1f4fa] rounded-2xl relative group transition-all duration-500 hover:bg-[#004b63]/20" style="height: 40%"></div>
+                <div class="w-full bg-[#003345] rounded-2xl relative group transition-all duration-500" style="height: 80%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] font-bold text-[#40484c]/40 uppercase tracking-[0.2em] px-2 md:px-4">
+                <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-8">
+        <h3 class="text-2xl md:text-3xl font-headline font-bold text-[#003345]">Yearly Comparison</h3>
+        <div class="bg-white p-6 md:p-10 rounded-[2.5rem] h-auto lg:h-[28rem] flex flex-col shadow-sm">
+            <div class="flex-1 flex flex-col gap-8 md:gap-10 justify-center">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center text-[10px] font-bold text-[#40484c] uppercase tracking-widest">
+                        <span>2023 FY</span>
+                        <span>$124,500</span>
+                    </div>
+                    <div class="h-10 w-full bg-[#f1f4fa] rounded-2xl overflow-hidden flex">
+                        <div class="h-full bg-[#004b63] w-[65%]"></div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center text-[10px] font-bold text-[#003345] uppercase tracking-widest">
+                        <span>2024 YTD</span>
+                        <span>$158,200</span>
+                    </div>
+                    <div class="h-10 w-full bg-[#f1f4fa] rounded-2xl overflow-hidden flex">
+                        <div class="h-full bg-[#003345] w-[85%]"></div>
+                    </div>
+                </div>
+                <div class="mt-6 p-6 bg-[#7fda91]/10 rounded-3xl flex items-start gap-4 border border-[#7fda91]/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#003816] shrink-0"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></svg>
+                    <p class="text-xs text-[#005323] leading-relaxed font-medium">
+                        Revenue has increased by <span class="font-bold text-[#003816]">27%</span> compared to the same period last year.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="grid grid-cols-1 lg:grid-cols-5 gap-8 md:gap-12 bg-[#f1f4fa] rounded-[3rem] p-8 md:p-16 overflow-hidden relative">
+    <div class="lg:col-span-2 space-y-6 md:space-y-8 relative z-10">
+        <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-[#003345]">Intelligence Report</span>
+        <h3 class="text-3xl md:text-5xl font-headline font-black text-[#003345] leading-tight tracking-tighter">Your wealth is accelerating.</h3>
+        <p class="text-[#40484c] text-base md:text-lg leading-relaxed font-medium">Our AI models detect a 14% efficiency gain in your variable spending over the last quarter. This surplus is currently idle in your transactional account.</p>
+        <div class="flex items-center gap-6 pt-6">
+            <div class="p-4 bg-white rounded-full shadow-md shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#003345]"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>
+            </div>
+            <div>
+                <p class="text-sm font-bold text-[#003345]">Smart Recommendation</p>
+                <p class="text-xs text-[#40484c] font-medium">Move $2,500 to 'Treasury Bond B' to earn 4.2% APY.</p>
+            </div>
+        </div>
+    </div>
+    <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
+        <div class="bg-white p-8 rounded-[2rem] shadow-sm sm:rotate-1 flex flex-col justify-between border border-[#dfe3e8]/10">
+            <span class="text-[10px] font-bold text-[#40484c]/40 uppercase tracking-widest">Net Worth Delta</span>
+            <div class="flex items-end justify-between mt-6">
+                <span class="text-3xl md:text-4xl font-headline font-bold text-[#003345]">+$18.4k</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#016a60]"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></svg>
+            </div>
+        </div>
+        <div class="bg-white p-8 rounded-[2rem] shadow-sm sm:-rotate-1 flex flex-col justify-between border border-[#dfe3e8]/10">
+            <span class="text-[10px] font-bold text-[#40484c]/40 uppercase tracking-widest">Idle Capital</span>
+            <div class="flex items-end justify-between mt-6">
+                <span class="text-3xl md:text-4xl font-headline font-bold text-[#ba1a1a]">$8.2k</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#ba1a1a]"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+            </div>
+        </div>
+        <div class="sm:col-span-2 bg-[#003345] p-6 md:p-8 rounded-[2rem] flex flex-col sm:flex-row items-center justify-between text-white shadow-2xl mt-4 gap-6">
+            <div class="flex gap-6 items-center">
+                <div class="w-12 h-12 md:w-16 md:h-16 bg-white/10 rounded-2xl flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 2.6-2 3.5 0 1 1 1.5 2 1.5s2-.5 2-1.5c0-.9-.5-2.24-2-3.5Z" /><path d="M19.5 16.5c-1.5 1.26-2 2.6-2 3.5 0 1 1 1.5 2 1.5s2-.5 2-1.5c0-.9-.5-2.24-2-3.5Z" /><path d="m12 15 3.5 3.5" /><path d="m12 15-3.5 3.5" /><path d="M12 2v2" /><path d="M12 8v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-lg md:text-xl font-bold font-headline">Automate Growth</h4>
+                    <p class="text-xs md:text-sm opacity-70">Switch to Auto-Invest for detected surpluses.</p>
+                </div>
+            </div>
+            <button class="w-full sm:w-auto px-8 py-4 bg-[#016a60] text-white rounded-xl font-bold text-xs uppercase tracking-[0.2em] shadow-lg active:scale-95 transition-all">
+                Enable Now
+            </button>
+        </div>
+    </div>
+    <div class="absolute right-0 bottom-0 w-1/3 h-full opacity-5 pointer-events-none hidden lg:block">
+        <svg class="w-full h-full fill-[#003345]" viewBox="0 0 100 100">
+            <circle cx="100" cy="100" r="80"></circle>
+            <circle cx="100" cy="100" opacity="0.5" r="60"></circle>
+            <circle cx="100" cy="100" opacity="0.3" r="40"></circle>
+        </svg>
+    </div>
+</section>

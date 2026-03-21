@@ -1,0 +1,150 @@
+﻿@page "/monthly-report"
+@using DYS.FinanceTracker.Features.Accounts.Components
+@using DYS.FinanceTracker.Features.Accounts.ViewModels
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.AspNetCore.Components.QuickGrid.Infrastructure
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div class="space-y-4">
+        <h2 class="text-4xl font-black text-[#003345] tracking-tight">Monthly Report</h2>
+        <p class="text-[#40484c] text-lg">
+            Financial summary for <span class="font-bold text-[#003345]" id="current-month">March 2026</span>
+        </p>
+    </div>
+    <button id="download-btn" class="flex items-center space-x-2 bg-[#003345] text-white px-6 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl active:scale-95 transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg>
+        <span>Download CSV</span>
+    </button>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-[#dfe3e8]/30 space-y-2">
+        <p class="text-xs font-bold text-[#40484c] uppercase tracking-widest opacity-70">Total Income</p>
+        <p class="text-3xl font-black text-emerald-600" id="total-income">$12,450.00</p>
+    </div>
+    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-[#dfe3e8]/30 space-y-2">
+        <p class="text-xs font-bold text-[#40484c] uppercase tracking-widest opacity-70">Total Expenses</p>
+        <p class="text-3xl font-black text-rose-600" id="total-expenses">$8,240.00</p>
+    </div>
+    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-[#dfe3e8]/30 space-y-2">
+        <p class="text-xs font-bold text-[#40484c] uppercase tracking-widest opacity-70">Net Savings</p>
+        <p class="text-3xl font-black text-[#003345]" id="net-savings">$4,210.00</p>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="bg-white p-6 rounded-[2rem] shadow-sm border border-[#dfe3e8]/30 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="space-y-1">
+        <label class="text-[10px] font-bold uppercase tracking-widest text-[#40484c]">Start Date</label>
+        <input type="date" id="start-date" class="w-full bg-[#f1f4fa] border-none rounded-xl px-4 py-2 text-sm font-bold focus:ring-2 focus:ring-[#003345] transition-all">
+    </div>
+    <div class="space-y-1">
+        <label class="text-[10px] font-bold uppercase tracking-widest text-[#40484c]">End Date</label>
+        <input type="date" id="end-date" class="w-full bg-[#f1f4fa] border-none rounded-xl px-4 py-2 text-sm font-bold focus:ring-2 focus:ring-[#003345] transition-all">
+    </div>
+    <div class="space-y-1">
+        <label class="text-[10px] font-bold uppercase tracking-widest text-[#40484c]">Type</label>
+        <select id="type-filter" class="w-full bg-[#f1f4fa] border-none rounded-xl px-4 py-2 text-sm font-bold focus:ring-2 focus:ring-[#003345] transition-all">
+            <option value="All">All Types</option>
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+        </select>
+    </div>
+</div>
+
+<!-- Transaction Table -->
+<div class="bg-white rounded-[2.5rem] shadow-sm border border-[#dfe3e8]/30 overflow-hidden">
+    <div class="p-8 border-b border-[#dfe3e8]/30 flex items-center justify-between">
+        <h3 class="text-xl font-extrabold text-[#003345]">Transaction Details</h3>
+        <span id="item-count" class="text-xs font-bold text-[#40484c] bg-[#f1f4fa] px-3 py-1 rounded-full uppercase tracking-widest">
+            0 Items
+        </span>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-[#f1f4fa]">
+                    <th class="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-[#40484c]">Date</th>
+                    <th class="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-[#40484c]">Description</th>
+                    <th class="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-[#40484c]">Category</th>
+                    <th class="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-[#40484c] text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody id="transaction-table-body" class="divide-y divide-[#dfe3e8]/30">
+                <!-- Rows will be injected by JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-[#dfe3e8]/30 space-y-6">
+        <div class="flex items-center space-x-4">
+            <div class="p-3 bg-[#003345]/10 rounded-2xl text-[#003345]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2h0V5z" /><path d="M7 11h.01" /><path d="M11 11h.01" /><path d="M15 11h.01" /></svg>
+            </div>
+            <h3 class="text-xl font-extrabold text-[#003345]">Expense Breakdown</h3>
+        </div>
+                    
+        <div class="space-y-4">
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm font-bold">
+                    <span class="text-[#40484c]">Housing</span>
+                    <span class="text-[#003345]">$3,200.00</span>
+                </div>
+                <div class="h-2 bg-[#dfe3e8] rounded-full overflow-hidden">
+                    <div class="h-full ledger-gradient" style="width: 38%"></div>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm font-bold">
+                    <span class="text-[#40484c]">Supplies</span>
+                    <span class="text-[#003345]">$1,850.00</span>
+                </div>
+                <div class="h-2 bg-[#dfe3e8] rounded-full overflow-hidden">
+                    <div class="h-full ledger-gradient" style="width: 22%"></div>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm font-bold">
+                    <span class="text-[#40484c]">Equipment</span>
+                    <span class="text-[#003345]">$1,420.00</span>
+                </div>
+                <div class="h-2 bg-[#dfe3e8] rounded-full overflow-hidden">
+                    <div class="h-full ledger-gradient" style="width: 17%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-[#dfe3e8]/30 space-y-6">
+        <div class="flex items-center space-x-4">
+            <div class="p-3 bg-[#016a60]/10 rounded-2xl text-[#016a60]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><line x1="10" y1="9" x2="8" y2="9" /></svg>
+            </div>
+            <h3 class="text-xl font-extrabold text-[#003345]">Report Insights</h3>
+        </div>
+                    
+        <div class="space-y-4 text-sm text-[#40484c] leading-relaxed">
+            <p>
+                Your highest spending category this month was <span class="font-bold text-[#003345]">Housing</span>.
+            </p>
+            <p>
+                You saved <span className="font-bold text-[#003345]">33.8%</span> of your total income.
+            </p>
+            <p>
+                Compared to last month, your expenses are <span class="text-emerald-600 font-bold">down by 12%</span>.
+            </p>
+        </div>
+                    
+        <div class="pt-4">
+            <div class="p-4 bg-[#f1f4fa] rounded-2xl border border-[#dfe3e8]/30">
+                <p class="text-xs font-bold text-[#003345] uppercase tracking-widest mb-1">Architect's Tip</p>
+                <p class="text-xs text-[#40484c]">
+                    Consider allocating more to your 'Investment' category to reach your long-term goals faster.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

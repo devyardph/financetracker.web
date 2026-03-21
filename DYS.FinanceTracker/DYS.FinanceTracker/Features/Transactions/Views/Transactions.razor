@@ -1,0 +1,70 @@
+﻿@page "/transactions"
+@using DYS.FinanceTracker.Features.Accounts.Components
+@using DYS.FinanceTracker.Features.Accounts.ViewModels
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.AspNetCore.Components.QuickGrid.Infrastructure
+
+
+<div>
+    <h1 class="text-3xl md:text-5xl font-headline font-extrabold tracking-tight text-[#003345] mb-2">Transaction Ledger</h1>
+    <p class="text-sm md:text-base text-[#40484c]">Review and manage your complete financial architectural history.</p>
+</div>
+
+<div class="bg-[#f1f4fa] p-4 md:p-6 rounded-2xl flex flex-col md:flex-row flex-wrap gap-4 items-stretch md:items-end shadow-sm border border-[#dfe3e8]/10">
+    <div class="flex-grow min-w-0 sm:min-w-[300px]">
+        <label class="block text-[10px] font-bold uppercase tracking-wider text-[#40484c] mb-2">Search Transactions</label>
+        <div class="relative">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 text-[#40484c]"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+            <input type="text" placeholder="Description, vendor, or reference..." class="w-full bg-white border-none rounded-xl pl-10 py-3 text-sm shadow-sm focus:ring-1 focus:ring-[#003345]">
+        </div>
+    </div>
+    <!-- Filters... -->
+    <button class="bg-[#dfe3e8] text-[#003345] font-bold px-6 py-3 rounded-xl flex items-center justify-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" /></svg>
+        Advanced
+    </button>
+</div>
+
+<div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-[#dfe3e8]/10">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[600px]">
+            <thead>
+                <tr class="bg-[#f1f4fa]">
+                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#40484c]">Date</th>
+                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#40484c]">Description</th>
+                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#40484c]">Category</th>
+                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#40484c] text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-[#f1f4fa]">
+                <tr>
+                    <td class="px-6 py-5 text-sm font-medium text-[#181c20]">Oct 24, 2023</td>
+                    <td class="px-6 py-5">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold text-[#003345]">Autodesk License Renewal</span>
+                            <span class="text-[10px] text-[#40484c] font-medium">Inv #ARCH-20934</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-5">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-[#dfe3e8] text-[#40484c]">Equipment</span>
+                    </td>
+                    <td class="px-6 py-5 text-right font-bold text-[#ba1a1a]">-$1,250.00</td>
+                </tr>
+                <tr>
+                    <td class="px-6 py-5 text-sm font-medium text-[#181c20]">Oct 22, 2023</td>
+                    <td class="px-6 py-5">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold text-[#003345]">Blue Ribbon Project Payout</span>
+                            <span class="text-[10px] text-[#40484c] font-medium">Milestone 2 Completion</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-5">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-[#9ff2e4] text-[#117166]">Project Fee</span>
+                    </td>
+                    <td class="px-6 py-5 text-right font-bold text-[#016a60]">+$8,400.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
