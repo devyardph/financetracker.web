@@ -46,6 +46,8 @@ namespace DYS.FinanceTracker.Shared.ViewModels
              new MenuDto(){ Id="accounts", Title="Accounts", Icon="bx-credit-card", Path= "/accounts", Active= false },
              new MenuDto(){ Id="report", Title="Report", Icon="bx-file", Path= "/report", Active= false },
             };
+
+            _activeMenu = _navigationManager.Uri.Replace(_navigationManager.BaseUri, "").Split('/').FirstOrDefault() ?? "";
             return base.OnInitializedAsync();
         }
 
@@ -57,6 +59,7 @@ namespace DYS.FinanceTracker.Shared.ViewModels
 
         public override async Task OnAfterRenderAsync(bool firstRender)
         {
+            if (firstRender) await _jsRuntime.InvokeVoidAsync("sidebarInitialize");
             await base.OnAfterRenderAsync(firstRender);
         }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architect Ledger - Dashboard</title>
+    <title>Finance-Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
@@ -88,28 +88,30 @@
         </div>
     </div>
     <script>
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        const mobileMenuBtn = document.getElementById('mobile-menu-button');
-        const closeSidebarBtn = document.getElementById('close-sidebar');
+        function sidebarInitialize() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const mobileMenuBtn = document.getElementById('mobile-menu-button');
+            const closeSidebarBtn = document.getElementById('close-sidebar');
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        }
-
-        mobileMenuBtn.addEventListener('click', toggleSidebar);
-        closeSidebarBtn.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar);
-
-        // Search Logic
-        document.getElementById('search-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const q = document.getElementById('search-input').value;
-            if (q.trim()) {
-                window.location.href = `search-results.html?q=${encodeURIComponent(q)}`;
+            function toggleSidebar() {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
             }
-        });
+
+            mobileMenuBtn.addEventListener('click', toggleSidebar);
+            closeSidebarBtn.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', toggleSidebar);
+
+            // Search Logic
+            document.getElementById('search-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const q = document.getElementById('search-input').value;
+                if (q.trim()) {
+                    window.location.href = `search?query=${encodeURIComponent(q)}`;
+                }
+            });
+        }
     </script>
     <!-- Page JS -->
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
