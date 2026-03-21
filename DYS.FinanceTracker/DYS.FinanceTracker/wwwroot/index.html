@@ -94,10 +94,7 @@
             const mobileMenuBtn = document.getElementById('mobile-menu-button');
             const closeSidebarBtn = document.getElementById('close-sidebar');
 
-            function toggleSidebar() {
-                sidebar.classList.toggle('-translate-x-full');
-                overlay.classList.toggle('hidden');
-            }
+ 
 
             mobileMenuBtn.addEventListener('click', toggleSidebar);
             closeSidebarBtn.addEventListener('click', toggleSidebar);
@@ -111,6 +108,10 @@
                     window.location.href = `search?query=${encodeURIComponent(q)}`;
                 }
             });
+        }
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
         }
     </script>
     <!-- Page JS -->

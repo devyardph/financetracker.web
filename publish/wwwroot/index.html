@@ -69,7 +69,7 @@
     </style>
 
 
-    <link href="_framework/dotnet.b3f577jl4z.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="" />
+    <link href="_framework/dotnet.605kk0gc4j.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="manifest.webmanifest" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
@@ -79,7 +79,7 @@
     <script type="importmap">{
   "imports": {
     "./_framework/blazor.webassembly.js": "./_framework/blazor.webassembly.66stpp682q.js",
-    "./_framework/dotnet.js": "./_framework/dotnet.b3f577jl4z.js",
+    "./_framework/dotnet.js": "./_framework/dotnet.605kk0gc4j.js",
     "./_framework/dotnet.native.js": "./_framework/dotnet.native.4xbsgn06op.js",
     "./_framework/dotnet.runtime.js": "./_framework/dotnet.runtime.zj9dll5ffg.js"
   },
@@ -87,7 +87,7 @@
   "integrity": {
     "./_framework/blazor.webassembly.66stpp682q.js": "sha256-3lCWrko3zwspV40aQhs2S/IMkRSarnHRKIdkHhuXIBA=",
     "./_framework/blazor.webassembly.js": "sha256-3lCWrko3zwspV40aQhs2S/IMkRSarnHRKIdkHhuXIBA=",
-    "./_framework/dotnet.b3f577jl4z.js": "",
+    "./_framework/dotnet.605kk0gc4j.js": "",
     "./_framework/dotnet.js": "",
     "./_framework/dotnet.native.4xbsgn06op.js": "sha256-WHdERxxgCQA79nOtWAOvxQ2f7p1kEx+swJwfE4AE9Nk=",
     "./_framework/dotnet.native.js": "sha256-WHdERxxgCQA79nOtWAOvxQ2f7p1kEx+swJwfE4AE9Nk=",
@@ -112,10 +112,7 @@
             const mobileMenuBtn = document.getElementById('mobile-menu-button');
             const closeSidebarBtn = document.getElementById('close-sidebar');
 
-            function toggleSidebar() {
-                sidebar.classList.toggle('-translate-x-full');
-                overlay.classList.toggle('hidden');
-            }
+ 
 
             mobileMenuBtn.addEventListener('click', toggleSidebar);
             closeSidebarBtn.addEventListener('click', toggleSidebar);
@@ -129,6 +126,10 @@
                     window.location.href = `search?query=${encodeURIComponent(q)}`;
                 }
             });
+        }
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
         }
     </script>
     <!-- Page JS -->

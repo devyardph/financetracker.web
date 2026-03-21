@@ -137,7 +137,6 @@ namespace DYS.FinanceTracker.Shared.ViewModels
         }
         public virtual void NavigationToPath(string path, bool forceLoad )
         {
-            StateHasChanged();
             _navigationManager.NavigateTo(path,forceLoad: forceLoad);
         }
 

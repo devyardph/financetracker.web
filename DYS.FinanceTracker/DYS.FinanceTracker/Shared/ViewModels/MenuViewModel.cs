@@ -51,10 +51,11 @@ namespace DYS.FinanceTracker.Shared.ViewModels
             return base.OnInitializedAsync();
         }
 
-        public void NavigationToPath(string id,string path)
+        public async Task NavigationToPath(string id,string path)
         {
             base.NavigationToPath(path, forceLoad: false);
             _activeMenu = id;
+            await _jsRuntime.InvokeVoidAsync("toggleSidebar");
         }
 
         public override async Task OnAfterRenderAsync(bool firstRender)
