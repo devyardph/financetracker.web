@@ -1,0 +1,158 @@
+﻿@page "/tracker-old"
+@using DYS.FinanceTracker.Features.Finance.Components
+@using DYS.FinanceTracker.Features.Finance.ViewModels
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.AspNetCore.Components.QuickGrid.Infrastructure
+@inherits MvvmComponentBase<TrackerViewModel>
+@attribute [Authorize]
+
+
+<div class="row mt-5">
+    <div class="col-md-4 col-xxl-4 mb-6">
+        <div class="card h-100 border-3 border-light bg-warning-subtle">
+            <div class="card-header d-flex justify-content-between">
+                <div class="card-title mb-0">
+                    <h5 class="mb-1 me-2 fw-bolder display-6">Remaining balance</h5>
+                    <p class="card-subtitle">@BindingContext.StartDate.FormatDate("MMM dd") to @BindingContext.EndDate.FormatDate("MMM dd, yyyy")</p>
+                </div>
+                <div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex flex-column align-items-center gap-1">
+                        <h3 id="balance-text" class="mb-1 counter">@(BindingContext.IsLoading ? "0" : BindingContext.Summary.Balance?.ToString("N2"))</h3>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xxl-4 mb-6">
+        <div class="card h-100 border-3 border-light bg-success-subtle">
+            <div class="card-header d-flex justify-content-between">
+                <div class="card-title mb-0">
+                    <h5 class="mb-1 me-2 fw-bolder  display-6">Income</h5>
+                    <p class="card-subtitle">@BindingContext.Summary.IncomeCount items</p>
+                      
+                </div>
+                <div>
+                    <button class="btn text-body-secondary p-0" type="button" id="orederStatistics"
+                            @onclick="@(() => BindingContext.OpenTransactionAsync(new TransactionDto() { Type = "income" }))">
+                        <i class="icon-base bx bx-plus icon-36px fw-extrabold text-bg-success"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex flex-column align-items-center gap-1">
+                        <h3 id="income-text" class="mb-1 counter">@(BindingContext.IsLoading ? "0" : @BindingContext.Summary.Income?.ToString("N2"))</h3>
+                        @*   <small>Total Orders</small> *@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xxl-4 mb-6">
+        <div class="card h-100 border-3 border-light bg-info-subtle">
+            <div class="card-header d-flex justify-content-between">
+                <div class="card-title mb-0">
+                    <h5 class="mb-1 me-2 fw-bolder  display-6">Expenses</h5>
+                    <p class="card-subtitle">@BindingContext.Summary.ExpenseCount items</p>
+                </div>
+                <div>
+                    <button class="btn text-body-secondary p-0" type="button" id="orederStatistics"
+                            @onclick="@(() => BindingContext.OpenTransactionAsync(new TransactionDto() { Type = "expense" }))">
+                        <i class="icon-base bx bx-plus icon-36px fw-extrabold text-bg-info"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex flex-column align-items-center gap-1">
+                        <h3 id="expense-text" class="mb-1 counter">@(BindingContext.IsLoading ? "0" : @BindingContext.Summary.Expense?.ToString("N2"))</h3>
+                        @*<small>Total Orders</small> *@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12 order-2 mb-6">
+        <div class="card h-100 border-2 border-light">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <div class="nav-align-top">
+                    <ul class="nav nav-tabs flex-nowrap overflow-auto" role="tablist">
+
+                        <li class="nav-item" role="presentation">
+                            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#transactions-card" aria-controls="navs-top-home" aria-selected="true" @onclick="@(() => BindingContext.ReloadTransactions(""))">
+                                Transactions
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#transactions-card" aria-controls="navs-top-profile" aria-selected="false" tabindex="-1" @onclick="@(() => BindingContext.ReloadTransactions("income"))">
+                                Income
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#transactions-card" aria-controls="navs-top-messages" aria-selected="false" tabindex="-1" @onclick="@(() => BindingContext.ReloadTransactions("expense"))">
+                                Expenses
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#transactions-card" aria-controls="navs-top-messages" aria-selected="false" tabindex="-1" @onclick="@(() => BindingContext.ReloadTransactions("expense"))">
+                                Recently added
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <DateRangeComponent Id="date-range" Style="w-px-250"
+                                    @bind-StartDate="BindingContext.StartDate"
+                                    @bind-EndDate="BindingContext.EndDate"
+                                    TriggerEvent="BindingContext.OnChangeDate" />
+            </div>
+
+
+            <div class="card-body p-0 p-md-3">
+                <div class="table-responsive">
+                    @if (BindingContext.IsLoading)
+                    {
+                        <TrackerLoaderComponent Loop="10" />
+                    }
+                    else
+                    {
+                        <QuickGrid Items="BindingContext.FilteredTransactions2?.OrderByDescending(x => x.DateCreated)!" Class="table table-hover table-sm no-header-grid">
+                            <TemplateColumn Context="transaction" >
+                                <div class="d-flex flex-column cursor-pointer" @onclick="@(() => BindingContext.OpenTransactionAsync(transaction))">
+                                    <div class="p-0fw-lighter"><small>@DataExtensions.GetSelectedName(BindingContext.AccountOptions, transaction.AccountId.ToString()) </small></div>
+                                    <div class="p-0 fw-lighter">@DataExtensions.GetSelectedName(GlobalSettings.Categories, transaction.Category) @transaction.Description</div>
+@*                                  <div class="p-0 fw-lighter"><small>@transaction.DateCreated.FormatDate("MMM dd, yyyy hh:mm tt")</small></div> *@
+                                </div>
+                            </TemplateColumn>
+                            <TemplateColumn Context="transaction" Class="w-px-250 text-end">
+                                <div class="d-flex flex-column cursor-pointer" @onclick="@(() => BindingContext.OpenTransactionAsync(transaction))">
+                                    <div class="p-0 fw-lighter @BooleanExtensions.GetConditionalString(transaction.Type == "expense", "text-danger","")">PHP @transaction.Amount?.ToString("N2")</div>
+                                    <div class="p-0 fw-lighter"><small>@transaction.Recurrence @transaction.Type</small></div>
+                                </div>
+                            </TemplateColumn>
+                        </QuickGrid>
+                    } 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--OFF CANVASS-->
+<TransactionComponent Id="transaction-component" 
+SubmitTransaction="BindingContext.SubmitTransactionAsync" 
+DeleteTransaction="BindingContext.DeleteTransactionAsync"
+IsSaving="BindingContext.IsSaving" @ref="BindingContext.TransactionComponent" />
+<!--OFF CANVASS-->
+

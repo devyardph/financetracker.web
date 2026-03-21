@@ -1,8 +1,8 @@
 self.assetsManifest = {
-  "version": "kFeQJk0N",
+  "version": "IqM0XZXB",
   "assets": [
     {
-      "hash": "sha256-hSIriYPDk3TPVlbhDE5xSGlJr7K0Rxz9RK73uizLR8o=",
+      "hash": "sha256-J9Jvv7m+9SPO+eKHeJzce0c6Sp1/wQIxZGrZIGCGIdo=",
       "url": "DYS.FinanceTracker.styles.css"
     },
     {
@@ -38,12 +38,12 @@ self.assetsManifest = {
       "url": "_framework/Blazored.SessionStorage.34xr2ein7y.wasm"
     },
     {
-      "hash": "sha256-+QEd6dA1Y4ueo/iWm+tAxt4z42/rQzPFMAB24reBIJc=",
-      "url": "_framework/DYS.FinanceTracker.Shared.bzdh5qtk82.wasm"
+      "hash": "sha256-jvoEF0C/tWHw3Fq57tUzehImVFuV+U2evvemDd/4QqI=",
+      "url": "_framework/DYS.FinanceTracker.673pt7f2hi.wasm"
     },
     {
-      "hash": "sha256-zLLWXFdKa39k2LtSfQGF/2hEM9yXzLbd+Z/R1dWoXug=",
-      "url": "_framework/DYS.FinanceTracker.gbba7hx0q7.wasm"
+      "hash": "sha256-+QEd6dA1Y4ueo/iWm+tAxt4z42/rQzPFMAB24reBIJc=",
+      "url": "_framework/DYS.FinanceTracker.Shared.bzdh5qtk82.wasm"
     },
     {
       "hash": "sha256-IN5hrX0mFJ3VMQllVS3NDFeGvETQ3EnCUbK4MW3/DlI=",
@@ -534,8 +534,8 @@ self.assetsManifest = {
       "url": "_framework/de/Microsoft.CodeAnalysis.resources.wnf0vy72a5.wasm"
     },
     {
-      "hash": "sha256-dPhimJpbnM5gFQkGNNYTcDU86pFy8HZwMA5/qKzAXzA=",
-      "url": "_framework/dotnet.0xd0mni4qe.js"
+      "hash": "sha256-V8Pt6JH53LPFxM5xrDPhedE+iMBnUloiWgGoDBE1Fi0=",
+      "url": "_framework/dotnet.ld814i50c5.js"
     },
     {
       "hash": "sha256-WHdERxxgCQA79nOtWAOvxQ2f7p1kEx+swJwfE4AE9Nk=",
@@ -1214,6 +1214,102 @@ self.assetsManifest = {
       "url": "favicon.png"
     },
     {
+      "hash": "sha256-x0qFncyBA+7a0WtKvMTTR2JLHJ0JemnmgqFFmaAr1Ds=",
+      "url": "gemini/account-success.html"
+    },
+    {
+      "hash": "sha256-sw2THa0gh/9uEXSGeqwJybxtuVbUOsmujJ3n61hszyo=",
+      "url": "gemini/accounts.html"
+    },
+    {
+      "hash": "sha256-tW8izCNPd2jyelLN2g/rsOCsqviceeb5vRQni6fPOhI=",
+      "url": "gemini/budget-success.html"
+    },
+    {
+      "hash": "sha256-PEZSUDMu+mVhnYHogeyhn8pnoDvYoK6+sXVU4Hy55FM=",
+      "url": "gemini/budget.html"
+    },
+    {
+      "hash": "sha256-n22QRZrq6JdXEdnvDcShj2KT0t29fJr7aSt9RNVJUUQ=",
+      "url": "gemini/create-account.html"
+    },
+    {
+      "hash": "sha256-tIEQ5kvfUz4ZeGt2X9HIL8BfwlDvlMucnfNgWoGMp/o=",
+      "url": "gemini/create-budget.html"
+    },
+    {
+      "hash": "sha256-WOzkBw79Ln1yYh+9Glr/MO8qrjTA76P2BJJSWN47V8Q=",
+      "url": "gemini/create-debt.html"
+    },
+    {
+      "hash": "sha256-c/6iW1JKeur6NS5cceKwgMAI3p//ZdOFXNdQ1n+iOE4=",
+      "url": "gemini/create-payment.html"
+    },
+    {
+      "hash": "sha256-wyaWAXPjnjMR6JO7t3jYGZNr3H5DgIQLOMngfrvysKQ=",
+      "url": "gemini/create-transaction.html"
+    },
+    {
+      "hash": "sha256-xbIFb3lEO1Uww45JL/K5o7NRF7cZiJSlNQyme8c3U2g=",
+      "url": "gemini/dashboard.html"
+    },
+    {
+      "hash": "sha256-G9Vi/ihkJ/npnwM4wtJqBkM5gaz+0tAcdN48CktmZ5s=",
+      "url": "gemini/debt-payments.html"
+    },
+    {
+      "hash": "sha256-NKgUjp9iHY8MaFjSpGCoceJEae2RV0cZO2Lg58BQo0E=",
+      "url": "gemini/debt-success.html"
+    },
+    {
+      "hash": "sha256-ex6IfyNa4VIMPVb88SR6rbXYhxxh7ZA0qx/IGcCLwTs=",
+      "url": "gemini/debt-tracker.html"
+    },
+    {
+      "hash": "sha256-38scS+5lCbz7OSqxtlQXr1vg4iZzIkhslvToc0vLQHo=",
+      "url": "gemini/forgot-password.html"
+    },
+    {
+      "hash": "sha256-J6TdGEA4UqLY2474bMPFy/vlgQnEkNXMh65Vk3nul8o=",
+      "url": "gemini/help.html"
+    },
+    {
+      "hash": "sha256-P1A6PYU+2w7j3j8Kx7ev2VM0DTZGWbgFoMndnEdqV/I=",
+      "url": "gemini/insights.html"
+    },
+    {
+      "hash": "sha256-6PrAJqEjMN67a10q2JMQL9OQJYhfsaQVnu1JzLwYgHc=",
+      "url": "gemini/login.html"
+    },
+    {
+      "hash": "sha256-z8CcHAslHbl5kGm1o8AVqgl79kPei+4opHhX+NM6gN0=",
+      "url": "gemini/monthly-report.html"
+    },
+    {
+      "hash": "sha256-8EKKUywwTIBsek8iyNJNGm0W3d/msn7ed+T9gY8nkUY=",
+      "url": "gemini/payment-success.html"
+    },
+    {
+      "hash": "sha256-CQVkPVyHWvWBteoouidzvn6C52VVwsu85gCuL5i1bus=",
+      "url": "gemini/reset-password.html"
+    },
+    {
+      "hash": "sha256-pi/MbuXEsz1Z6tNhLkds5dZd5KSEPqh/18PTBrnOfS0=",
+      "url": "gemini/search-results.html"
+    },
+    {
+      "hash": "sha256-kJw5mT8d6+fxCVARKvgHTUyQ5rtVH9uhglogve9p6/c=",
+      "url": "gemini/signup.html"
+    },
+    {
+      "hash": "sha256-aZZ5V0mIAqd52++d2ZVocw39F6VF+Cm3aXjv+K1PRVQ=",
+      "url": "gemini/transaction-success.html"
+    },
+    {
+      "hash": "sha256-ibpfqoupAjss/i0YtNk9lFjwl88cwYKmW7BNmLrtGlY=",
+      "url": "gemini/transactions.html"
+    },
+    {
       "hash": "sha256-DbpQaq68ZSb5IoPosBErM1QWBfsbTxpJqhU0REi6wP4=",
       "url": "icon-192.png"
     },
@@ -1222,7 +1318,7 @@ self.assetsManifest = {
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-3Q2tLnbK/BApn5YgVevnp1m7hQ7cmDZeSvj6t8cZC4U=",
+      "hash": "sha256-22t51LbY2q/sMEd6Ox3j6/1zzQ9lIJBJ+khO8UeytaY=",
       "url": "index.html"
     },
     {
